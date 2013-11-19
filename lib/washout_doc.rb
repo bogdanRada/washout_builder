@@ -25,6 +25,9 @@ module ActionDispatch::Routing
   end
 end
 
+
+
+
 Mime::Type.register "application/soap+xml", :soap
 ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord)
 
