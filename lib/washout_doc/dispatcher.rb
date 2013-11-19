@@ -5,34 +5,25 @@ module WashoutDoc
   # as a SOAP endpoint. It includes actions for generating WSDL and handling
   # SOAP requests.
   module Dispatcher
-
     extend WashOut::Dispatcher
 
-
-
-
-
-
-
-
     def _generate_doc
-
       @map       = self.class.soap_actions
       @namespace = soap_config.namespace
       @name      = controller_path.gsub('/', '_')
       @service = self.class.name.demodulize
       @endpoint  = @namespace.gsub("/wsdl", "/action")
 
-      render :template => "aaj/wash_with_html/doc", :layout => false,
-             :content_type => 'text/html'
+      render :template => "wash_with_html/doc", :layout => false,
+        :content_type => 'text/html'
     end
 
 
     def _render_soap_fault_exception(error)
       render :template => "wash_with_soap/#{soap_config.wsdl_style}/custom_error", :status => 500,
-             :layout => false,
-             :locals => { :error_message => error.message, :error_faultcode => error.faultCode, :errors => error.errors },
-             :content_type => 'text/xml'
+        :layout => false,
+        :locals => { :error_message => error.message, :error_faultcode => error.faultCode, :errors => error.errors },
+        :content_type => 'text/xml'
     end
 
 
@@ -50,13 +41,13 @@ module WashoutDoc
     end
 
     def _catch_soap_faults
-        yield
-  rescue => exception
-    if exception.class <= WashoutDoc::SoapFault
-      _render_soap_fault_exception(exception)
-    else
-      raise exception
-    end
+      yield
+    rescue => exception
+      if exception.class <= WashoutDoc::SoapFault
+        _render_soap_fault_exception(exception)
+      else
+        raise exception
+      end
     end
   end
 end
