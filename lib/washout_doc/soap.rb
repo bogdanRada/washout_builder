@@ -1,8 +1,10 @@
 require 'active_support/concern'
 
-module WashOut
+module WashoutDoc
   module SOAP
     extend ActiveSupport::Concern
+    include WashOut::SOAP
+
 
     module ClassMethods
       attr_accessor :soap_actions
@@ -41,7 +43,7 @@ module WashOut
 
     included do
       include WashOut::Configurable
-      include WashOut::Dispatcher
+      include WashoutDoc::Dispatcher
       self.soap_actions = {}
     end
   end

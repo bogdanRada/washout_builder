@@ -1,1 +1,1 @@
-require 'wash_out'
+require 'washout_doc'

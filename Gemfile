@@ -2,6 +2,9 @@ source "http://rubygems.org"
 
 gemspec
 
+
+gem 'wash_out',git: 'git@github.com:inossidabile/wash_out.git'
+
 gem 'wasabi'
 gem 'savon', '>= 2.0.0'
 gem 'httpi', :git => 'git://github.com/savonrb/httpi.git'

@@ -1,24 +1,33 @@
-require 'wash_out/soap_fault'
-require 'wash_out/configurable'
-require 'wash_out/soap_config'
-require 'wash_out/soap'
-require 'wash_out/engine'
-require 'wash_out/param'
-require 'wash_out/dispatcher'
-require 'wash_out/soap'
-require 'wash_out/router'
-require 'wash_out/type'
-require 'wash_out/model'
-require 'wash_out/wsse'
-require 'wash_out/middleware'
+#require 'wash_out/soap_fault'
+#require 'wash_out/configurable'
+#require 'wash_out/soap_config'
+#require 'wash_out/soap'
+#require 'wash_out/engine'
+#require 'wash_out/param'
+#require 'wash_out/dispatcher'
+#require 'wash_out/soap'
+#require 'wash_out/router'
+#require 'wash_out/type'
+#require 'wash_out/model'
+#require 'wash_out/wsse'
+#require 'wash_out/middleware'
+
+
+require 'wash_out'
+require 'washout_doc/soap_fault'
+require 'washout_doc/soap'
+require 'washout_doc/param'
+require 'washout_doc/dispatcher'
+require 'washout_doc/type'
 
 module ActionDispatch::Routing
-  class Mapper
+  class  Mapper
+
     # Adds the routes for a SOAP endpoint at +controller+.
     def wash_out(controller_name, options={})
       options.reverse_merge!(@scope) if @scope
       controller_class_name = [options[:module], controller_name].compact.join("/")
-    
+
       match "#{controller_name}/doc"   => "#{controller_name}#_generate_doc", :via => :get, :format => false
       match "#{controller_name}/wsdl"   => "#{controller_name}#_generate_wsdl", :via => :get, :format => false
       match "#{controller_name}/action" => WashOut::Router.new(controller_class_name), :via => [:get, :post], :defaults => { :controller => controller_class_name, :action => '_action' }, :format => false
@@ -43,7 +52,7 @@ ActionController::Base.class_eval do
   # (like supporting multiple namespaces instead of application wide such)
   #
   def self.soap_service(options={})
-    include WashOut::SOAP
+    include WashoutDoc::SOAP
     self.soap_config = options
   end
 end
