@@ -17,6 +17,7 @@ class WashoutDocController < ActionController::Base
         :service_name =>  hash[:class].to_s.demodulize ,
         :namespace => namespace,
         :endpoint => namespace.gsub("/wsdl", "/action"),
+        :documentation_url => "#{request.protocol}#{request.host_with_port}/#{hash[:name]}/doc",
         }
     end
 
