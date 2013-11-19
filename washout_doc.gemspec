@@ -10,7 +10,8 @@ Gem::Specification.new do |s|
   s.description = "WashOut Soap Service Documentation builder"
   s.authors     = ["bogdanRada"]
 
-  s.files         = `git ls-files`.split("\n")
+  #s.files         = `git ls-files`.split("\n")
+  s.files = Dir["spec/*", "lib/**/*", "app/*", "README.md","Gemfile","Rakefile"]
   s.require_paths = ["lib"]
   s.add_dependency("nori", ">= 2.0.0")
   s.add_dependency("wash_out", ">= 0.9.0")

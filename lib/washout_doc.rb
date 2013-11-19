@@ -16,9 +16,11 @@
 require 'wash_out'
 require 'washout_doc/soap_fault'
 require 'washout_doc/soap'
-require 'washout_doc/param'
+#require 'washout_doc/param'
+require 'washout_doc/engine'
 require 'washout_doc/dispatcher'
 require 'washout_doc/type'
+require 'washout_doc/middleware'
 
 module ActionDispatch::Routing
   class  Mapper
