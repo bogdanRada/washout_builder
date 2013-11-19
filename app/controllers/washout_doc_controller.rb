@@ -30,7 +30,6 @@ class WashoutDocController < ActionController::Base
   end
 
 
-  private
 
 
 end
