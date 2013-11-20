@@ -13,8 +13,8 @@ The way WashOut is used is not modified, it just extends its functionality by pr
 
 = Screenshots (just an example)
 
-* {washout1}[https://f.cloud.github.com/assets/1104923/1563031/0efe630c-5058-11e3-8502-1e0b145de80c.png]
-* {washout2}[https://f.cloud.github.com/assets/1104923/1563032/0f43ddb0-5058-11e3-91d1-35409d4017b0.png]
+* {Screenshot 1}[https://f.cloud.github.com/assets/1104923/1563031/0efe630c-5058-11e3-8502-1e0b145de80c.png]
+* {Screenshot 2}[https://f.cloud.github.com/assets/1104923/1563032/0f43ddb0-5058-11e3-91d1-35409d4017b0.png]
 
 = Requirements
 
@@ -49,6 +49,14 @@ Please read {release details}[https://github.com/bogdanRada/washout_builder/rele
 
 The way soap_actions, or reusable types are defined or how the configuration is made using WashOut(https://github.com/inossidabile/wash_out)  haven't changed
 You can still do everything that gem does .
+
+when specifying the soap_action you can also pass a option for description and a list of exceptions that the method can raise at a certain moment.
+The exception classes used must inherit from WashoutBuilder::SoapFault and have accessible_attributes in order to show up in the documentation
+
+Here is an example :
+
+ soap_action "find",  :args   => {:number => :integer} , :return => :boolean, :raises => [MyFirstExceptionClass, MySecondExceptionClass ] , :description => "some description about this method to show in the documentation"
+
 
 But there are still some features. If you write this in the routes ( this is exactly how it would be done using WashOut)
 
