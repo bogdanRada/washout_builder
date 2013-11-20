@@ -9,6 +9,9 @@ gem 'wasabi'
 gem 'savon', '>= 2.0.0'
 gem 'httpi', :git => 'git://github.com/savonrb/httpi.git'
 
+gem 'guard'
+gem 'guard-rspec'
+gem 'rspec-rails'
 gem "rdoc"
 gem 'rb-fsevent'
 gem 'appraisal'
@@ -17,9 +20,6 @@ gem 'pry'
 
 
 group :development, :test do
-  gem 'guard'
-  gem 'guard-rspec'
-  gem 'rspec-rails'
   gem 'capybara'
   gem 'spork', "> 0.9.0.rc"
   gem 'active_reload'
