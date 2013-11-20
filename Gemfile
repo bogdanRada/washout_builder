@@ -9,30 +9,13 @@ gem 'wasabi'
 gem 'savon', '>= 2.0.0'
 gem 'httpi', :git => 'git://github.com/savonrb/httpi.git'
 
+gem 'rspec-rails'
 gem 'guard'
 gem 'guard-rspec'
-gem 'rspec-rails'
-gem "rdoc"
 gem 'rb-fsevent'
 gem 'appraisal'
 gem 'tzinfo'
 gem 'pry'
+gem 'simplecov'
+gem 'simplecov-summary'
 
-
-group :development, :test do
-  gem 'capybara'
-  gem 'spork', "> 0.9.0.rc"
-  gem 'active_reload'
-  gem "shoulda"
-  gem "rdoc"
-  gem 'rspec'
-  gem 'rake'
-  gem 'rspec-mocks'
-  gem "bundler"
-  gem "simplecov"
-  gem 'simplecov', :require => false
-  gem 'simplecov-rcov', :require => false
-  gem 'simplecov-summary',:require => false
-  gem 'webmock'
-  gem 'mocha'
-end
