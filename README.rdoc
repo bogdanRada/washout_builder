@@ -58,7 +58,7 @@ Here is an example :
  soap_action "find",  :args   => {:number => :integer} , :return => :boolean, :raises => [MyFirstExceptionClass, MySecondExceptionClass ] , :description => "some description about this method to show in the documentation"
 
 
-But there are still some features. If you write this in the routes ( this is exactly how it would be done using WashOut)
+In order to see the documentation you must write something like this  in the routes (exactly like you would do when using only WashOut)
 
 In the following file  +config/routes.rb+ you can put this configuration 
 
@@ -67,9 +67,9 @@ In the following file  +config/routes.rb+ you can put this configuration
   wash_out :my_other_service
  end
 
-You can access the url /washout and you will see a list with available services ( in our case there are only two : The RumbasController and MyOtherServiceController) with links to their documentation and where you can find the WSDL.
+You can access the url +/washout+ and you will see a list with available services ( in our case there are only two : The RumbasController and MyOtherServiceController) with links to their documentation and where you can find the WSDL.
 
-If you want to access directly the hml documentation that was generated for RumbasController  you can do that by accessing url /rumbas/doc And the WSDL will be available at /rumbas/wsdl
+If you want to access directly the hml documentation that was generated for RumbasController  you can do that by accessing url +/rumbas/doc+ And the WSDL will be available at +/rumbas/wsdl+
 
 
 Also this gem contains another feature about using exceptions.
