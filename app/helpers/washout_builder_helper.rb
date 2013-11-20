@@ -17,8 +17,8 @@ module WashoutBuilderHelper
       defined.each do |hash|
         found = true if hash[:class] == complex_class
       end
-      if found == true && p.type =="struct"
-        # found a nested hash or a class
+      if found == true && p.type =="struct" && p.source_class.blank?   # avoiding collissions on hashes by using a timestamp -- not the best idea
+        # found a nested hash 
         complex_class = complex_class+timestamp.to_s
         p.timestamp = timestamp.to_s
         #  raise p.inspect
