@@ -11,7 +11,7 @@ module WashoutBuilder
       @map       = self.class.soap_actions
       @namespace = soap_config.namespace
       @name      = controller_path.gsub('/', '_')
-      @service = self.class.name.demodulize
+      @service = self.class.name.underscore.gsub("_controller", "").camelize
       @endpoint  = @namespace.gsub("/wsdl", "/action")
 
       render :template => "wash_with_html/doc", :layout => false,
