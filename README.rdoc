@@ -78,10 +78,12 @@ This class has as attributes :  a faultCode, a faultString (or message) and anot
 
 If you only  want to send a faultcode for your exception in the webservice application you can do this
 
-class MyException < WashoutBuilder::SoapFault
-end
+ class MyException < WashoutBuilder::SoapFault end
  
-and then when you raise it in the code you can do this raise MyException.new (1001, "damn! found a error") . 
+and then when you raise it in the code you can do this 
+
+  raise MyException.new (1001, "damn! found a error") . 
+
 The first argument can be a integer or a string representing a faultcode that both the webservice and the client know about.
 And the second is a message for the error. 
 
