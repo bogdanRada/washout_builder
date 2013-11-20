@@ -18,6 +18,7 @@ The way WashOut is used is not modified, it just extends its functionality by pr
 1. {Ruby 1.9.x}[http://www.ruby-lang.org]
 2. {Ruby on Rails}[http://rubyonrails.org].
 3. {WashOut Gem}[https://github.com/inossidabile/wash_out]
+4. {Nori Gem}[https://github.com/savonrb/nori]
 
 = Compatibility
 
@@ -31,13 +32,13 @@ Rubinius support temporarily dropped since 0.6.2 due to Rails 4 incompatibility.
 
 Type the following from the command line to install:
 
-  gem install washout_builder ( it will automatically install  also wash_out version 0.9.0 that is currently used)
+  gem install washout_builder  #it will automatically install  also wash_out version 0.9.0 that is currently used
 
 Add the following to your Gemfile:
 
   gem "washout_builder"
 
-Please read [release details](https://github.com/bogdanRada/washout_builder/releases) if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
+Please read {release details}[https://github.com/bogdanRada/washout_builder/releases] if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
 
 = Usage
 
@@ -46,7 +47,7 @@ You can still do everything that gem does .
 
 But there are still some features. If you write this in the routes ( this is exactly how it would be done using WashOut)
 
-# config/routes.rb
+ config/routes.rb
 WashOutSample::Application.routes.draw do
   wash_out :rumbas
   wash_out :my_other_service
@@ -59,9 +60,7 @@ If you want to access directly the hml documentation that was generated for Rumb
 
 
 
-Also this gem contains another feature about using exceptions. I am going to give an example.
-If you have two applications . The first one that acts like a webservice server that waits for calls from the other application wich is a soap client.
-Let's say your first applications needs to send a error code for a specific exception, everytime that happens, so that the client application can treat it in a general way every time it happens
+Also this gem contains another feature about using exceptions.
 
 There is a class WashoutBuilder::SoapFault
 This class has as attributes :  a faultCode, a faultString (or message) and another attribute errors. Which i am going to explain how can be used.
@@ -71,8 +70,11 @@ If you only  want to send a faultcode for your exception in the webservice appli
 class MyException < WashoutBuilder::SoapFault
 end
  
-and then when you raise it in the code you can do this raise MyException.new (1001, "damn! found a error") . The first argument can be a integer or a string representing a faultcode that both the webservice and the client know about.
-And the second is a message for the error. This exception is going to be catched by the gem and is going to send it to the client with the specified fault code and message
+and then when you raise it in the code you can do this raise MyException.new (1001, "damn! found a error") . 
+The first argument can be a integer or a string representing a faultcode that both the webservice and the client know about.
+And the second is a message for the error. 
+
+This exception is going to be catched by the gem and is going to send it to the client with the specified fault code and message
 
 
 But let's think things even further than that. Let's say you want to raise this exception when you validate a object and also send the fields and the message for why each field in that group is not valid
@@ -80,38 +82,12 @@ You can easily do that by passing a third argument an array that contains hashes
 
  { :related => "the object's field name that is not valid",
     :message => "why is not valid",
-    :arguments => "possible arguments"             # this doesn't necessarily need to be string, it can be array or hash . but it can't be a class ( You could use this for Internalization between the two applications)
+    :arguments => "possible arguments"             # this doesn't necessarily need to be string, it can be array or hash . but it can't be a class 
 }
 
 
 If your class MyException still needs more attribute you can define them in the classs and they will also be passed to the client when the exception will be raised.
 Also if you override the initialize method don't forget to call super at the end or at the beginning of the method so that the attributes from the parent class will be correctly instantiated.
-
-
-
-
-
-
-
-In such a setup, the generated WSDL may be queried at path `/api/wsdl`. So, with a
-gem like Savon, a request can be done using this path:
-
-```ruby
-require 'savon'
-
-client = Savon::Client.new(wsdl: "http://localhost:3000/rumbas/wsdl")
-
-client.operations # => [:integer_to_string, :concat, :add_circle]
-
-result = client.call(:concat, message: { :a => "123", :b => "abc" })
-
-# actual wash_out
-result.to_hash # => {:concat_reponse => {:value=>"123abc"}}
-
-# wash_out below 0.3.0 (and this is malformed response so please update)
-result.to_hash # => {:value=>"123abc"}
-```
-
 
 
 
