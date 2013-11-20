@@ -5,7 +5,7 @@ require 'washout_builder/param'
 require 'washout_builder/engine'
 require 'washout_builder/dispatcher'
 require 'washout_builder/type'
-require 'washout_builder/middleware'
+
 
 module ActionDispatch::Routing
   class  Mapper
