@@ -1,7 +1,7 @@
 require 'wash_out'
 require 'washout_builder/soap_fault'
 require 'washout_builder/soap'
-#require 'washout_doc/param'
+require 'washout_builder/param'
 require 'washout_builder/engine'
 require 'washout_builder/dispatcher'
 require 'washout_builder/type'
@@ -30,6 +30,7 @@ end
 
 Mime::Type.register "application/soap+xml", :soap
 ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord)
+WashOut::Param.send :include, WashoutBuilder::Param if defined?(WashoutBuilder::Param)
 
 ActionController::Renderers.add :soap do |what, options|
   _render_soap(what, options)
