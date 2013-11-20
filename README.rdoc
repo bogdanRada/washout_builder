@@ -98,7 +98,7 @@ You can easily do that by passing a third argument an array that contains hashes
  }
 
 If your class MyException still needs more attribute you can define them in the classs and they will also be passed to the client when the exception will be raised.
-Also if you override the initialize method don't forget to call +super+ at the end or at the beginning of the method so that the attributes from the parent class will be correctly instantiated.
+Also if you override the initialize method don't forget to call +super+ at the end of the method so that the attributes from the parent class will be correctly instantiated.
 
 = Testing
 
