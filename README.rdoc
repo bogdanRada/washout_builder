@@ -47,7 +47,7 @@ You can still do everything that gem does .
 
 But there are still some features. If you write this in the routes ( this is exactly how it would be done using WashOut)
 
- In the following file  config/routes.rb you can put this configuration :
+ In the following file  +config/routes.rb+ you can put this configuration 
 
 WashOutSample::Application.routes.draw do
   wash_out :rumbas
