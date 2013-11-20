@@ -74,7 +74,7 @@ If you want to access directly the hml documentation that was generated for Rumb
 = Setup  custom  exceptions
 
 There is a class WashoutBuilder::SoapFault
-This class has as attributes :  a faultCode, a faultString (or message) and another attribute errors. The third argument is optional
+This class has as attributes :  a faultCode, a faultString (or message) and another attribute errors. The third attribute is optional
 
 If you only  want to send a faultcode for your exception in the webservice application you can do this
 
