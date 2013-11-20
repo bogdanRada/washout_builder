@@ -1,3 +1,3 @@
-module WashoutDoc
+module WashoutBuilder
   VERSION = "0.0.3"
 end

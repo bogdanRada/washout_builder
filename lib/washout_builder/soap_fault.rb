@@ -1,4 +1,4 @@
-module WashoutDoc
+module WashoutBuilder
   class SoapFault < StandardError
     include ActiveModel::MassAssignmentSecurity
 

@@ -1,9 +1,9 @@
-module WashoutDocHelper
+module WashoutBuilderHelper
   include WashOutHelper
 
   def get_complex_class_name(p, defined = [])
     complex_class = nil
-    if !p.source_class_name.nil?  # it is a class and has ancestor WashoutDoc::Type
+    if !p.source_class_name.nil?  # it is a class and has ancestor WashoutBuilder::Type
       complex_class=  p.source_class_name
     elsif p.type == "struct" && !p.source_class.blank?    # it is a class
       complex_class = p.source_class
@@ -35,7 +35,7 @@ module WashoutDocHelper
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
     defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
-    if WashoutDoc_param_is_complex?(param)
+    if param_is_complex?(param)
       c_names = []
       param.map.each do |obj|
         nested = get_nested_complex_types(obj, defined)
@@ -88,8 +88,8 @@ module WashoutDocHelper
   end
 
 
-  def WashoutDoc_param_is_complex?(p)
-    !p.source_class_name.nil? || (p.type == "struct" && !p.source_class.blank?) || p.type =="struct" # it is a class and has ancestor WashoutDoc::Type
+  def param_is_complex?(p)
+    !p.source_class_name.nil? || (p.type == "struct" && !p.source_class.blank?) || p.type =="struct" # it is a class and has ancestor WashoutBuilder::Type
   end
 
   def create_html_complex_type_validation_errors(xml)
@@ -124,7 +124,7 @@ module WashoutDocHelper
           param.map.each do |element|
             # raise YAML::dump(element) if class_name.include?("ype") and element.name == "members"
             xml.li { |pre|
-              if WashoutDoc::Type::BASIC_TYPES.include?(element.type)
+              if WashoutBuilder::Type::BASIC_TYPES.include?(element.type)
                 pre << "<span class='blue'>#{element.type}</span>&nbsp;<span class='bold'>#{element.name}</span>"
               else
                 complex_class = get_complex_class_name(element)
@@ -172,11 +172,11 @@ module WashoutDocHelper
     xml.h3 "#{param}"
     xml.a("name" => "#{param}") {}
     xml.ul("class" => "pre") {
-      if param.ancestors.include?(WashoutDoc::SoapFault)
+      if param.ancestors.include?(WashoutBuilder::SoapFault)
 
         param.accessible_attributes.each do |attribute|
           xml.li { |pre|
-            if WashoutDoc::Type::BASIC_TYPES.include?(attribute.class.name.downcase) && attribute != "errors"
+            if WashoutBuilder::Type::BASIC_TYPES.include?(attribute.class.name.downcase) && attribute != "errors"
               pre << "<span class='blue'>#{attribute.class.name.downcase}</span>&nbsp;<span class='bold'>#{attribute}</span>"
             elsif attribute == "errors"
               pre << "<a href='#ValidationErrors'><span class='lightBlue'>Array of ValidationErrors</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
@@ -210,7 +210,7 @@ module WashoutDocHelper
 
     xml.p("class" => "pre"){ |pre|
       if !formats[:out].nil?
-        if WashoutDoc::Type::BASIC_TYPES.include?(formats[:out][0].type)
+        if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
           xml.span("class" => "blue") { |y| y<<  "#{formats[:out][0].type}" }
         else
           xml.a("href" => "##{formats[:out][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:out][0].type}" } }
@@ -228,7 +228,7 @@ module WashoutDocHelper
         while j<mlen
           param = formats[:in][j]
           use_spacer =  mlen > 1 ? true : false
-          if WashoutDoc::Type::BASIC_TYPES.include?(param.type)
+          if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
             pre << "#{use_spacer ? spacer: ''}<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"
           else
             complex_class = get_complex_class_name(param)
@@ -266,7 +266,7 @@ module WashoutDocHelper
       while j<mlen
         param = formats[:in][j]
         xml.li("class" => "pre") { |pre|
-          if WashoutDoc::Type::BASIC_TYPES.include?(param.type)
+          if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
             pre << "<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"
           else
             complex_class = get_complex_class_name(param)
@@ -289,7 +289,7 @@ module WashoutDocHelper
       xml.li {
         if !formats[:out].nil?
 
-          if WashoutDoc::Type::BASIC_TYPES.include?(formats[:out][0].type)
+          if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
             xml.span("class" => "pre") { |xml| xml.span("class" => "blue") { |sp| sp << "#{formats[:out][0].type}" } }
           else
             xml.span("class" => "pre") { xml.a("href" => "##{formats[:out][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:out][0].type}" } } }

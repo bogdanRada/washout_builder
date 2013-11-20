@@ -1,4 +1,4 @@
-class WashoutDocController < ActionController::Base
+class WashoutBuilderController < ActionController::Base
   protect_from_forgery
 
   def all
@@ -10,7 +10,7 @@ class WashoutDocController < ActionController::Base
     end.uniq.compact
 
     @services = []
-
+   unless controllers.blank?
     controllers.map do |hash|
       namespace  = hash[:class].soap_config.namespace
       @services << {
@@ -20,6 +20,7 @@ class WashoutDocController < ActionController::Base
         :documentation_url => "#{request.protocol}#{request.host_with_port}/#{hash[:name]}/doc",
         }
     end
+   end
 
 
     render :template => "wash_with_html/all_services", :layout => false,

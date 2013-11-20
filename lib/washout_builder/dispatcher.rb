@@ -1,7 +1,7 @@
 require 'nori'
 
-module WashoutDoc
-  # The WashoutDoc::Dispatcher module should be included in a controller acting
+module WashoutBuilder
+  # The WashoutBuilder::Dispatcher module should be included in a controller acting
   # as a SOAP endpoint. It includes actions for generating WSDL and handling
   # SOAP requests.
   module Dispatcher
@@ -43,7 +43,7 @@ module WashoutDoc
     def _catch_soap_faults
       yield
     rescue => exception
-      if exception.class <= WashoutDoc::SoapFault
+      if exception.class <= WashoutBuilder::SoapFault
         _render_soap_fault_exception(exception)
       else
         raise exception

@@ -1,14 +1,14 @@
 require 'active_support/concern'
 
-module WashoutDoc
+module WashoutBuilder
   module SOAP
     extend ActiveSupport::Concern
     include WashOut::SOAP
 
-    
+
     included do
       include WashOut::Configurable
-      include WashoutDoc::Dispatcher
+      include WashoutBuilder::Dispatcher
       self.soap_actions = {}
     end
   end

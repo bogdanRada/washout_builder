@@ -1,11 +1,11 @@
 require 'wash_out'
-require 'washout_doc/soap_fault'
-require 'washout_doc/soap'
+require 'washout_builder/soap_fault'
+require 'washout_builder/soap'
 #require 'washout_doc/param'
-require 'washout_doc/engine'
-require 'washout_doc/dispatcher'
-require 'washout_doc/type'
-require 'washout_doc/middleware'
+require 'washout_builder/engine'
+require 'washout_builder/dispatcher'
+require 'washout_builder/type'
+require 'washout_builder/middleware'
 
 module ActionDispatch::Routing
   class  Mapper
@@ -45,7 +45,7 @@ ActionController::Base.class_eval do
   # (like supporting multiple namespaces instead of application wide such)
   #
   def self.soap_service(options={})
-    include WashoutDoc::SOAP
+    include WashoutBuilder::SOAP
     self.soap_config = options
   end
 end

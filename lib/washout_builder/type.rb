@@ -1,4 +1,4 @@
-module WashoutDoc
+module WashoutBuilder
   class Type < WashOut::Type
 
 

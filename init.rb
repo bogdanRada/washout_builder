@@ -1,1 +1,1 @@
-require 'washout_doc'
+require 'washout_builder'
