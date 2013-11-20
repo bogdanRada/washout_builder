@@ -107,7 +107,7 @@ To test, do the following:
 
 1. cd to the gem root.
 2. bundle install
-3. bundle exec rspec spec
+3. bundle exec rake
 
 = Contributions
 
