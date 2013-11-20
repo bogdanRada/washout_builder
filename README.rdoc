@@ -13,8 +13,8 @@ The way WashOut is used is not modified, it just extends its functionality by pr
 
 = Screenshots
 
-{washout1}[https://f.cloud.github.com/assets/1104923/1563031/0efe630c-5058-11e3-8502-1e0b145de80c.png]
-{washout2}[https://f.cloud.github.com/assets/1104923/1563032/0f43ddb0-5058-11e3-91d1-35409d4017b0.png]
+*{washout1}[https://f.cloud.github.com/assets/1104923/1563031/0efe630c-5058-11e3-8502-1e0b145de80c.png]
+*{washout2}[https://f.cloud.github.com/assets/1104923/1563032/0f43ddb0-5058-11e3-91d1-35409d4017b0.png]
 
 = Requirements
 
