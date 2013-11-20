@@ -9,7 +9,9 @@ The way WashOut is used is not modified, it just extends its functionality by pr
 
 = Features
 
-* Fully customizable HTML5 attributes for date_select .
+* Provides way of seeing the available services with links to documentation, endpoint and namespace
+* Provides a human-readable HTML documentation generated  for each service that you write
+* Can also create custom exception  classes and use them to send custom fault errors to the client application
 
 = Requirements
 
