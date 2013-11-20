@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.summary     = "WashOut Soap Service Documentation builder (extends WashOut https://github.com/inossidabile/wash_out/)"
   s.email       = "raoul_ice@yahoo.com"
-  s.homepage    = "http://github.com/bogdan.rada/washout_builder/"
+  s.homepage    = "http://github.com/bogdanRada/washout_builder/"
   s.description = "WashOut Soap Service Documentation builder (extends WashOut https://github.com/inossidabile/wash_out/) "
   s.authors     = ["bogdanRada"]
 
