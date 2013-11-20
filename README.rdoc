@@ -13,7 +13,7 @@ The way WashOut is used is not modified, it just extends its functionality by pr
 
 = Screenshots (just an example)
 
-* {Screenshot 1}[https://f.cloud.github.com/assets/1104923/1582562/94e10580-51f0-11e3-89f2-851f404cb538.png]
+* {Screenshot 1}[https://f.cloud.github.com/assets/1104923/1582604/53ad8c04-51f1-11e3-963c-fb6c58d0a6a6.png]
 * {Screenshot 2}[https://f.cloud.github.com/assets/1104923/1563031/0efe630c-5058-11e3-8502-1e0b145de80c.png]
 * {Screenshot 3}[https://f.cloud.github.com/assets/1104923/1563032/0f43ddb0-5058-11e3-91d1-35409d4017b0.png]
 
