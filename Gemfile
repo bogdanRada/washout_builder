@@ -3,7 +3,7 @@ source "http://rubygems.org"
 gemspec
 
 
-gem 'wash_out', "~> 0.9.0",git: 'git@github.com:inossidabile/wash_out.git'
+gem 'wash_out', "~> 0.9.0", :git=> 'git://github.com/inossidabile/wash_out.git'
 
 gem 'wasabi'
 gem 'savon', '>= 2.0.0'
