@@ -1,7 +1,7 @@
 = washout_builder
 
 = Overview
-WashOutBuilder is a  Soap Service Documentation builder (extends WashOut https://github.com/inossidabile/wash_out/)
+WashOutBuilder is a  Soap Service Documentation generator (extends WashOut https://github.com/inossidabile/wash_out/)
 
 The way WashOut is used is not modified, it just extends its functionality by providing html documentation
 
