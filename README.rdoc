@@ -1,0 +1,142 @@
+= washout_builder
+
+= Overview
+WashOutBuilder is a  Soap Service Documentation builder (extends WashOut https://github.com/inossidabile/wash_out/)
+
+The way WashOut is used is not modified, it just extends its functionality by providing html documentation
+
+
+
+= Features
+
+* Fully customizable HTML5 attributes for date_select .
+
+= Requirements
+
+1. {Ruby 1.9.x}[http://www.ruby-lang.org]
+2. {Ruby on Rails}[http://rubyonrails.org].
+3. {WashOut Gem}[https://github.com/inossidabile/wash_out]
+
+= Compatibility
+
+Rails >3.0 only. MRI 1.9, 2.0, JRuby (--1.9).
+
+Ruby 1.8 is not officially supported since 0.5.3. We will accept further compatibilty pull-requests but no upcoming versions will be tested against it.
+
+Rubinius support temporarily dropped since 0.6.2 due to Rails 4 incompatibility.
+
+= Setup
+
+Type the following from the command line to install:
+
+  gem install washout_builder ( it will automatically install  also wash_out version 0.9.0 that is currently used)
+
+Add the following to your Gemfile:
+
+  gem "washout_builder"
+
+Please read [release details](https://github.com/bogdanRada/washout_builder/releases) if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
+
+= Usage
+
+The way soap_actions, or reusable types are defined or how the configuration is made using WashOut(https://github.com/inossidabile/wash_out)  haven't changed
+You can still do everything that gem does .
+
+But there are still some features. If you write this in the routes ( this is exactly how it would be done using WashOut)
+
+# config/routes.rb
+WashOutSample::Application.routes.draw do
+  wash_out :rumbas
+  wash_out :my_other_service
+end
+
+You can access the url /washout and you will see a list with available services ( in our case there are only two : The RumbasController and MyOtherServiceController) with links to their documentation and where you can find the WSDL.
+
+If you want to access directly the hml documentation that was generated for RumbasController  you can do that by accessing url /rumbas/doc And the WSDL will be available at /rumbas/wsdl
+
+
+
+
+Also this gem contains another feature about using exceptions. I am going to give an example.
+If you have two applications . The first one that acts like a webservice server that waits for calls from the other application wich is a soap client.
+Let's say your first applications needs to send a error code for a specific exception, everytime that happens, so that the client application can treat it in a general way every time it happens
+
+There is a class WashoutBuilder::SoapFault
+This class has as attributes :  a faultCode, a faultString (or message) and another attribute errors. Which i am going to explain how can be used.
+
+If you only  want to send a faultcode for your exception in the webservice application you can do this
+
+class MyException < WashoutBuilder::SoapFault
+end
+ 
+and then when you raise it in the code you can do this raise MyException.new (1001, "damn! found a error") . The first argument can be a integer or a string representing a faultcode that both the webservice and the client know about.
+And the second is a message for the error. This exception is going to be catched by the gem and is going to send it to the client with the specified fault code and message
+
+
+But let's think things even further than that. Let's say you want to raise this exception when you validate a object and also send the fields and the message for why each field in that group is not valid
+You can easily do that by passing a third argument an array that contains hashes in this form
+
+ { :related => "the object's field name that is not valid",
+    :message => "why is not valid",
+    :arguments => "possible arguments"             # this doesn't necessarily need to be string, it can be array or hash . but it can't be a class ( You could use this for Internalization between the two applications)
+}
+
+
+If your class MyException still needs more attribute you can define them in the classs and they will also be passed to the client when the exception will be raised.
+Also if you override the initialize method don't forget to call super at the end or at the beginning of the method so that the attributes from the parent class will be correctly instantiated.
+
+
+
+
+
+
+
+In such a setup, the generated WSDL may be queried at path `/api/wsdl`. So, with a
+gem like Savon, a request can be done using this path:
+
+```ruby
+require 'savon'
+
+client = Savon::Client.new(wsdl: "http://localhost:3000/rumbas/wsdl")
+
+client.operations # => [:integer_to_string, :concat, :add_circle]
+
+result = client.call(:concat, message: { :a => "123", :b => "abc" })
+
+# actual wash_out
+result.to_hash # => {:concat_reponse => {:value=>"123abc"}}
+
+# wash_out below 0.3.0 (and this is malformed response so please update)
+result.to_hash # => {:value=>"123abc"}
+```
+
+
+
+
+= Testing
+
+To test, do the following:
+
+1. cd to the gem root.
+2. bundle install
+3. bundle exec rspec spec
+
+= Contributions
+
+Please log all feedback/issues via {GitHub Issues}[http://github.com/bogdanRada/washout_builder/issues]. Thanks.
+
+
+== Contributing to washout_builder
+
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
+* Fork the project.
+* Start a feature/bugfix branch.
+* Commit and push until you are happy with your contribution.
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+
+== Copyright
+
+Copyright (c) 2013 bogdanRada. See LICENSE.txt for
+further details.
