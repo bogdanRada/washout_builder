@@ -2,30 +2,17 @@ module WashoutBuilderHelper
   include WashOutHelper
 
   def get_complex_class_name(p, defined = [])
-    complex_class = nil
-    if !p.source_class_name.nil?  # it is a class and has ancestor WashoutBuilder::Type
-      complex_class=  p.source_class_name
-    elsif p.struct? && p.classified?    # it is a class
-      complex_class = p.source_class
-    elsif p.struct? 
-      complex_class = p.name.classify
-    end
+    complex_class = p.basic_type
+    
     if !complex_class.nil? && !defined.blank?
-      timestamp = Time.now.to_i
-
+     
       found = false
       defined.each do |hash|
         found = true if hash[:class] == complex_class
       end
-      if found == true && p.struct?  &&  !p.classified?
-                 
-      raise RuntimeError, "Duplicate use of `#{p.basic_type}` type name. Consider using classified types."
-        # found a nested hash 
-        #complex_class = complex_class+timestamp.to_s
-       # p.timestamp = timestamp.to_s
+      if found == true && p.struct?  &&  !p.classified? && p.source_class_name.blank?
+        raise RuntimeError, "Duplicate use of `#{p.basic_type}` type name. Consider using classified types."
       end
-    elsif !complex_class.nil? && defined.blank? and p.timestamp
-      complex_class = complex_class+p.timestamp
     end
 
     return complex_class
@@ -36,7 +23,7 @@ module WashoutBuilderHelper
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
     defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
-    if param_is_complex?(param)
+    if param.is_complex?
       c_names = []
       param.map.each do |obj|
         nested = get_nested_complex_types(obj, defined)
@@ -61,7 +48,7 @@ module WashoutBuilderHelper
       end
     end
     defined <<  {:class =>"ValidationErrors", :obj => nil} unless get_fault_types_names(map).blank?
-  defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
+    defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
   end
 
   def get_fault_types_names(map)
@@ -89,9 +76,6 @@ module WashoutBuilderHelper
   end
 
 
-  def param_is_complex?(p)
-    !p.source_class_name.nil? || (p.type == "struct" && !p.source_class.blank?) || p.type =="struct" # it is a class and has ancestor WashoutBuilder::Type
-  end
 
   def create_html_complex_type_validation_errors(xml)
     xml.a( "name" => "ValidationErrors")  { }
@@ -150,7 +134,7 @@ module WashoutBuilderHelper
   def create_html_fault_types_details(xml, map)
     defined = []
     unless map.blank?
-     map =  map.sort_by { |operation, formats| formats[:raises].to_s.downcase }.uniq
+      map =  map.sort_by { |operation, formats| formats[:raises].to_s.downcase }.uniq
       map.each do |operation, formats|
         faults = formats[:raises]
         unless faults.blank?
@@ -162,10 +146,10 @@ module WashoutBuilderHelper
       end
     end
     unless defined.blank?
-   defined =  defined.sort_by { |name| name.to_s.downcase }.uniq
-     defined.each do |fault|
-       create_html_fault_type(xml, fault)
-     end
+      defined =  defined.sort_by { |name| name.to_s.downcase }.uniq
+      defined.each do |fault|
+        create_html_fault_type(xml, fault)
+      end
     end
   end
 
