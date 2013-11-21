@@ -6,7 +6,7 @@ module WashoutBuilder
     
     def initialize(soap_config, name, type, class_name, multiplied = false)
       @source_class_name = class_name
-       original_initialize(soap_config, name, type, multiplied )
+       super(soap_config, name, type, multiplied )
     end
     
     def self.parse_def(soap_config, definition)

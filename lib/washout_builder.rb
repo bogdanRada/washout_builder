@@ -30,11 +30,6 @@ end
 Mime::Type.register "application/soap+xml", :soap
 ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord)
 
-WashOut::Param.class_eval do
-  alias_method :original_initialize, :initialize
-end
-
-
 WashOut::SOAP::ClassMethods.class_eval do
   alias_method :original_soap_action, :soap_action
 end
