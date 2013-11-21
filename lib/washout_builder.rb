@@ -15,7 +15,6 @@ module ActionDispatch::Routing
     # Adds the routes for a SOAP endpoint at +controller+.
     def wash_out(controller_name, options={})
       options.reverse_merge!(@scope) if @scope
-      controller_class_name = [options[:module], controller_name].compact.join("/")
 
       match "#{controller_name}/doc"   => "#{controller_name}#_generate_doc", :via => :get, :format => false
       original_wash_out(controller_name, options)
@@ -33,7 +32,6 @@ ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord)
 
 WashOut::Param.class_eval do
   alias_method :original_initialize, :initialize
- # include WashoutBuilder::Param if defined?(WashoutBuilder::Param)
 end
 
 ActionController::Renderers.add :soap do |what, options|
