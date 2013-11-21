@@ -3,7 +3,7 @@ module WashoutBuilderHelper
 
   def get_complex_class_name(p, defined = [])
     complex_class = nil
-    complex_class = p.basic_type  if p.is_complex?
+    complex_class = p.basic_type.to_s.classify  if p.is_complex?
     
     if !complex_class.nil? && !defined.blank?
      
