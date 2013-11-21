@@ -34,9 +34,6 @@ WashOut::Param.class_eval do
   alias_method :original_initialize, :initialize
 end
 
-WashOut::Param.class_eval do
-  alias_method :original_initialize, :initialize
-end
 
 WashOut::SOAP::ClassMethods.class_eval do
   alias_method :original_soap_action, :soap_action
