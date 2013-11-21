@@ -31,8 +31,10 @@ module WashoutBuilder
         default_response_tag = "tns:#{action}#{default_response_tag}"
         
          self.soap_actions[action] = {
-          :in => WashOut::Param.parse_def(soap_config, options[:args]),
+           :in => WashOut::Param.parse_def(soap_config, options[:args]),
           :out => WashOut::Param.parse_def(soap_config, options[:return]),
+          :input => WashoutBuilder::Param.parse_def(soap_config, options[:args]),
+          :output => WashoutBuilder::Param.parse_def(soap_config, options[:return]),
           :description => options[:description],
           :raises => options[:raises],
           :to => options[:to] || action,

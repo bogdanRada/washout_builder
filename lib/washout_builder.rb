@@ -33,7 +33,7 @@ ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord)
 
 WashOut::Param.class_eval do
   alias_method :original_initialize, :initialize
-  include WashoutBuilder::Param if defined?(WashoutBuilder::Param)
+ # include WashoutBuilder::Param if defined?(WashoutBuilder::Param)
 end
 
 ActionController::Renderers.add :soap do |what, options|
