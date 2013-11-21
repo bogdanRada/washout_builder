@@ -29,7 +29,7 @@ module WashoutBuilder
 
     def self.included(controller)
       controller.send :rescue_from, WashOut::Dispatcher::SOAPError, :with => :_render_soap_exception
-      controller.send :helper, :wash_out
+      controller.send :helper, :wash_out, :washout_builder
       controller.send :before_filter, :_parse_soap_parameters, :except => [
         :_generate_wsdl, :_generate_doc, :_invalid_action ]
       controller.send :before_filter, :_authenticate_wsse,     :except => [
