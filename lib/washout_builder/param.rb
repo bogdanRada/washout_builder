@@ -25,7 +25,7 @@ module WashoutBuilder
 
       if definition.is_a? Hash
         definition.map do |name, opt|
-          if opt.is_a? WashOut::Param
+          if opt.is_a? WashoutBuilder::Param
              opt
           elsif opt.is_a? Array
            WashoutBuilder::Param.new(soap_config, name, opt[0],definition_class_name, true)
