@@ -34,6 +34,14 @@ WashOut::Param.class_eval do
   alias_method :original_initialize, :initialize
 end
 
+WashOut::Param.class_eval do
+  alias_method :original_initialize, :initialize
+end
+
+WashOut::SOAP::ClassMethods.class_eval do
+  alias_method :original_soap_action, :soap_action
+end
+
 ActionController::Renderers.add :soap do |what, options|
   _render_soap(what, options)
 end
