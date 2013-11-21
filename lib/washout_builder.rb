@@ -30,7 +30,11 @@ end
 
 Mime::Type.register "application/soap+xml", :soap
 ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord)
-WashOut::Param.send :include, WashoutBuilder::Param if defined?(WashoutBuilder::Param)
+
+WashOut::Param.class_eval do
+  alias_method :original_initialize, :initialize
+  include WashoutBuilder::Param if defined?(WashoutBuilder::Param)
+end
 
 ActionController::Renderers.add :soap do |what, options|
   _render_soap(what, options)

@@ -5,30 +5,8 @@ module WashoutBuilder
     attr_accessor :timestamp
     
      def initialize(soap_config, name, type, class_name, multiplied = false)
-      type ||= {}
-      @soap_config = soap_config
-      @name = name.to_s
-      @raw_name = name.to_s
-      @map = {}
-      @multiplied = multiplied
       @source_class_name = class_name
-
-      if soap_config.camelize_wsdl.to_s == 'lower'
-        @name = @name.camelize(:lower)
-      elsif soap_config.camelize_wsdl
-        @name = @name.camelize
-      end
-
-      if type.is_a?(Symbol)
-        @type = type.to_s
-      elsif type.is_a?(Class)
-        @type = 'struct'
-        @map = self.class.parse_def(soap_config, type.wash_out_param_map)
-        @source_class = type
-      else
-        @type = 'struct'
-        @map = self.class.parse_def(soap_config, type)
-      end
+      original_initialize(soap_config, name, type, multiplied )
     end
     
       def self.parse_def(soap_config, definition)
