@@ -2,7 +2,8 @@ module WashoutBuilderHelper
   include WashOutHelper
 
   def get_complex_class_name(p, defined = [])
-    complex_class = p.basic_type
+    complex_class = nil
+    complex_class = p.basic_type  if p.is_complex?
     
     if !complex_class.nil? && !defined.blank?
      
