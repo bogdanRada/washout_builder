@@ -5,9 +5,9 @@ module WashoutBuilderHelper
     complex_class = nil
     if !p.source_class_name.nil?  # it is a class and has ancestor WashoutBuilder::Type
       complex_class=  p.source_class_name
-    elsif p.type == "struct" && !p.source_class.blank?    # it is a class
+    elsif p.struct? && p.classified?    # it is a class
       complex_class = p.source_class
-    elsif p.type == "struct" #TODO figure out a way to avoid collissions for hashes
+    elsif p.struct? 
       complex_class = p.name.classify
     end
     if !complex_class.nil? && !defined.blank?
@@ -17,10 +17,12 @@ module WashoutBuilderHelper
       defined.each do |hash|
         found = true if hash[:class] == complex_class
       end
-      if found == true && p.type =="struct" && p.source_class.blank?   # avoiding collissions on hashes by using a timestamp -- not the best idea
+      if found == true && p.struct?  &&  !p.classified?
+                 
+      raise RuntimeError, "Duplicate use of `#{p.basic_type}` type name. Consider using classified types."
         # found a nested hash 
-        complex_class = complex_class+timestamp.to_s
-        p.timestamp = timestamp.to_s
+        #complex_class = complex_class+timestamp.to_s
+       # p.timestamp = timestamp.to_s
       end
     elsif !complex_class.nil? && defined.blank? and p.timestamp
       complex_class = complex_class+p.timestamp
