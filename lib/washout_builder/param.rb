@@ -14,7 +14,7 @@ module WashoutBuilder
 
       definition_class_name = nil
       if definition.is_a?(Class) && definition.ancestors.include?(WashOut::Type)
-        definition_class_name = definition.to_s.demodulize.classify
+        definition_class_name = definition.to_s.classify
         definition = definition.wash_out_param_map
       end
 
