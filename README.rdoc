@@ -53,7 +53,7 @@ The way soap_actions, or reusable types are defined or how the configuration is 
 You can still do everything that gem does .
 
 when specifying the soap_action you can also pass a option for description and a list of exceptions that the method can raise at a certain moment.
-The exception classes used must inherit from WashoutBuilder::SoapFault and have accessible_attributes in order to show up in the documentation
+The exception classes used must inherit from WashOut::SoapError and have accessible_attributes in order to show up in the documentation
 
 Here is an example :
 
