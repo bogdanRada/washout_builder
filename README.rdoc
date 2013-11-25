@@ -61,8 +61,10 @@ Please read {release details}[https://github.com/bogdanRada/washout_builder/rele
 The way soap_actions, or reusable types are defined or how the configuration is made using WashOut(https://github.com/inossidabile/wash_out)  haven't changed
 You can still do everything that gem does .
 
-when specifying the soap_action you can also pass a option for description and a list of exceptions that the method can raise at a certain moment.
+When specifying the soap_action you can also pass a option for description and a list of exceptions that the method can raise at a certain moment.
+
 The exception classes used must inherit from +WashOut::SoapError+ .
+
 This class +WashOut::SoapError+ has  by default  a error code and a message as attribute but you can extend it by adding more accessible_attributes to your own custom class. 
 
 Here is an example :
