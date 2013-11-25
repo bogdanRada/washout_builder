@@ -62,7 +62,8 @@ The way soap_actions, or reusable types are defined or how the configuration is 
 You can still do everything that gem does .
 
 when specifying the soap_action you can also pass a option for description and a list of exceptions that the method can raise at a certain moment.
-The exception classes used must inherit from WashOut::SoapError and have accessible_attributes in order to show up in the documentation
+The exception classes used must inherit from +WashOut::SoapError+ .
+This class +WashOut::SoapError+ has  by default  a error code and a message as attribute but you can extend it by adding more accessible_attributes to your own custom class. 
 
 Here is an example :
 
@@ -82,20 +83,7 @@ You can access the url +/washout+ and you will see a list with available service
 
 If you want to access directly the hml documentation that was generated for RumbasController  you can do that by accessing url +/rumbas/doc+ And the WSDL will be available at +/rumbas/wsdl+
 
-= Setup  custom  exceptions
 
-There is a class WashOut::SoapError
-This class has as attributes :  a error_code, and a message. 
-
-If you only  want to send a faultcode for your exception in the webservice application you can do this
-
- class MyException < WashOut::SoapError; end
- 
-and then when you raise it in the code you can do this 
-
-  raise MyException.new (1001, "damn! found a error") . 
-
-This exception is going to be catched by the gem and is going to send it to the client with the specified fault code and message
 
 = Testing
 
