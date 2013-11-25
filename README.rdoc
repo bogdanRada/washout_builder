@@ -53,6 +53,8 @@ Or if you want this to be available only in development mode , you can do someth
     gem 'washout_builder'            # The documentation will only be available in development mode. 
   end
 
+Just make sure that the requirements for this gem are met and everything should be fine. 
+
 Please read {release details}[https://github.com/bogdanRada/washout_builder/releases] if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
 
 = Usage
