@@ -63,9 +63,9 @@ You can still do everything that gem does .
 
 When specifying the <b>soap_action</b> you can also pass a <b>option for description</b> and a <b>list of exceptions</b> that the method can raise at a certain moment.
 
-The exception classes used <b>must inherit</b> from  <tt>WashOut::Dispatcher::SOAPError</tt>
+The exception classes used <b>must inherit</b> from  <tt>WashOut::Dispatcher::SOAPError</tt>, which has  by default  a error code and a message as attributes but you can extend it by adding more accessible_attributes to your own custom class. 
 
-This class  <tt>WashOut::Dispatcher::SOAPError</tt> has  by default  a error code and a message as attributes but you can extend it by adding more accessible_attributes to your own custom class. 
+<b> If your custom exception class doesn't  have any accesible_attributes, they will not appear in the documentation!!!</b> 
 
 Here is an example :
 
