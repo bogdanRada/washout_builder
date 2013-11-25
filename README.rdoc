@@ -65,7 +65,7 @@ When specifying the soap_action you can also pass a option for description and a
 
 The exception classes used must inherit from  <tt>WashOut::SoapError</tt>
 
-This class  <tt>WashOut::SoapError</tt> has  by default  a error code and a message as attribute but you can extend it by adding more accessible_attributes to your own custom class. 
+This class  <tt>WashOut::SoapError</tt> has  by default  a error code and a message as attributes but you can extend it by adding more accessible_attributes to your own custom class. 
 
 Here is an example :
 
