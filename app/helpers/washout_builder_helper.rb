@@ -158,7 +158,7 @@ module WashoutBuilderHelper
     xml.h3 "#{param}"
     xml.a("name" => "#{param}") {}
     xml.ul("class" => "pre") {
-      if param.ancestors.include?(WashoutBuilder::SoapFault)
+      if param.ancestors.include?(WashOut::Dispatcher::SOAPError)
 
         param.accessible_attributes.each do |attribute|
           xml.li { |pre|
