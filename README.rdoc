@@ -43,7 +43,7 @@ Add the following to your Gemfile:
   
   gem "washout_builder"
 
-it will automatically install  also wash_out  that is currently used
+it will automatically install  also +wash_out+ gem  that is currently used
 
 Please read {release details}[https://github.com/bogdanRada/washout_builder/releases] if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
 
