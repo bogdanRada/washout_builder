@@ -21,7 +21,7 @@ The way WashOut is used is not modified, it just extends its functionality by pr
 
 1. {Ruby 1.9.x}[http://www.ruby-lang.org]
 2. {Ruby on Rails}[http://rubyonrails.org].
-3. {WashOut Gem v. 0.9.0}[https://github.com/inossidabile/wash_out]
+3. {WashOut Gem v. 0.9.1}[https://github.com/inossidabile/wash_out]
 4. {Nori Gem}[https://github.com/savonrb/nori]
 
 = Compatibility
@@ -40,10 +40,10 @@ Type the following from the command line to install:
 
 Add the following to your Gemfile:
 
-  gem 'wash_out',"~> 0.9.0", git: 'git://github.com/inossidabile/wash_out.git'
+  
   gem "washout_builder"
 
-it will automatically install  also wash_out version 0.9.0 that is currently used
+it will automatically install  also wash_out  that is currently used
 
 Please read {release details}[https://github.com/bogdanRada/washout_builder/releases] if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
 
