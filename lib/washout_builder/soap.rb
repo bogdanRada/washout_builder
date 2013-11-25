@@ -21,9 +21,7 @@ module WashoutBuilder
         
           current_action[:input] = WashoutBuilder::Param.parse_def(soap_config, options[:args])
           current_action[:output] = WashoutBuilder::Param.parse_def(soap_config, options[:return])
-          current_action[:description] = options[:description]
-          current_action[:raises] = options[:raises]
-        
+         
       end
     end
     

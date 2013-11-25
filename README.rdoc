@@ -74,32 +74,18 @@ If you want to access directly the hml documentation that was generated for Rumb
 
 = Setup  custom  exceptions
 
-There is a class WashoutBuilder::SoapFault
-This class has as attributes :  a faultCode, a faultString (or message) and another attribute errors. The third attribute is optional
+There is a class WashOut::SoapError
+This class has as attributes :  a error_code, and a message. 
 
 If you only  want to send a faultcode for your exception in the webservice application you can do this
 
- class MyException < WashoutBuilder::SoapFault end
+ class MyException < WashOut::SoapError; end
  
 and then when you raise it in the code you can do this 
 
   raise MyException.new (1001, "damn! found a error") . 
 
-The first argument can be a integer or a string representing a faultcode that both the webservice and the client know about.
-And the second is a message for the error. 
-
 This exception is going to be catched by the gem and is going to send it to the client with the specified fault code and message
-
-But let's think things even further than that. Let's say you want to raise this exception when you validate a object and also send the fields and the message for why each field in that group is not valid
-You can easily do that by passing a third argument an array that contains hashes in this form
-
- { :related => "the object's field name that is not valid",
-    :message => "why is not valid",
-    :arguments => "possible arguments"             # this doesn't necessarily need to be string, it can be array or hash . but it can't be a class 
- }
-
-If your class MyException still needs more attribute you can define them in the classs and they will also be passed to the client when the exception will be raised.
-Also if you override the initialize method don't forget to call +super+ at the end of the method so that the attributes from the parent class will be correctly instantiated.
 
 = Testing
 

@@ -18,15 +18,6 @@ module WashoutBuilder
         :content_type => 'text/html'
     end
 
-
-    def _render_soap_fault_exception(error)
-      render :template => "wash_with_soap/#{soap_config.wsdl_style}/custom_error", :status => 500,
-        :layout => false,
-        :locals => { :error_message => error.message, :error_faultcode => error.faultCode, :errors => error.errors },
-        :content_type => 'text/xml'
-    end
-
-
     def self.included(controller)
       controller.send :rescue_from, WashOut::Dispatcher::SOAPError, :with => :_render_soap_exception
       controller.send :helper, :wash_out, :washout_builder
@@ -43,7 +34,7 @@ module WashoutBuilder
     def _catch_soap_faults
       yield
     rescue => exception
-      if exception.class <= WashoutBuilder::SoapFault
+      if exception.class <= WashOut::Dispatcher::SOAPError
         _render_soap_fault_exception(exception)
       else
         raise exception
