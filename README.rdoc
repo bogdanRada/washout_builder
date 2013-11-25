@@ -47,11 +47,11 @@ it will automatically install  also +wash_out+ gem  that is currently used
 
 Or if you want this to be available only in development mode , you can do something like this inside the Gemfile:
 
-gem 'wash_out'       # The WashOut gem  would be used also  in production 
+  gem 'wash_out'       # The WashOut gem  would be used also  in production 
 
-group :development, :test do
-  gem 'washout_builder'            # The documentation will only be available in development mode. 
-end
+  group :development, :test do
+    gem 'washout_builder'            # The documentation will only be available in development mode. 
+  end
 
 Please read {release details}[https://github.com/bogdanRada/washout_builder/releases] if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
 
