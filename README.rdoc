@@ -63,7 +63,7 @@ You can still do everything that gem does .
 
 When specifying the soap_action you can also pass a option for description and a list of exceptions that the method can raise at a certain moment.
 
-The exception classes used must inherit from +WashOut::SoapError+ .
+The exception classes used must inherit from  +WashOut::SoapError+
 
 This class +WashOut::SoapError+ has  by default  a error code and a message as attribute but you can extend it by adding more accessible_attributes to your own custom class. 
 
