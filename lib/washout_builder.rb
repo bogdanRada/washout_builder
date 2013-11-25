@@ -1,5 +1,5 @@
 require 'wash_out'
-require 'washout_builder/soap_fault'
+
 require 'washout_builder/soap'
 require 'washout_builder/param'
 require 'washout_builder/engine'
