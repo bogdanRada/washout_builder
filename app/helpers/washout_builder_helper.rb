@@ -42,7 +42,6 @@ module WashoutBuilderHelper
         defined.concat(nested)
       end
     end
-    defined <<  {:class =>"ValidationErrors", :obj => nil} unless get_fault_types_names(map).blank?
     defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
   end
 
@@ -66,16 +65,7 @@ module WashoutBuilderHelper
 
 
 
-  def create_html_complex_type_validation_errors(xml)
-    xml.a( "name" => "ValidationErrors")  { }
-    xml.h3 "ValidationErrors"
 
-    xml.ul("class" => "pre") {
-      xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>related</span>" }
-      xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>message</span>" }
-      xml.li { |pre| pre << "<span class='blue'>Array of string</span>&nbsp;<span class='bold'>arguments</span>" }
-    }
-  end
 
 
 

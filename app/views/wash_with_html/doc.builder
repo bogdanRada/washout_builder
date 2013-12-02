@@ -99,7 +99,6 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
 
 
     unless @fault_types.blank?
-        create_html_complex_type_validation_errors(xml)
        xml.h2 "Fault types:"
        create_html_fault_types_details(xml, @map)
      end
