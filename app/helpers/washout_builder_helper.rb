@@ -7,11 +7,9 @@ module WashoutBuilderHelper
     
     if !complex_class.nil? && !defined.blank?
      
-      found = false
-      defined.each do |hash|
-        found = true if hash[:class] == complex_class
-      end
-      if found == true && p.struct?  &&  !p.classified? && p.source_class_name.blank?
+      complex_obj_found = defined.detect {|hash|   hash[:class] == complex_class}
+    
+      if !complex_obj_found.nil? && p.struct?  &&  !p.classified? && p.source_class_name.blank?
         raise RuntimeError, "Duplicate use of `#{p.basic_type}` type name. Consider using classified types."
       end
     end
