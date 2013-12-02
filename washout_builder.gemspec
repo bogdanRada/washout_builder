@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   
   s.licenses = ["MIT"]
   s.files = `git ls-files`.split("\n")
+  s.test_files = s.files.grep(/^(spec)/)
   s.require_paths = ["lib"]
   s.add_dependency("nori", ">= 2.0.0")
   s.add_dependency("wash_out", "= 0.9.1")
