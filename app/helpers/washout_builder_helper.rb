@@ -52,7 +52,7 @@ module WashoutBuilderHelper
       unless faults.blank?
         faults = [formats[:raises]] if !faults.is_a?(Array)
         faults.each do |p|
-          defined << p.to_s.classify
+          defined << p.class.to_s
         end
       end
     end
@@ -125,7 +125,7 @@ module WashoutBuilderHelper
       end
     end
     unless defined.blank?
-      defined =  defined.sort_by { |name| name.to_s.downcase }.uniq
+      defined =  defined.sort_by { |name| name.class.to_s.downcase }.uniq
       defined.each do |fault|
         create_html_fault_type(xml, fault)
       end
@@ -133,25 +133,28 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_type(xml, param)
-      if param.ancestors.include?(WashOut::Dispatcher::SOAPError)
-    xml.h3 "#{param}"
-    xml.a("name" => "#{param}") {}
-    xml.ul("class" => "pre") {
-    
-
-        param.accessible_attributes.each do |attribute|
-          xml.li { |pre|
-            if WashoutBuilder::Type::BASIC_TYPES.include?(attribute.class.name.downcase) && attribute != "errors"
-              pre << "<span class='blue'>#{attribute.class.name.downcase}</span>&nbsp;<span class='bold'>#{attribute}</span>"
-            elsif attribute == "errors"
-              pre << "<a href='#ValidationErrors'><span class='lightBlue'>Array of ValidationErrors</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
-            else
-              pre << "<a href='##{attribute.class.name}'><span class='lightBlue'>#{attribute.class.name}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
-            end
-          }
+    if param.class.ancestors.include?(WashOut::Dispatcher::SOAPError)
+      xml.h3 "#{param.class}"
+      xml.a("name" => "#{param.class}") {}
+      xml.ul("class" => "pre") {
+      
+      
+        param.class.accessible_attributes.each do |attribute|
+          if attribute!="code" && attribute != "message"  && attribute!= 'backtrace'
+            attribute_class = param.send(attribute).class.name.downcase
+            xml.li { |pre|
+              if WashoutBuilder::Type::BASIC_TYPES.include?(attribute_class) || attribute_class == "nilclass" 
+                pre << "<span class='blue'>#{attribute_class == "nilclass" ? "string" : attribute_class }</span>&nbsp;<span class='bold'>#{attribute}</span>"
+              else
+                pre << "<a href='##{attribute.class.name}'><span class='lightBlue'>#{attribute.class.name}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
+              end
+            }
+          end
         end
+        xml.li { |pre| pre << "<span class='blue'>integer</span>&nbsp;<span class='bold'>code</span>" }
+        xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>message</span>" }
         xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>backtrace</span>" }
-    }
+      }
     end
   end
 
