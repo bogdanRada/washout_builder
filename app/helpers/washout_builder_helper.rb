@@ -46,27 +46,13 @@ module WashoutBuilderHelper
   end
 
   def get_fault_types_names(map)
-    defined = []
-    map.each do |operation, formats|
-      faults = formats[:raises]
-      unless faults.blank?
-        faults = [formats[:raises]] if !faults.is_a?(Array)
-        faults.each do |p|
-          defined << p.class.to_s
-        end
-      end
-    end
-    defined.sort_by { |name| name.downcase }.uniq unless defined.blank?
+    defined = map.select{|operation, formats| !formats[:raises].blank? }
+    defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.map{|item| item.class.to_s }.sort_by { |name| name.downcase }.uniq unless defined.blank?
   end
 
   def get_soap_action_names(map)
-    map.sort_by { |operation, formats| operation.downcase }.map{|operation, formats| operation.to_s }.uniq unless map.blank?
+    map.map{|operation, formats| operation.to_s }.sort_by { |name| name.downcase }.uniq unless map.blank?
   end
-
-
-
-
-
 
 
   def create_html_complex_types(xml, types)
@@ -111,21 +97,9 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_types_details(xml, map)
-    defined = []
-    unless map.blank?
-      map =  map.sort_by { |operation, formats| formats[:raises].to_s.downcase }.uniq
-      map.each do |operation, formats|
-        faults = formats[:raises]
-        unless faults.blank?
-          faults = [formats[:raises]] if !faults.is_a?(Array)
-          faults.each do |p|
-            defined << p
-          end
-        end
-      end
-    end
+     defined = map.select{|operation, formats| !formats[:raises].blank? }
     unless defined.blank?
-      defined =  defined.sort_by { |name| name.class.to_s.downcase }.uniq
+      defined =  defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.sort_by { |item| item.class.to_s.downcase }.uniq
       defined.each do |fault|
         create_html_fault_type(xml, fault)
       end
