@@ -97,7 +97,7 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_types_details(xml, map)
-     defined = map.select{|operation, formats| !formats[:raises].blank? }
+    defined = map.select{|operation, formats| !formats[:raises].blank? }
     unless defined.blank?
       defined =  defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.sort_by { |item| item.class.to_s.downcase }.uniq
       defined.each do |fault|

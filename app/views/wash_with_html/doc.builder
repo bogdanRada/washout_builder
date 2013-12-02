@@ -21,20 +21,15 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
     .blue{color:#3400FF;}
     .lightBlue{color:#5491AF;}
       "
-
     }
 
     xml.style( "type"=>"text/css", "media" => "print" ) { xml.text! "
     .noprint{display:none;}
       "
-
     }
-
-
   }
 
   xml.body {
-
 
     xml.h1 "#{ @service} Soap WebService interface description"
 
@@ -63,7 +58,6 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         end
       end
 
-
       @fault_types = get_fault_types_names(@map)
       unless @fault_types.blank?
         xml.p  "Fault Types: "
@@ -74,7 +68,6 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
           end
         end
       end
-
 
       methods = get_soap_action_names(@map)
       unless methods.blank?
@@ -87,30 +80,18 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         end
       end
 
-
-
     }
 
-
     xml.h2 "Complex types:"
-
     create_html_complex_types(xml, @complex_types)
 
-
-
     unless @fault_types.blank?
-       xml.h2 "Fault types:"
-       create_html_fault_types_details(xml, @map)
-     end
-
-
+      xml.h2 "Fault types:"
+      create_html_fault_types_details(xml, @map)
+    end
 
     xml.h2 "Public methods:"
     create_html_public_methods(xml, @map)
-
-
-
-
 
   }
 
