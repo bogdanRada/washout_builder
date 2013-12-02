@@ -26,9 +26,7 @@ module WashoutBuilderHelper
       c_names = []
       param.map.each do |obj|
         nested = get_nested_complex_types(obj, defined)
-        nested.each  do |hash|
-          c_names << hash
-        end
+        c_names.concat(nested)
       end
       defined.concat(c_names)
     end
@@ -41,9 +39,7 @@ module WashoutBuilderHelper
     map.each do |operation, formats|
       (formats[:input] + formats[:output]).each do |p|
         nested = get_nested_complex_types(p, defined)
-        nested.each  do |hash|
-          defined << hash
-        end
+        defined.concat(nested)
       end
     end
     defined <<  {:class =>"ValidationErrors", :obj => nil} unless get_fault_types_names(map).blank?
@@ -65,13 +61,7 @@ module WashoutBuilderHelper
   end
 
   def get_soap_action_names(map)
-    defined = []
-    unless map.blank?
-      map.each do |operation, formats|
-        defined << operation.to_s
-      end
-    end
-    defined.sort_by { |name| name.downcase }.uniq unless defined.blank?
+    map.sort_by { |operation, formats| operation.downcase }.map{|operation, formats| operation.to_s }.uniq unless map.blank?
   end
 
 
