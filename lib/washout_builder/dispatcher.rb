@@ -13,6 +13,7 @@ module WashoutBuilder
       @name      = controller_path.gsub('/', '_')
       @service = self.class.name.underscore.gsub("_controller", "").camelize
       @endpoint  = @namespace.gsub("/wsdl", "/action")
+       @soap_config = soap_config
 
       render :template => "wash_with_html/doc", :layout => false,
         :content_type => 'text/html'

@@ -21,7 +21,21 @@ module WashoutBuilderHelper
   def get_nested_complex_types(param, defined)
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
-    defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
+    if param.classified?
+      param_class = complex_class.constantize
+      ancestors  = param_class.ancestors - param_class.included_modules 
+       ancestors.delete_if{ |x| x.to_s == complex_class ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" }
+       unless ancestors.blank?
+         ancestors.each do |ancestor_class|
+           ancestor_structure =  ancestor_class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h }
+           ancestor_structure = {ancestor_class.to_s.downcase => ancestor_structure}
+               defined << {:class =>ancestor_class.to_s, :obj => WashoutBuilder::Param.parse_def(@soap_config,ancestor_structure, true)[0]}
+         end
+       end
+       defined << {:class =>complex_class, :obj => param, :ancestors => ancestors} unless complex_class.nil?
+    else
+      defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
+    end
     if param.is_complex?
       c_names = []
       param.map.each do |obj|
@@ -57,21 +71,22 @@ module WashoutBuilderHelper
 
   def create_html_complex_types(xml, types)
     types.each do |hash|
-      create_complex_type_html(xml, hash[:obj], hash[:class])
+      create_complex_type_html(xml, hash[:obj], hash[:class], hash[:ancestors])
     end
   end
 
 
 
-  def create_complex_type_html(xml, param, class_name)
+  def create_complex_type_html(xml, param, class_name, ancestors)
     unless param.blank?
       xml.a( "name" => "#{class_name}")  { }
-      xml.h3 "#{class_name}"
+      xml.h3  { |pre| pre << "#{class_name} #{ancestors.blank? ? "" : "(extends <a href='##{ancestors[0].to_s.classify}'> #{ancestors[0].to_s.classify} )</a>" } " }
 
       if param.is_a?(WashoutBuilder::Param)
         xml.ul("class" => "pre") {
-
+          
           param.map.each do |element|
+            element.type = "string" if element.type == "text"
             # raise YAML::dump(element) if class_name.include?("ype") and element.name == "members"
             xml.li { |pre|
               if WashoutBuilder::Type::BASIC_TYPES.include?(element.type)
