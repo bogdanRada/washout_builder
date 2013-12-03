@@ -249,7 +249,7 @@ module WashoutBuilderHelper
       xml.p "Exceptions:"
       xml.ul {
         faults.each do |p|
-          xml.li("class" => "pre"){ |y| y<< "<a href='##{p.to_s.classify}'><span class='lightBlue'> #{p.to_s.classify}</span></a>" }
+          xml.li("class" => "pre"){ |y| y<< "<a href='##{p.class.to_s}'><span class='lightBlue'> #{p.class.to_s}</span></a>" }
         end
       }
     end
