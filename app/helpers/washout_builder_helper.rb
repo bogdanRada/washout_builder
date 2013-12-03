@@ -18,18 +18,46 @@ module WashoutBuilderHelper
   end
 
   
-  def get_class_ancestors(class_name, defined)
-      param_class = class_name.is_a?(Class) ? class_name : class_name.constantize 
-      ancestors  = param_class.ancestors - param_class.included_modules 
-       ancestors.delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
-       unless ancestors.blank?
-         ancestors.each do |ancestor_class|
-           ancestor_structure =  {ancestor_class.to_s.downcase => ancestor_class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
-           top_ancestors = get_class_ancestors(ancestor_class, defined)
-               defined << {:class =>ancestor_class.to_s, :obj => WashoutBuilder::Param.parse_def(@soap_config,ancestor_structure)[0] ,  :ancestors => top_ancestors   }
-         end
-       end
-       ancestors
+  def get_param_structure(param)
+    param.map.inject({}) {|h,element|  h[element.name] = element.type;h }
+  end
+  
+  
+  def remove_type_inheritable_elements(param, keys)
+    param.map.delete_if{|element|  keys.include?(element.name) }
+  end
+  
+  
+  def  same_structure_as_ancestor?(param, ancestor)
+    param_structure = get_param_structure(param)
+    ancestor_structure = get_param_structure(ancestor)
+    if  param_structure.keys == ancestor_structure.keys
+      return true
+    else 
+      remove_type_inheritable_elements(param, ancestor_structure.keys)
+      return false
+    end
+  end
+  
+  
+  
+  
+  def get_class_ancestors(param,class_name, defined)
+    bool_the_same = false
+    param_class = class_name.is_a?(Class) ? class_name : class_name.constantize 
+    ancestors  = param_class.ancestors - param_class.included_modules 
+    ancestors.delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
+    unless ancestors.blank?
+      ancestor_class = ancestors[0]
+      ancestor_structure =  {ancestor_class.to_s.downcase => ancestor_class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
+      ancestor_object =  WashoutBuilder::Param.parse_def(@soap_config,ancestor_structure)[0]
+      bool_the_same = same_structure_as_ancestor?(param, ancestor_object)
+      unless bool_the_same
+        top_ancestors = get_class_ancestors(ancestor_class, defined)
+        defined << {:class =>ancestor_class.to_s, :obj =>ancestor_object ,  :ancestors => top_ancestors   }
+      end
+    end
+    ancestors unless  bool_the_same
   end
   
 
@@ -37,7 +65,7 @@ module WashoutBuilderHelper
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
     if param.classified? 
-      defined << {:class =>complex_class, :obj => param, :ancestors => get_class_ancestors(complex_class, defined)} unless complex_class.nil?
+      defined << {:class =>complex_class, :obj => param, :ancestors => get_class_ancestors(param, complex_class, defined)} unless complex_class.nil?
     else
       defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
     end
