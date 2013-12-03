@@ -21,7 +21,7 @@ module WashoutBuilderHelper
   def get_class_ancestors(class_name, defined)
       param_class = class_name.is_a?(Class) ? class_name : class_name.constantize 
       ancestors  = param_class.ancestors - param_class.included_modules 
-       ancestors.delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" }
+       ancestors.delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
        unless ancestors.blank?
          ancestors.each do |ancestor_class|
            ancestor_structure =  {ancestor_class.to_s.downcase => ancestor_class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
@@ -36,7 +36,7 @@ module WashoutBuilderHelper
   def get_nested_complex_types(param, defined)
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
-    if param.classified?
+    if param.classified? 
       defined << {:class =>complex_class, :obj => param, :ancestors => get_class_ancestors(complex_class, defined)} unless complex_class.nil?
     else
       defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
