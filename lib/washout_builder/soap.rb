@@ -28,6 +28,7 @@ module WashoutBuilder
 
     included do
       include WashOut::Configurable
+      include  WashOut::Dispatcher
       include WashoutBuilder::Dispatcher
       self.soap_actions = {}
     end

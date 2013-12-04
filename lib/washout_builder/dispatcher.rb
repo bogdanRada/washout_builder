@@ -5,7 +5,6 @@ module WashoutBuilder
   # as a SOAP endpoint. It includes actions for generating WSDL and handling
   # SOAP requests.
   module Dispatcher
-    extend WashOut::Dispatcher
 
     def _generate_doc
       @map       = self.class.soap_actions
