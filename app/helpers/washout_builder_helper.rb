@@ -2,10 +2,9 @@ module WashoutBuilderHelper
   include WashOutHelper
 
   def get_complex_class_name(p, defined = [])
-    complex_class = nil
-    complex_class = p.basic_type.to_s.classify  if p.is_complex?
-    
-    if !complex_class.nil? && !defined.blank?
+    complex_class =  p.is_complex? ? p.basic_type.to_s.classify : nil 
+      
+    unless complex_class.nil? || defined.blank?
      
       complex_obj_found = defined.detect {|hash|   hash[:class] == complex_class}
     
@@ -45,11 +44,9 @@ module WashoutBuilderHelper
   def get_class_ancestors(param,class_name, defined)
     bool_the_same = false
     param_class = class_name.is_a?(Class) ? class_name : class_name.constantize 
-    ancestors  = param_class.ancestors - param_class.included_modules 
-    ancestors.delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
+    ancestors  = (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
     unless ancestors.blank?
-      ancestor_class = ancestors[0]
-      ancestor_structure =  {ancestor_class.to_s.downcase => ancestor_class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
+      ancestor_structure =  { ancestors[0].to_s.downcase =>  ancestors[0].columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
       ancestor_object =  WashoutBuilder::Param.parse_def(@soap_config,ancestor_structure)[0]
       bool_the_same = same_structure_as_ancestor?(param, ancestor_object)
       unless bool_the_same
@@ -64,17 +61,10 @@ module WashoutBuilderHelper
   def get_nested_complex_types(param, defined)
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
-    if param.classified? 
-      defined << {:class =>complex_class, :obj => param, :ancestors => get_class_ancestors(param, complex_class, defined)} unless complex_class.nil?
-    else
-      defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
-    end
+    defined << {:class =>complex_class, :obj => param, :ancestors => param.classified?  ?  get_class_ancestors(param, complex_class, defined) : nil } unless complex_class.nil?
     if param.is_complex?
       c_names = []
-      param.map.each do |obj|
-        nested = get_nested_complex_types(obj, defined)
-        c_names.concat(nested)
-      end
+      param.map.each { |obj|   c_names.concat(get_nested_complex_types(obj, defined))  }        
       defined.concat(c_names)
     end
     defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
@@ -85,8 +75,7 @@ module WashoutBuilderHelper
     defined = []
     map.each do |operation, formats|
       (formats[:input] + formats[:output]).each do |p|
-        nested = get_nested_complex_types(p, defined)
-        defined.concat(nested)
+        defined.concat(get_nested_complex_types(p, defined))
       end
     end
     defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
@@ -103,9 +92,7 @@ module WashoutBuilderHelper
 
 
   def create_html_complex_types(xml, types)
-    types.each do |hash|
-      create_complex_type_html(xml, hash[:obj], hash[:class], hash[:ancestors])
-    end
+    types.each  { |hash| create_complex_type_html(xml, hash[:obj], hash[:class], hash[:ancestors]) }
   end
 
 
@@ -148,9 +135,7 @@ module WashoutBuilderHelper
     defined = map.select{|operation, formats| !formats[:raises].blank? }
     unless defined.blank?
       defined =  defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.sort_by { |item| item.class.to_s.downcase }.uniq
-      defined.each do |fault|
-        create_html_fault_type(xml, fault)
-      end
+      defined.each {  |fault| create_html_fault_type(xml, fault) }  
     end
   end
 
@@ -183,10 +168,7 @@ module WashoutBuilderHelper
   def create_html_public_methods(xml, map)
     unless map.blank?
       map =map.sort_by { |operation, formats| operation.downcase }.uniq
-
-      map.each do |operation, formats|
-        create_html_public_method(xml, operation, formats)
-      end
+      map.each {  |operation, formats| create_html_public_method(xml, operation, formats) }
     end
   end
 
