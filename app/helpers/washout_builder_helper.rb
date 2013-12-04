@@ -64,10 +64,10 @@ module WashoutBuilderHelper
   def get_nested_complex_types(param, defined)
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
-    if param.classified? 
-      defined << {:class =>complex_class, :obj => param, :ancestors => get_class_ancestors(param, complex_class, defined)} unless complex_class.nil?
+    if param.classified? && !complex_class.nil?
+      defined << {:class =>complex_class, :obj => param, :ancestors => get_class_ancestors(param, complex_class, defined)}
     else
-      defined << {:class =>complex_class, :obj => param} unless complex_class.nil?
+      defined << {:class =>complex_class, :obj => param} 
     end
     if param.is_complex?
       c_names = []
