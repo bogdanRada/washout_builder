@@ -24,17 +24,7 @@ module WashoutBuilder
         :_generate_wsdl, :_generate_doc,:_invalid_action ]
       controller.send :before_filter, :_map_soap_parameters, :except => [
         :_generate_wsdl,:_generate_doc, :_invalid_action ]
-      controller.send :around_filter, :_catch_soap_faults
     end
     
-    def _catch_soap_faults
-      yield
-    rescue => exception
-      if exception.class <= WashOut::Dispatcher::SOAPError
-        WashOut::Dispatcher.send(:render_soap_error,exception.message, exception.code)
-      else
-        raise exception
-      end
-    end
   end
 end
