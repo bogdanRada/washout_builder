@@ -100,7 +100,7 @@ module WashoutBuilderHelper
   def create_complex_type_html(xml, param, class_name, ancestors)
     unless param.blank?
       xml.a( "name" => "#{class_name}")  { }
-      xml.h3  { |pre| pre << "#{class_name} #{ancestors.blank? ? "" : "(extends <a href='##{ancestors[0].to_s.classify}'> #{ancestors[0].to_s.classify} )</a>" } " }
+      xml.h3  { |pre| pre << "#{class_name} #{ancestors.blank? ? "" : "<small>(extends <a href='##{ancestors[0].to_s.classify}'>#{ancestors[0].to_s.classify}</a>)</small>" } " }
 
       if param.is_a?(WashoutBuilder::Param)
         xml.ul("class" => "pre") {
