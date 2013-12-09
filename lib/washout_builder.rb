@@ -25,10 +25,6 @@ end
 
 
 
-
-Mime::Type.register "application/soap+xml", :soap
-ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord) && defined?(WashOut::Model)
-ActiveRecord::Base.send :extend, WashOut::Rails::ActiveRecord if defined?(ActiveRecord) && defined?(WashOut::Rails::ActiveRecord)
 WashOut::Dispatcher::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::Dispatcher)
 WashOut::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::SOAPError)
 
@@ -45,9 +41,6 @@ if defined?(WashOut::Rails::Controller)
   end
 end
 
-ActionController::Renderers.add :soap do |what, options|
-  _render_soap(what, options)
-end
 
   WashOut::Param.class_eval do
    
