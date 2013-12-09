@@ -2,8 +2,9 @@ module WashoutBuilderHelper
   include WashOutHelper
 
   def get_complex_class_name(p, defined = [])
-    complex_class =  p.is_complex? ? p.basic_type.to_s.classify : nil 
-      
+    complex_class =  p.struct? ? p.basic_type : nil
+    complex_class =  complex_class.include?(".") ? complex_class.gsub(".","/").camelize : complex_class.to_s.classify    unless complex_class.nil?
+     
     unless complex_class.nil? || defined.blank?
      
       complex_obj_found = defined.detect {|hash|   hash[:class] == complex_class}
@@ -12,7 +13,7 @@ module WashoutBuilderHelper
         raise RuntimeError, "Duplicate use of `#{p.basic_type}` type name. Consider using classified types."
       end
     end
-
+   
     return complex_class
   end
 
@@ -47,7 +48,7 @@ module WashoutBuilderHelper
     ancestors  = (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
     unless ancestors.blank?
       ancestor_structure =  { ancestors[0].to_s.downcase =>  ancestors[0].columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
-      ancestor_object =  WashoutBuilder::Param.parse_def(@soap_config,ancestor_structure)[0]
+      ancestor_object =  WashOut::Param.parse_def(@soap_config,ancestor_structure)[0]
       bool_the_same = same_structure_as_ancestor?(param, ancestor_object)
       unless bool_the_same
         top_ancestors = get_class_ancestors(ancestor_class, defined)
@@ -61,8 +62,13 @@ module WashoutBuilderHelper
   def get_nested_complex_types(param, defined)
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
+    param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
+    if !param_class.nil? && param_class.ancestors.include?(WashOut::Type)
+      param.name =  param.map[0].name
+      param.map =  param.map[0].map  
+    end
     defined << {:class =>complex_class, :obj => param, :ancestors => param.classified?  ?  get_class_ancestors(param, complex_class, defined) : nil } unless complex_class.nil?
-    if param.is_complex?
+    if param.struct?
       c_names = []
       param.map.each { |obj|   c_names.concat(get_nested_complex_types(obj, defined))  }        
       defined.concat(c_names)
@@ -102,7 +108,7 @@ module WashoutBuilderHelper
       xml.a( "name" => "#{class_name}")  { }
       xml.h3  { |pre| pre << "#{class_name} #{ancestors.blank? ? "" : "<small>(extends <a href='##{ancestors[0].to_s.classify}'>#{ancestors[0].to_s.classify}</a>)</small>" } " }
 
-      if param.is_a?(WashoutBuilder::Param)
+      if param.is_a?(WashOut::Param)
         xml.ul("class" => "pre") {
           
           param.map.each do |element|
@@ -140,7 +146,8 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_type(xml, param)
-    if param.class.ancestors.include?(WashOut::Dispatcher::SOAPError)
+    ancestor_class =  defined?(WashOut::Dispatcher::SOAPError) ? WashOut::Dispatcher::SOAPError  : Washout::SoapError
+    if param.class.ancestors.include?(ancestor_class) 
       xml.h3 "#{param.class}"
       xml.a("name" => "#{param.class}") {}
       xml.ul("class" => "pre") {
