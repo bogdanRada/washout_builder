@@ -10,7 +10,6 @@ module WashoutBuilder
 
     included do
       include WashoutBuilder::Dispatcher
-      self.soap_actions = {}
     end
   end
 end

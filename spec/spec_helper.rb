@@ -1,6 +1,7 @@
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
 
+require 'active_support'
 require "simplecov"
 SimpleCov.start do
   add_filter 'spec'
@@ -13,8 +14,10 @@ end
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rails/test_help"
 require "rspec/rails"
+require 'rspec/autorun'
 require "pry"
 require "savon"
+require 'wash_out'
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -27,7 +30,7 @@ RSpec.configure do |config|
 
   config.mock_with :rspec
   config.before(:all) do
-    WashOut::Engine.config.wash_out = {
+    WashoutBuilder::Engine.config.wash_out = {
       snakecase_input: false,
       camelize_wsdl: false,
       namespace: false
