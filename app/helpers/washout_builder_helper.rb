@@ -80,7 +80,7 @@ module WashoutBuilderHelper
   def get_complex_types(map)
     defined = []
     map.each do |operation, formats|
-      (formats[:input] + formats[:output]).each do |p|
+      (formats[:in] + formats[:out]).each do |p|
         defined.concat(get_nested_complex_types(p, defined))
       end
     end
@@ -182,30 +182,30 @@ module WashoutBuilderHelper
 
 
   def create_html_public_method(xml, operation, formats)
-    # raise YAML::dump(formats[:input])
+    # raise YAML::dump(formats[:in])
     xml.h3 "#{operation}"
     xml.a("name" => "#{operation}") {}
 
 
     xml.p("class" => "pre"){ |pre|
-      if !formats[:output].nil?
-        if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:output][0].type)
-          xml.span("class" => "blue") { |y| y<<  "#{formats[:output][0].type}" }
+      if !formats[:out].nil?
+        if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
+          xml.span("class" => "blue") { |y| y<<  "#{formats[:out][0].type}" }
         else
-          xml.a("href" => "##{formats[:output][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:output][0].type}" } }
+          xml.a("href" => "##{formats[:out][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:out][0].type}" } }
         end
       else
         pre << "void"
       end
 
       xml.span("class" => "bold") {|y|  y << "#{operation} (" }
-      mlen = formats[:input].size
+      mlen = formats[:in].size
       xml.br if mlen > 1
       spacer = "&nbsp;&nbsp;&nbsp;&nbsp;"
       if mlen > 0
         j=0
         while j<mlen
-          param = formats[:input][j]
+          param = formats[:in][j]
           use_spacer =  mlen > 1 ? true : false
           if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
             pre << "#{use_spacer ? spacer: ''}<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"
@@ -241,9 +241,9 @@ module WashoutBuilderHelper
 
     xml.ul {
       j=0
-      mlen = formats[:input].size
+      mlen = formats[:in].size
       while j<mlen
-        param = formats[:input][j]
+        param = formats[:in][j]
         xml.li("class" => "pre") { |pre|
           if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
             pre << "<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"
@@ -266,12 +266,12 @@ module WashoutBuilderHelper
     xml.p "Return value:"
     xml.ul {
       xml.li {
-        if !formats[:output].nil?
+        if !formats[:out].nil?
 
-          if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:output][0].type)
-            xml.span("class" => "pre") { |xml| xml.span("class" => "blue") { |sp| sp << "#{formats[:output][0].type}" } }
+          if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
+            xml.span("class" => "pre") { |xml| xml.span("class" => "blue") { |sp| sp << "#{formats[:out][0].type}" } }
           else
-            xml.span("class" => "pre") { xml.a("href" => "##{formats[:output][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:output][0].type}" } } }
+            xml.span("class" => "pre") { xml.a("href" => "##{formats[:out][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:out][0].type}" } } }
           end
         else
           xml.span("class" => "pre") { |sp| sp << "void" }
