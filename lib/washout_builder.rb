@@ -25,7 +25,6 @@ end
 
 
 
-WashOut::Dispatcher::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::Dispatcher)
 WashOut::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::SOAPError)
 
 
