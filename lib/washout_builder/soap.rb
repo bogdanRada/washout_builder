@@ -20,8 +20,8 @@ module WashoutBuilder
           
           current_action = self.soap_actions[action]
         
-          current_action[:input] = WashoutBuilder::Param.parse_def(soap_config, options[:args])
-          current_action[:output] = WashoutBuilder::Param.parse_def(soap_config, options[:return])
+          current_action[:input] = WashOut::Param.parse_builder_def(soap_config, options[:args])
+          current_action[:output] = WashOut::Param.parse_builder_def(soap_config, options[:return])
          
       end
     end
