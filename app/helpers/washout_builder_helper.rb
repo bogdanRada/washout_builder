@@ -58,15 +58,19 @@ module WashoutBuilderHelper
     ancestors unless  bool_the_same
   end
   
+  
+  def fix_descendant_wash_out_type(param, complex_class)
+    param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
+    if !param_class.nil? && param_class.ancestors.include?(WashOut::Type)
+      param.name =  param.map[0].name 
+      param.map =  param.map[0].map  
+    end
+  end
 
   def get_nested_complex_types(param, defined)
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
-    param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
-    if !param_class.nil? && param_class.ancestors.include?(WashOut::Type)
-      param.name =  param.map[0].name
-      param.map =  param.map[0].map  
-    end
+     fix_descendant_wash_out_type(param, complex_class)
     defined << {:class =>complex_class, :obj => param, :ancestors => param.classified?  ?  get_class_ancestors(param, complex_class, defined) : nil } unless complex_class.nil?
     if param.struct?
       c_names = []
@@ -78,11 +82,11 @@ module WashoutBuilderHelper
 
 
   def get_complex_types(map)
+    array = Marshal.load( Marshal.dump(map) )
     defined = []
-    map.each do |operation, formats|
+    array.each do |operation, formats|
       (formats[:in] + formats[:out]).each do |p|
-        param = p.dup
-        defined.concat(get_nested_complex_types(param, defined))
+        defined.concat(get_nested_complex_types(p, defined))
       end
     end
     defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
@@ -207,11 +211,12 @@ module WashoutBuilderHelper
         j=0
         while j<mlen
           param = formats[:in][j]
+          complex_class = get_complex_class_name(param)  
+           fix_descendant_wash_out_type(param, complex_class)
           use_spacer =  mlen > 1 ? true : false
           if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
             pre << "#{use_spacer ? spacer: ''}<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"
           else
-            complex_class = get_complex_class_name(param)
             unless complex_class.nil?
               if  param.multiplied == false
                 pre << "#{use_spacer ? spacer: ''}<a href='##{complex_class}'><span class='lightBlue'>#{complex_class}</span></a>&nbsp;<span class='bold'>#{param.name}</span>"
@@ -245,11 +250,11 @@ module WashoutBuilderHelper
       mlen = formats[:in].size
       while j<mlen
         param = formats[:in][j]
+        complex_class = get_complex_class_name(param)  
         xml.li("class" => "pre") { |pre|
           if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
             pre << "<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"
           else
-            complex_class = get_complex_class_name(param)
             unless complex_class.nil?
               if  param.multiplied == false
                 pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_class}</span></a>&nbsp;<span class='bold'>#{param.name}</span>"
