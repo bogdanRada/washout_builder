@@ -81,7 +81,8 @@ module WashoutBuilderHelper
     defined = []
     map.each do |operation, formats|
       (formats[:in] + formats[:out]).each do |p|
-        defined.concat(get_nested_complex_types(p, defined))
+        param = p.dup
+        defined.concat(get_nested_complex_types(param, defined))
       end
     end
     defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
