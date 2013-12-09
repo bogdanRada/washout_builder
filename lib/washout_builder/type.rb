@@ -1,6 +1,5 @@
 module WashoutBuilder
-  class Type < WashOut::Type
-
+  class Type 
 
     BASIC_TYPES=[
       "string",

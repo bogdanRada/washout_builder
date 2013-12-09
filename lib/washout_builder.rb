@@ -28,11 +28,22 @@ end
 
 
 Mime::Type.register "application/soap+xml", :soap
-ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord)
-WashOut::Dispatcher::SOAPError.send :include, ActiveModel::MassAssignmentSecurity
+ActiveRecord::Base.send :extend, WashOut::Model if defined?(ActiveRecord) && defined?(WashOut::Model)
+ActiveRecord::Base.send :extend, WashOut::Rails::ActiveRecord if defined?(ActiveRecord) && defined?(WashOut::Rails::ActiveRecord)
+WashOut::Dispatcher::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::Dispatcher)
+WashOut::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::SOAPError)
 
-WashOut::SOAP::ClassMethods.class_eval do
-  alias_method :original_soap_action, :soap_action
+
+if defined?(WashOut::Soap)
+  WashOut::SOAP::ClassMethods.class_eval do
+    alias_method :original_soap_action, :soap_action
+  end
+end
+
+if defined?(WashOut::Rails::Controller)
+  WashOut::Rails::Controller::ClassMethods.class_eval do
+    alias_method :original_soap_action, :soap_action
+  end
 end
 
 ActionController::Renderers.add :soap do |what, options|
