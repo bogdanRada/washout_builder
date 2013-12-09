@@ -29,40 +29,6 @@ WashOut::Dispatcher::SOAPError.send :include, ActiveModel::MassAssignmentSecurit
 WashOut::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::SOAPError)
 
 
-if defined?(WashOut::SOAP)
-  WashOut::SOAP::ClassMethods.class_eval do
-    alias_method :original_soap_action, :soap_action
-  end
-end
-
-if defined?(WashOut::Rails::Controller)
-  WashOut::Rails::Controller::ClassMethods.class_eval do
-    alias_method :original_soap_action, :soap_action
-  end
-end
-
-
-  WashOut::Param.class_eval do
-   
-    def self.parse_builder_def(soap_config, definition)
-      raise RuntimeError, "[] should not be used in your params. Use nil if you want to mark empty set." if definition == []
-      return [] if definition == nil
-
-      definition = { :value => definition } unless definition.is_a?(Hash)
-
-      definition.collect do |name, opt|
-        if opt.is_a? WashOut::Param
-          opt
-        elsif opt.is_a? Array
-          WashOut::Param.new(soap_config, name, opt[0], true)
-        else
-          WashOut::Param.new(soap_config, name, opt)
-        end
-      end
-    end
-  
-  end
-
 
 
 
