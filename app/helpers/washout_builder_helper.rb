@@ -96,7 +96,7 @@ module WashoutBuilderHelper
 
   def get_fault_types_names(map)
     defined = map.select{|operation, formats| !formats[:raises].blank? }
-    defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
+    defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.is_a?(Class) && x.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
     defined.map{|item| item.to_s }.sort_by { |name| name.downcase }.uniq unless defined.blank?
   end
 
@@ -154,7 +154,7 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_type(xml, param)
-  #  if param.class.ancestors.include?(WashOut::SOAPError) 
+    if param.is_a?(Class) &&  param.ancestors.include?(WashOut::SOAPError) 
       xml.h3 "#{param}"
       xml.a("name" => "#{param}") {}
       xml.ul("class" => "pre") {
@@ -173,7 +173,7 @@ module WashoutBuilderHelper
         end
         xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>backtrace</span>" }
       }
-   # end
+    end
   end
 
   def create_html_public_methods(xml, map)
@@ -287,7 +287,7 @@ module WashoutBuilderHelper
       faults = formats[:raises]
       faults = [formats[:raises]] if !faults.is_a?(Array)
       
-      faults = faults.select { |x| x.ancestors.include?(WashOut::SOAPError) }
+      faults = faults.select { |x| x.is_a?(Class) && x.ancestors.include?(WashOut::SOAPError) }
       unless faults.blank?
         xml.p "Exceptions:"
         xml.ul {
