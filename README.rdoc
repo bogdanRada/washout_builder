@@ -76,7 +76,7 @@ The WashOut::SoapError now includes Virtus.model from +virtus+ gem. This way you
   
    end
 
-<b> If your custom exception class doesn't  have any accesible_attributes, these attributes will not appear in the documentation!!!</b> 
+<b> If your custom exception class doesn't  have any  attributes set, only the inherited attributes will appear!!!</b> 
 
 Here is an example :
 
