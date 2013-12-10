@@ -44,7 +44,8 @@ module WashoutBuilderHelper
   
   def get_class_ancestors(param,class_name, defined)
     bool_the_same = false
-    param_class = class_name.is_a?(Class) ? class_name : class_name.constantize 
+    param_class = class_name.is_a?(Class) ? class_name : class_name.constantize rescue nil
+    unless param_class.nil?
     ancestors  = (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
     unless ancestors.blank?
       ancestor_structure =  { ancestors[0].to_s.downcase =>  ancestors[0].columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
@@ -56,6 +57,7 @@ module WashoutBuilderHelper
       end
     end
     ancestors unless  bool_the_same
+    end
   end
   
   
