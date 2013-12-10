@@ -1,5 +1,5 @@
 require 'wash_out'
-
+require 'virtus'
 require 'washout_builder/soap'
 require 'washout_builder/engine'
 require 'washout_builder/dispatcher'
@@ -25,10 +25,12 @@ end
 
 
 
-WashOut::SOAPError.send :include, ActiveModel::MassAssignmentSecurity if defined?(WashOut::SOAPError) && defined?(ActiveModel::MassAssignmentSecurity)
+WashOut::SOAPError.send :include, Virtus.model
 
-
-
+WashOut::SOAPError.class_eval do
+  attribute :code, Integer
+  attribute :message, String
+end
 
 
 ActionController::Base.class_eval do
