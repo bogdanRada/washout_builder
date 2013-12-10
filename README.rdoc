@@ -22,6 +22,7 @@ The way WashOut is used is not modified, it just extends its functionality by ge
 2. {Ruby on Rails}[http://rubyonrails.org].
 3. {WashOut Gem version >= 0.10.0.beta.1}[https://github.com/inossidabile/wash_out]
 4. {Nori Gem}[https://github.com/savonrb/nori]
+5. {Virtus Gem}[https://github.com/solnic/virtus]
 
 = Compatibility
 
@@ -61,9 +62,19 @@ Please read {release details}[https://github.com/bogdanRada/washout_builder/rele
 The way soap_actions, or reusable types are defined or how the configuration is made using WashOut(https://github.com/inossidabile/wash_out)  haven't changed
 You can still do everything that gem does .
 
-When specifying the <b>soap_action</b> you can also pass a <b>option for description</b> and a <b>list of exceptions(need to be instances)</b> that the method can raise at a certain moment.
+When specifying the <b>soap_action</b> you can also pass a <b>option for description</b> and a <b>list of exceptions(need to be classes)</b> that the method can raise at a certain moment.
 
-The exception classes used <b>must inherit</b> from  <tt>WashOut::SOAPError</tt>, which has  by default  a error code and a message as attributes but you can extend it by adding more accessible_attributes to your own custom class. 
+The exception classes used <b>must inherit</b> from  <tt>WashOut::SOAPError</tt>, which has  by default  a error code and a message as attributes but you can extend it by adding more attributes to your own custom class. 
+
+The WashOut::SoapError now includes Virtus.model from +virtus+ gem. This way you can add attributes like this:
+
+
+  class MyCustomSoapError < WashOut::SOAPError
+  
+    attribute :custom_attribute, String
+    attribute :other_custom_attribute, Integer
+  
+   end
 
 <b> If your custom exception class doesn't  have any accesible_attributes, these attributes will not appear in the documentation!!!</b> 
 
