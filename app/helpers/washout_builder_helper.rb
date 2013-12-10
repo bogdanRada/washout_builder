@@ -64,14 +64,14 @@ module WashoutBuilderHelper
     if !param_class.nil? && param_class.ancestors.include?(WashOut::Type) && !param.map[0].nil? 
       descendant = WashOut::Param.parse_def(@soap_config, param_class.wash_out_param_map)[0]
       param.name =  descendant.name 
-       param.map = descendant.map
+      param.map = descendant.map
     end
   end
 
   def get_nested_complex_types(param, defined)
     defined = [] if defined.blank?
     complex_class = get_complex_class_name(param, defined)
-     fix_descendant_wash_out_type(param, complex_class)
+    fix_descendant_wash_out_type(param, complex_class)
     defined << {:class =>complex_class, :obj => param, :ancestors => param.classified?  ?  get_class_ancestors(param, complex_class, defined) : nil } unless complex_class.nil?
     if param.struct?
       c_names = []
@@ -94,7 +94,8 @@ module WashoutBuilderHelper
 
   def get_fault_types_names(map)
     defined = map.select{|operation, formats| !formats[:raises].blank? }
-    defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.map{|item| item.class.to_s }.sort_by { |name| name.downcase }.uniq unless defined.blank?
+    defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.class.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
+    defined.map{|item| item.class.to_s }.sort_by { |name| name.downcase }.uniq unless defined.blank?
   end
 
   def get_soap_action_names(map)
@@ -151,8 +152,7 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_type(xml, param)
-    ancestor_class =  defined?(WashOut::Dispatcher::SOAPError) ? WashOut::Dispatcher::SOAPError  : WashOut::SOAPError
-    if param.class.ancestors.include?(ancestor_class) 
+    if param.class.ancestors.include?(WashOut::SOAPError) 
       xml.h3 "#{param.class}"
       xml.a("name" => "#{param.class}") {}
       xml.ul("class" => "pre") {
@@ -287,13 +287,16 @@ module WashoutBuilderHelper
     unless formats[:raises].blank?
       faults = formats[:raises]
       faults = [formats[:raises]] if !faults.is_a?(Array)
-
-      xml.p "Exceptions:"
-      xml.ul {
-        faults.each do |p|
-          xml.li("class" => "pre"){ |y| y<< "<a href='##{p.class.to_s}'><span class='lightBlue'> #{p.class.to_s}</span></a>" }
-        end
-      }
+      
+      faults = faults.select { |x| x.class.ancestors.include?(WashOut::SOAPError) }
+      unless faults.blank?
+        xml.p "Exceptions:"
+        xml.ul {
+          faults.each do |p|
+            xml.li("class" => "pre"){ |y| y<< "<a href='##{p.class.to_s}'><span class='lightBlue'> #{p.class.to_s}</span></a>" }
+          end
+        }
+      end
     end
   end
 
