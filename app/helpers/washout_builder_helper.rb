@@ -96,8 +96,8 @@ module WashoutBuilderHelper
 
   def get_fault_types_names(map)
     defined = map.select{|operation, formats| !formats[:raises].blank? }
-    defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.class.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
-    defined.map{|item| item.class.to_s }.sort_by { |name| name.downcase }.uniq unless defined.blank?
+    defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
+    defined.map{|item| item.to_s }.sort_by { |name| name.downcase }.uniq unless defined.blank?
   end
 
   def get_soap_action_names(map)
@@ -154,29 +154,26 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_type(xml, param)
-    if param.class.ancestors.include?(WashOut::SOAPError) 
-      xml.h3 "#{param.class}"
-      xml.a("name" => "#{param.class}") {}
+  #  if param.class.ancestors.include?(WashOut::SOAPError) 
+      xml.h3 "#{param}"
+      xml.a("name" => "#{param}") {}
       xml.ul("class" => "pre") {
-      
-      
-        param.class.accessible_attributes.each do |attribute|
-          if attribute!="code" && attribute != "message"  && attribute!= 'backtrace'
-            attribute_class = param.send(attribute).class.name.downcase
+       fault_structure = param.attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= "#{elem.primitive.to_s.downcase}"; h }
+     
+        fault_structure.each do |attribute, attribute_type|
+          if attribute!= 'backtrace'
             xml.li { |pre|
-              if WashoutBuilder::Type::BASIC_TYPES.include?(attribute_class) || attribute_class == "nilclass" 
-                pre << "<span class='blue'>#{attribute_class == "nilclass" ? "string" : attribute_class }</span>&nbsp;<span class='bold'>#{attribute}</span>"
+              if WashoutBuilder::Type::BASIC_TYPES.include?(attribute_type) || attribute_type == "nilclass" 
+                pre << "<span class='blue'>#{attribute_type == "nilclass" ? "string" : attribute_type }</span>&nbsp;<span class='bold'>#{attribute}</span>"
               else
-                pre << "<a href='##{attribute.class.name}'><span class='lightBlue'>#{attribute.class.name}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
+                pre << "<a href='##{attribute_type}'><span class='lightBlue'>#{attribute_type}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
               end
             }
           end
         end
-        xml.li { |pre| pre << "<span class='blue'>integer</span>&nbsp;<span class='bold'>code</span>" }
-        xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>message</span>" }
         xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>backtrace</span>" }
       }
-    end
+   # end
   end
 
   def create_html_public_methods(xml, map)
@@ -290,12 +287,12 @@ module WashoutBuilderHelper
       faults = formats[:raises]
       faults = [formats[:raises]] if !faults.is_a?(Array)
       
-      faults = faults.select { |x| x.class.ancestors.include?(WashOut::SOAPError) }
+      faults = faults.select { |x| x.ancestors.include?(WashOut::SOAPError) }
       unless faults.blank?
         xml.p "Exceptions:"
         xml.ul {
           faults.each do |p|
-            xml.li("class" => "pre"){ |y| y<< "<a href='##{p.class.to_s}'><span class='lightBlue'> #{p.class.to_s}</span></a>" }
+            xml.li("class" => "pre"){ |y| y<< "<a href='##{p.to_s}'><span class='lightBlue'> #{p.to_s}</span></a>" }
           end
         }
       end
