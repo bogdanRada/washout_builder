@@ -151,7 +151,7 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_type(xml, param)
-    ancestor_class =  defined?(WashOut::Dispatcher::SOAPError) ? WashOut::Dispatcher::SOAPError  : Washout::SoapError
+    ancestor_class =  defined?(WashOut::Dispatcher::SOAPError) ? WashOut::Dispatcher::SOAPError  : WashOut::SOAPError
     if param.class.ancestors.include?(ancestor_class) 
       xml.h3 "#{param.class}"
       xml.a("name" => "#{param.class}") {}
