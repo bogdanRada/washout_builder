@@ -154,7 +154,7 @@ module WashoutBuilderHelper
   end
 
   def create_html_fault_type(xml, param)
-  #  if param.class.ancestors.include?(WashOut::SOAPError) 
+    if param.class.ancestors.include?(WashOut::SOAPError) 
       xml.h3 "#{param}"
       xml.a("name" => "#{param}") {}
       xml.ul("class" => "pre") {
@@ -173,7 +173,7 @@ module WashoutBuilderHelper
         end
         xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>backtrace</span>" }
       }
-   # end
+    end
   end
 
   def create_html_public_methods(xml, map)
