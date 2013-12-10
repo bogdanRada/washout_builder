@@ -44,6 +44,11 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         xml.p {|pre|  pre << "WSDL URI: &nbsp;<a href='#{service[:namespace]}'><span class='pre'>#{service[:namespace]}</span></a>" }
       end
     end
+    
+    if @services.blank?
+       xml.h1 "Available Services"
+       xml.p "There are no services yet added. Please add the routes for your services and try again!"
+    end
   
   }
 
