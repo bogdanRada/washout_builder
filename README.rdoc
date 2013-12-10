@@ -80,7 +80,7 @@ The WashOut::SoapError now includes Virtus.model from +virtus+ gem. This way you
 
 Here is an example :
 
- soap_action "find",  :args   => {:number => :integer} , :return => :boolean, :raises => [MyFirstExceptionClass.new(1, "found error"), MySecondExceptionClass(1, "found another error"}) ] , :description => "some description about this method to show in the documentation"
+ soap_action "find",  :args   => {:number => :integer} , :return => :boolean, :raises => [MyCustomSoapError, MySecondExceptionClass ] , :description => "some description about this method to show in the documentation"
 
 
 In order to see the documentation you must write something like this  in the routes (exactly like you would do when using only WashOut)
