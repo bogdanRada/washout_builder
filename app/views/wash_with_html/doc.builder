@@ -50,14 +50,17 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
     xml.div("class" => "noprint") {
 
       xml.h2 "Index "
-      xml.p  "Complex Types: "
       @complex_types =  get_complex_types(@map)
-      xml.ul do
-        @complex_types.each do |hash|
-          xml.li { |y| y << "<a href='##{hash[:class]}'><span class='pre'>#{hash[:class]}</span></a>" }
+      unless @complex_types.blank?
+        xml.p  "Complex Types: "
+      
+        xml.ul do
+          @complex_types.each do |hash|
+            xml.li { |y| y << "<a href='##{hash[:class]}'><span class='pre'>#{hash[:class]}</span></a>" }
+          end
         end
+      
       end
-
       @fault_types = get_fault_types_names(@map)
       unless @fault_types.blank?
         xml.p  "Fault Types: "
@@ -69,12 +72,12 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         end
       end
 
-      methods = get_soap_action_names(@map)
-      unless methods.blank?
+      @methods = get_soap_action_names(@map)
+      unless @methods.blank?
         xml.p  "Public Methods:"
 
         xml.ul do
-          methods.each do |name|
+          @methods.each do |name|
             xml.li { |y| y << "<a href='##{name}'><span class='pre'>#{name}</span></a>" }
           end
         end
@@ -82,17 +85,24 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
 
     }
 
-    xml.h2 "Complex types:"
-    create_html_complex_types(xml, @complex_types)
-
+    unless @complex_types.blank?
+      xml.h2 "Complex types:"
+      create_html_complex_types(xml, @complex_types)
+    end
     unless @fault_types.blank?
       xml.h2 "Fault types:"
       create_html_fault_types_details(xml, @map)
     end
-
-    xml.h2 "Public methods:"
-    create_html_public_methods(xml, @map)
-
+    unless @methods.blank?
+      xml.h2 "Public methods:"
+      create_html_public_methods(xml, @map)
+    end
+    
+    if @complex_types.blank? && @fault_types.blank? &&  @methods.blank?
+      xml.p "There are no soap actions defined yet for this service. Please add some actions and try again!"
+    end
+    
+    
   }
 
 }
