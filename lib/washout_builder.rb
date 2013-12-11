@@ -25,11 +25,12 @@ end
 
 
 
-WashOut::SOAPError.send :include, Virtus.model
 
 WashOut::SOAPError.class_eval do
+  include Virtus.model
   attribute :code, Integer
   attribute :message, String
+  attribute :backtrace, String
 end
 
 
