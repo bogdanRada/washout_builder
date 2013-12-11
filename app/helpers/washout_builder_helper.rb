@@ -154,7 +154,7 @@ module WashoutBuilderHelper
         
         param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
         if !param_class.nil? && param_class.ancestors.include?(Virtus::Model::Core)
-          complex_types << get_fault_class_ancestors(param_class, complex_types)
+           get_fault_class_ancestors(param_class, complex_types)
         elsif !param_class.nil? && !param_class.ancestors.include?(Virtus::Model::Core)
           raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
         end
@@ -213,7 +213,7 @@ module WashoutBuilderHelper
     unless fault_types.blank?
       
       fault_types.each {  |hash| 
-        create_html_virtus_model_type(xml, hash[:fault],hash[:structure],  hash[:ancestors]) unless hash.blank?
+        create_html_virtus_model_type(xml, hash[:fault],hash[:structure],  hash[:ancestors]) 
       }  
     end
   end
