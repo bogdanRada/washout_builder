@@ -1,4 +1,3 @@
-require 'nori'
 
 module WashoutBuilder
   # The WashoutBuilder::Dispatcher module should be included in a controller acting

@@ -1,5 +1,4 @@
 module WashoutBuilderHelper
-  include WashOutHelper
 
   def get_complex_class_name(p, defined = [])
     complex_class =  p.struct? ? p.basic_type : nil
