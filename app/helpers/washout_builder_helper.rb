@@ -132,7 +132,7 @@ module WashoutBuilderHelper
   end
   
   def get_virtus_model_structure(fault)
-    fault.attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= { :primitive => "#{elem.primitive.to_s.downcase}", :options => elem.options }; h }
+    fault.attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= { :primitive => "#{elem.primitive}", :options => elem.options }; h }
   end
  
   
@@ -146,12 +146,12 @@ module WashoutBuilderHelper
     complex_types = []
     fault_types.each do |hash| 
       hash[:structure].each do |attribute, attr_details|
-        if  attr_details[:primitive] == "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:options][:member_type].primitive.to_s.downcase)
+        if  attr_details[:primitive].to_s.downcase == "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:options][:member_type].primitive.to_s.downcase)
           complex_class = attr_details[:options][:member_type].primitive
-        elsif  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive])
+        elsif attr_details[:primitive].to_s.downcase != "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive].to_s.downcase)
           complex_class = attr_details[:primitive]
         end
-        
+       
         param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
         if !param_class.nil? && param_class.ancestors.include?(Virtus::Model::Core)
            get_fault_class_ancestors(param_class, complex_types)
@@ -161,6 +161,7 @@ module WashoutBuilderHelper
         
       end 
     end
+    complex_types = complex_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless complex_types.blank?
     [fault_types, complex_types]
   end
 
@@ -230,11 +231,11 @@ module WashoutBuilderHelper
      
         fault_structure.each do |attribute, attr_details|
           xml.li { |pre|
-            if WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive]) || attr_details[:primitive] == "nilclass" 
-              pre << "<span class='blue'>#{attr_details[:primitive] == "nilclass" ? "string" : attr_details[:primitive] }</span>&nbsp;<span class='bold'>#{attribute}</span>"
+            if WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive].to_s.downcase) || attr_details[:primitive] == "nilclass" 
+              pre << "<span class='blue'>#{attr_details[:primitive].to_s.downcase == "nilclass" ? "string" : attr_details[:primitive].to_s.downcase }</span>&nbsp;<span class='bold'>#{attribute}</span>"
               
             else
-              if  attr_details[:primitive] == "array"
+              if  attr_details[:primitive].to_s.downcase == "array"
                 attr_primitive = attr_details[:options][:member_type].primitive.to_s
                 
                 attr_primitive =  WashoutBuilder::Type::BASIC_TYPES.include?(attr_primitive.downcase) ? attr_primitive.downcase : attr_primitive
