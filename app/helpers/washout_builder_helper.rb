@@ -46,17 +46,17 @@ module WashoutBuilderHelper
     bool_the_same = false
     param_class = class_name.is_a?(Class) ? class_name : class_name.constantize rescue nil
     unless param_class.nil?
-    ancestors  = (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
-    unless ancestors.blank?
-      ancestor_structure =  { ancestors[0].to_s.downcase =>  ancestors[0].columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
-      ancestor_object =  WashOut::Param.parse_def(@soap_config,ancestor_structure)[0]
-      bool_the_same = same_structure_as_ancestor?(param, ancestor_object)
-      unless bool_the_same
-        top_ancestors = get_class_ancestors(ancestor_class, defined)
-        defined << {:class =>ancestor_class.to_s, :obj =>ancestor_object ,  :ancestors => top_ancestors   }
+      ancestors  = (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
+      unless ancestors.blank?
+        ancestor_structure =  { ancestors[0].to_s.downcase =>  ancestors[0].columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
+        ancestor_object =  WashOut::Param.parse_def(@soap_config,ancestor_structure)[0]
+        bool_the_same = same_structure_as_ancestor?(param, ancestor_object)
+        unless bool_the_same
+          top_ancestors = get_class_ancestors(ancestor_class, defined)
+          defined << {:class =>ancestor_class.to_s, :obj =>ancestor_object ,  :ancestors => top_ancestors   }
+        end
       end
-    end
-    ancestors unless  bool_the_same
+      ancestors unless  bool_the_same
     end
   end
   
@@ -94,10 +94,74 @@ module WashoutBuilderHelper
     defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
   end
 
-  def get_fault_types_names(map)
+  
+  def remove_fault_type_inheritable_elements(param, keys)
+    get_virtus_model_structure(param).delete_if{|key,value|  keys.include?(key) }
+  end
+  
+  
+  def  same_fault_structure_as_ancestor?(param, ancestor)
+    param_structure = get_virtus_model_structure(param)
+    ancestor_structure = get_virtus_model_structure(ancestor)
+    if  param_structure.keys == ancestor_structure.keys
+      return true, get_virtus_model_structure(param)
+    else 
+      return false, remove_fault_type_inheritable_elements(param, ancestor_structure.keys)
+    end
+  end
+  
+  
+  
+  
+  def get_fault_class_ancestors(fault, defined)
+    
+    bool_the_same = false
+    unless fault.nil?
+      ancestors  = (fault.ancestors - fault.included_modules).delete_if{ |x| x.to_s.downcase == fault.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject"   || x.to_s == "Exception" }
+      if  ancestors.blank?
+        defined << {:fault => fault,:structure =>get_virtus_model_structure(fault)  ,:ancestors => []   }
+      else
+        bool_the_same, fault_structure = same_fault_structure_as_ancestor?(fault, ancestors[0])
+        unless bool_the_same
+          defined << {:fault => fault,:structure =>fault_structure  ,:ancestors => ancestors  }
+          get_fault_class_ancestors(ancestors[0], defined)
+        end
+      end
+      ancestors unless  bool_the_same
+    end
+  end
+  
+  def get_virtus_model_structure(fault)
+    fault.attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= { :primitive => "#{elem.primitive.to_s.downcase}", :options => elem.options }; h }
+  end
+ 
+  
+  def get_fault_types(map)
     defined = map.select{|operation, formats| !formats[:raises].blank? }
     defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.is_a?(Class) && x.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
-    defined.map{|item| item.to_s }.sort_by { |name| name.downcase }.uniq unless defined.blank?
+    fault_types = []
+    defined << WashOut::SOAPError
+    defined.each{ |item|  get_fault_class_ancestors(item, fault_types)}  unless   defined.blank?
+    fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?
+    complex_types = []
+    fault_types.each do |hash| 
+      hash[:structure].each do |attribute, attr_details|
+        if  attr_details[:primitive] == "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:options][:member_type].primitive.to_s.downcase)
+          complex_class = attr_details[:options][:member_type].primitive
+        elsif  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive])
+          complex_class = attr_details[:primitive]
+        end
+        
+        param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
+        if !param_class.nil? && param_class.ancestors.include?(Virtus::Model::Core)
+          complex_types << get_fault_class_ancestors(param_class, complex_types)
+        elsif !param_class.nil? && !param_class.ancestors.include?(Virtus::Model::Core)
+          raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
+        end
+        
+      end 
+    end
+    [fault_types, complex_types]
   end
 
   def get_soap_action_names(map)
@@ -145,33 +209,42 @@ module WashoutBuilderHelper
     end
   end
 
-  def create_html_fault_types_details(xml, map)
-    defined = map.select{|operation, formats| !formats[:raises].blank? }
-    unless defined.blank?
-      defined =  defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.sort_by { |item| item.class.to_s.downcase }.uniq
-      defined.each {  |fault| create_html_fault_type(xml, fault) }  
+  def create_html_fault_types_details(xml, fault_types)
+    unless fault_types.blank?
+      
+      fault_types.each {  |hash| 
+        create_html_virtus_model_type(xml, hash[:fault],hash[:structure],  hash[:ancestors]) unless hash.blank?
+      }  
     end
   end
 
-  def create_html_fault_type(xml, param)
-    if param.is_a?(Class) &&  param.ancestors.include?(WashOut::SOAPError) 
-      xml.h3 "#{param}"
+  
+
+  
+  def create_html_virtus_model_type(xml, param, fault_structure, ancestors)
+    if param.is_a?(Class) 
+      xml.h3 { |pre| pre << "#{param} #{ancestors.blank? ? "" : "<small>(extends <a href='##{ancestors[0].to_s.classify}'>#{ancestors[0].to_s.classify}</a>)</small>" } " }
       xml.a("name" => "#{param}") {}
       xml.ul("class" => "pre") {
-       fault_structure = param.attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= "#{elem.primitive.to_s.downcase}"; h }
+       
      
-        fault_structure.each do |attribute, attribute_type|
-          if attribute!= 'backtrace'
-            xml.li { |pre|
-              if WashoutBuilder::Type::BASIC_TYPES.include?(attribute_type) || attribute_type == "nilclass" 
-                pre << "<span class='blue'>#{attribute_type == "nilclass" ? "string" : attribute_type }</span>&nbsp;<span class='bold'>#{attribute}</span>"
+        fault_structure.each do |attribute, attr_details|
+          xml.li { |pre|
+            if WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive]) || attr_details[:primitive] == "nilclass" 
+              pre << "<span class='blue'>#{attr_details[:primitive] == "nilclass" ? "string" : attr_details[:primitive] }</span>&nbsp;<span class='bold'>#{attribute}</span>"
+              
+            else
+              if  attr_details[:primitive] == "array"
+                attr_primitive = attr_details[:options][:member_type].primitive.to_s
+                
+                attr_primitive =  WashoutBuilder::Type::BASIC_TYPES.include?(attr_primitive.downcase) ? attr_primitive.downcase : attr_primitive
+                pre << "<a href='##{attr_primitive}'><span class='lightBlue'>Array of #{attr_primitive}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
               else
-                pre << "<a href='##{attribute_type}'><span class='lightBlue'>#{attribute_type}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
+                pre << "<a href='##{attr_details[:primitive] }'><span class='lightBlue'>#{attr_details[:primitive]}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
               end
-            }
-          end
+            end
+          }
         end
-        xml.li { |pre| pre << "<span class='blue'>string</span>&nbsp;<span class='bold'>backtrace</span>" }
       }
     end
   end

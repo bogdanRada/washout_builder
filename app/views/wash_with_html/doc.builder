@@ -61,13 +61,13 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         end
       
       end
-      @fault_types = get_fault_types_names(@map)
+      @fault_types, @fault_complex_types = get_fault_types(@map)
       unless @fault_types.blank?
         xml.p  "Fault Types: "
 
         xml.ul do
-          @fault_types.each do |name|
-            xml.li { |y| y << "<a href='##{name}'><span class='pre'>#{name}</span></a>" }
+          @fault_types.each do |hash|
+            xml.li { |y| y << "<a href='##{hash[:fault].to_s}'><span class='pre'>#{hash[:fault].to_s}</span></a>" }
           end
         end
       end
@@ -89,9 +89,12 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
       xml.h2 "Complex types:"
       create_html_complex_types(xml, @complex_types)
     end
+    unless @fault_complex_types.blank?
+        create_html_fault_types_details(xml, @fault_complex_types)
+    end
     unless @fault_types.blank?
       xml.h2 "Fault types:"
-      create_html_fault_types_details(xml, @map)
+      create_html_fault_types_details(xml, @fault_types)
     end
     unless @methods.blank?
       xml.h2 "Public methods:"
