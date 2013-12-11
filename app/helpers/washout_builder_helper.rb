@@ -100,32 +100,19 @@ module WashoutBuilderHelper
   end
   
   
-  def  same_fault_structure_as_ancestor?(param, ancestor)
-    param_structure = get_virtus_model_structure(param)
-    ancestor_structure = get_virtus_model_structure(ancestor)
-    if  param_structure.keys == ancestor_structure.keys
-      return true, get_virtus_model_structure(param)
-    else 
-      return false, remove_fault_type_inheritable_elements(param, ancestor_structure.keys)
-    end
-  end
+ 
   
   
-  
-  
-  def get_fault_class_ancestors(fault, defined)
-    
+  def get_fault_class_ancestors(fault, defined, debug = false)
     bool_the_same = false
     unless fault.nil?
       ancestors  = (fault.ancestors - fault.included_modules).delete_if{ |x| x.to_s.downcase == fault.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject"   || x.to_s == "Exception" }
       if  ancestors.blank?
         defined << {:fault => fault,:structure =>get_virtus_model_structure(fault)  ,:ancestors => []   }
       else
-        bool_the_same, fault_structure = same_fault_structure_as_ancestor?(fault, ancestors[0])
-        unless bool_the_same
-          defined << {:fault => fault,:structure =>fault_structure  ,:ancestors => ancestors  }
-          get_fault_class_ancestors(ancestors[0], defined)
-        end
+       fault_structure =  remove_fault_type_inheritable_elements(fault,  get_virtus_model_structure(ancestors[0]).keys)
+       defined << {:fault => fault,:structure =>fault_structure  ,:ancestors => ancestors  }
+        get_fault_class_ancestors(ancestors[0], defined)
       end
       ancestors unless  bool_the_same
     end
@@ -141,7 +128,7 @@ module WashoutBuilderHelper
     defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.is_a?(Class) && x.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
     fault_types = []
     defined << WashOut::SOAPError
-    defined.each{ |item|  get_fault_class_ancestors(item, fault_types)}  unless   defined.blank?
+    defined.each{ |item|  get_fault_class_ancestors(item, fault_types, true)}  unless   defined.blank?
     fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?
     complex_types = []
     fault_types.each do |hash| 
