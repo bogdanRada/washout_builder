@@ -49,7 +49,7 @@ Or if you want this to be available only in development mode , you can do someth
   gem 'wash_out'       # The WashOut gem  would be used also  in production 
 
   group :development, :test do
-    gem 'washout_builder'            # The documentation will only be available in development mode. 
+    gem 'washout_builder'            # only  available in development mode. 
   end
  
 
