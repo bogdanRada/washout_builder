@@ -147,7 +147,7 @@ module WashoutBuilderHelper
         
       end 
     end
-    complex_types.delete_if{ |hash|  fault_types << hash if  hash[:fault].ancestors.include?(WashOut::SOAPError) }
+    complex_types.delete_if{ |hash|  fault_types << hash if  hash[:fault].ancestors.include?(WashOut::SOAPError) } unless complex_types.blank?
     fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?  
     complex_types = complex_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless complex_types.blank?
     [fault_types, complex_types]
