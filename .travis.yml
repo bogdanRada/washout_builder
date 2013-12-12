@@ -1,4 +1,5 @@
 before_install:
+  - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
   - gem install bundler
 rvm:
   - 1.9.3
