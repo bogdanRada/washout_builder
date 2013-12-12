@@ -128,7 +128,7 @@ module WashoutBuilderHelper
     fault_types = []
     defined << WashOut::SOAPError
     defined.each{ |item|  get_fault_class_ancestors(item, fault_types, true)}  unless   defined.blank?
-    fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?
+    
     complex_types = []
     fault_types.each do |hash| 
       hash[:structure].each do |attribute, attr_details|
@@ -147,6 +147,8 @@ module WashoutBuilderHelper
         
       end 
     end
+    complex_types.delete_if{ |hash|  fault_types << hash if  hash[:fault].ancestors.include?(WashOut::SOAPError) }
+    fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?  
     complex_types = complex_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless complex_types.blank?
     [fault_types, complex_types]
   end
