@@ -3,6 +3,7 @@ cache: bundler
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
   - gem install bundler
+  - gem install rake
 rvm:
   - 1.9.3
   - jruby-19mode
