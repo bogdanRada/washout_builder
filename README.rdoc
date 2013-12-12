@@ -51,8 +51,7 @@ Or if you want this to be available only in development mode , you can do someth
   group :development, :test do
     gem 'washout_builder'            # The documentation will only be available in development mode. 
   end
-
-Just make sure that the requirements for this gem are met and everything should be fine. 
+ 
 
 Please read {release details}[https://github.com/bogdanRada/washout_builder/releases] if you are upgrading. We break backward compatibility between large ticks but you can expect it to be specified at release notes.
 
@@ -60,31 +59,6 @@ Please read {release details}[https://github.com/bogdanRada/washout_builder/rele
 
 The way soap_actions, or reusable types are defined or how the configuration is made using WashOut(https://github.com/inossidabile/wash_out)  haven't changed
 You can still do everything that gem does .
-
-When specifying the <b>soap_action</b> you can also pass a <b>option for description</b> and a <b>list of exceptions(need to be classes)</b> that the method can raise at a certain moment.
-
-The exception classes used <b>must inherit</b> from  <tt>WashOut::SOAPError</tt>, which has  by default  a error code and a message as attributes but you can extend it by adding more attributes to your own custom class. 
-
-The WashOut::SoapError now includes Virtus.model from +virtus+ gem. This way you can add attributes like this:
-
-
-  class MyCustomSoapError < WashOut::SOAPError
-  
-    attribute :custom_attribute, String
-    attribute :other_custom_attribute, Integer
-  
-   end
-
-<b> If your custom exception class doesn't  have any  attributes set, only the inherited attributes will appear!!!</b> 
-
-Here is an example :
-
- soap_action "find",  
-  :args   => {:number => :integer} ,
-  :return => :boolean, 
-  :raises => [MyCustomSoapError, MySecondExceptionClass ] , 
-  :description => "some description about this method to show in the documentation"
-
 
 In order to see the documentation you must write something like this  in the routes (exactly like you would do when using only WashOut)
 
@@ -100,6 +74,54 @@ You can access the url +/washout+ and you will see a list with available service
 If you want to access directly the hml documentation that was generated for RumbasController  you can do that by accessing url +/rumbas/doc+ And the WSDL will be available at +/rumbas/wsdl+
 
 
+When specifying the <b>soap_service</b> you can also pass a <b>option for description</b> . Here is an example
+
+  soap_service  namespace: "http://my.app.com/my_service/wsdl", :description => "here goes some description for your service"
+
+
+When specifying the <b>soap_action</b> you can also pass a <b>option for description</b> and a <b>list of exceptions(need to be classes)</b> that the method can raise at a certain moment.
+
+Here is an example :
+
+ soap_action "find",  
+  :args   => {:number => :integer} ,
+  :return => :boolean, 
+  :raises => [MyCustomSoapError, MySecondExceptionClass ] , 
+  :description => "some description about this method to show in the documentation"
+
+
+The exception classes used <b>must inherit</b> from  <tt>WashOut::SOAPError</tt>, which has  by default  a error code and a message as attributes but you can extend it by adding more attributes to your own custom class. 
+
+The WashOut::SoapError now includes Virtus.model from +virtus+ gem. This way you can add attributes like this:
+
+  class MyCustomSoapError < WashOut::SOAPError
+  
+    attribute :custom_attribute, String
+    attribute :other_custom_attribute, Integer
+  
+   end
+   
+You can also specify complex types like this:
+
+  class MyCustomSoapError < WashOut::SOAPError
+  
+   attribute :errors,Array[Integer]
+   attribute :custom, Array[MyCustomModel]
+   attribute :custom2, MyCustomModel
+  
+   end
+
+<b> The model MyCustomModel must include +Virtus.model+ if you want it to show up in the documentation !!!</b> 
+
+And you can also use inheritance between custom exception classes like this:
+
+  class MySecondCustomSoapError < MyCustomSoapError
+  
+    atribute :option , String
+  
+   end
+
+ And you will see in the documentation that the class +MySecondCustomSoapError+ will extend +MyCustomSoapError+
 
 = Testing
 

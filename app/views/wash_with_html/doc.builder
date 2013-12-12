@@ -42,9 +42,9 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         xml.a( "href" => "#{@namespace}") { |y| y << "#{@namespace}" }
       };}
 
-    unless @service_description.blank?
+    unless @soap_config.description.blank?
       xml.h1 "#{@service}"
-      xml.p "#{@service_description}"
+      xml.p "#{@soap_config.description}"
     end
 
     xml.div("class" => "noprint") {
