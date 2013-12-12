@@ -76,8 +76,8 @@ If you want to access directly the hml documentation that was generated for Rumb
 
 When specifying the <b>soap_service</b> you can also pass a <b>option for description</b> . Here is an example
 
-  soap_service  namespace: "http://my.app.com/my_service/wsdl", :description => "here goes some description for your service"
-
+  soap_service  namespace: "http://my.app.com/my_service/wsdl", 
+   :description => "here goes some description for your service"
 
 When specifying the <b>soap_action</b> you can also pass a <b>option for description</b> and a <b>list of exceptions(need to be classes)</b> that the method can raise at a certain moment.
 
@@ -111,7 +111,7 @@ You can also specify complex types like this:
   
    end
 
-<b> The model MyCustomModel must include +Virtus.model+ if you want it to show up in the documentation !!!</b> 
+<b>The class MyCustomModel must include +Virtus.model+ if you want it to show up in the documentation!</b> 
 
 And you can also use inheritance between custom exception classes like this:
 
@@ -121,7 +121,7 @@ And you can also use inheritance between custom exception classes like this:
   
    end
 
- And you will see in the documentation that the class +MySecondCustomSoapError+ will extend +MyCustomSoapError+
+And you will see in the documentation that the class +MySecondCustomSoapError+ will extend +MyCustomSoapError+
 
 = Testing
 
