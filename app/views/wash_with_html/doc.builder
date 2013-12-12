@@ -5,7 +5,7 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
 
   xml.head {
 
-    xml.title "#{@service} interface description"
+    xml.title "#{@document.service} interface description"
 
     xml.style( "type"=>"text/css" ,"media" => "all" ) { xml.text! "
     body{font-family:Calibri,Arial;background-color:#fefefe;}
@@ -31,20 +31,20 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
 
   xml.body {
 
-    xml.h1 "#{ @service} Soap WebService interface description"
+    xml.h1 "#{ @document.service} Soap WebService interface description"
 
     xml.p{ |y| y << "Endpoint URI:";
-      xml.span( "class" => "pre") { |y| y << "#{@endpoint}"};
+      xml.span( "class" => "pre") { |y| y << "#{@document.endpoint}"};
     }
 
     xml.p{ |y| y << "WSDL URI:";
       xml.span( "class" => "pre") {
-        xml.a( "href" => "#{@namespace}") { |y| y << "#{@namespace}" }
+        xml.a( "href" => "#{@document.namespace}") { |y| y << "#{@document.namespace}" }
       };}
 
-    unless @soap_config.description.blank?
-      xml.h1 "#{@service}"
-      xml.p "#{@soap_config.description}"
+    unless @document.service_description.blank?
+      xml.h1 "#{@document.service}"
+      xml.p "#{@document.service_description}"
     end
 
     xml.div("class" => "noprint") {

@@ -2,8 +2,11 @@ require 'wash_out'
 require 'virtus'
 require 'washout_builder/soap'
 require 'washout_builder/engine'
+require 'washout_builder/document/generator'
+require 'washout_builder/document/complex_type'
 require 'washout_builder/dispatcher'
 require 'washout_builder/type'
+require 'washout_builder/version'
 
 
 module ActionDispatch::Routing
