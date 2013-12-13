@@ -19,6 +19,7 @@ module WashoutBuilderHelper
             # raise YAML::dump(element) if class_name.include?("ype") and element.name == "members"
             xml.li { |pre|
               if WashoutBuilder::Type::BASIC_TYPES.include?(element.type)
+                element.type = "integer" if element.type == "int"
                 pre << "<span class='blue'>#{element.type}</span>&nbsp;<span class='bold'>#{element.name}</span>"
               else
                 complex_class = element.get_complex_class_name

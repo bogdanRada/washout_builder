@@ -89,7 +89,7 @@ module WashoutBuilder
         bool_the_same = false
         ancestors   = param.get_ancestors(class_name)
         unless ancestors.blank?
-          ancestor_structure =  ancestors[0].wash_out_param_map 
+          ancestor_structure =   { ancestors[0].to_s.downcase => ancestors[0].wash_out_param_map }
           ancestor_object =  WashOut::Param.parse_def(config,ancestor_structure)[0]
           bool_the_same = param.same_structure_as_ancestor?( ancestor_object)
           unless bool_the_same
