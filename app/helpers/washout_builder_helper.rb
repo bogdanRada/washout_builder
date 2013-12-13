@@ -51,7 +51,7 @@ module WashoutBuilderHelper
         ancestor_object =  WashOut::Param.parse_def(@soap_config,ancestor_structure)[0]
         bool_the_same = same_structure_as_ancestor?(param, ancestor_object)
         unless bool_the_same
-           top_ancestors = get_class_ancestors(ancestor_object,ancestors[0], defined)
+          top_ancestors = get_class_ancestors(ancestor_object,ancestors[0], defined)
           defined << {:class =>ancestors[0], :obj =>ancestor_object ,  :ancestors => top_ancestors   }
         end
       end
@@ -109,8 +109,8 @@ module WashoutBuilderHelper
       if  ancestors.blank?
         defined << {:fault => fault,:structure =>get_virtus_model_structure(fault)  ,:ancestors => []   }
       else
-       fault_structure =  remove_fault_type_inheritable_elements(fault,  get_virtus_model_structure(ancestors[0]).keys)
-       defined << {:fault => fault,:structure =>fault_structure  ,:ancestors => ancestors  }
+        fault_structure =  remove_fault_type_inheritable_elements(fault,  get_virtus_model_structure(ancestors[0]).keys)
+        defined << {:fault => fault,:structure =>fault_structure  ,:ancestors => ancestors  }
         get_fault_class_ancestors(ancestors[0], defined)
       end
       ancestors unless  bool_the_same
@@ -144,7 +144,7 @@ module WashoutBuilderHelper
        
         param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
         if !param_class.nil? && param_class.ancestors.include?(Virtus::Model::Core)
-           get_fault_class_ancestors(param_class, complex_types)
+          get_fault_class_ancestors(param_class, complex_types)
         elsif !param_class.nil? && !param_class.ancestors.include?(Virtus::Model::Core)
           raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
         end
@@ -258,11 +258,18 @@ module WashoutBuilderHelper
 
 
     xml.p("class" => "pre"){ |pre|
-      if !formats[:out].nil?
+      unless formats[:out].nil?
+        complex_class = formats[:out][0].get_complex_class_name  
         if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
           xml.span("class" => "blue") { |y| y<<  "#{formats[:out][0].type}" }
         else
-          xml.a("href" => "##{formats[:out][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:out][0].type}" } }
+          unless complex_class.nil?
+            if  formats[:out][0].multiplied == false
+              pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_class}</span></a>"
+            else
+              pre << "<a href='##{complex_class}'><span class='lightBlue'>Array of #{complex_class}</span></a>"
+            end
+          end
         end
       else
         pre << "void"
