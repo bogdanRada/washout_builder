@@ -1,7 +1,9 @@
 module WashoutBuilder
   module Document
     module ComplexType
-     
+      extend ActiveSupport::Concern
+      
+      
       def get_complex_class_name(defined = [])
         complex_class =  struct? ? basic_type : nil
         complex_class =  complex_class.include?(".") ? complex_class.gsub(".","/").camelize : complex_class.to_s.classify    unless complex_class.nil?

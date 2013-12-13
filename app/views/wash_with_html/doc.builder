@@ -50,7 +50,7 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
     xml.div("class" => "noprint") {
 
       xml.h2 "Index "
-      @complex_types =  get_complex_types(@map)
+      @complex_types =  @document.complex_types
       @fault_types, @fault_complex_types = get_fault_types(@map)
       unless @complex_types.blank?
         xml.p  "Complex Types: "

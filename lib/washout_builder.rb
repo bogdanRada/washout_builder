@@ -27,10 +27,11 @@ module ActionDispatch::Routing
 end
 
 
-WashOut::Params.send :include, WashOut::Document::ComplexType
+WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
 
 WashOut::SOAPError.class_eval do
   include Virtus.model
+  include  WashoutBuilder::Document::FaultType
   attribute :code, Integer
   attribute :message, String
   attribute :backtrace, String

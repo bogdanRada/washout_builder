@@ -90,8 +90,8 @@ module WashoutBuilder
             ancestor_object =  WashOut::Param.parse_def(config,ancestor_structure)[0]
             bool_the_same = param.same_structure_as_ancestor?( ancestor_object)
             unless bool_the_same
-              top_ancestors = get_class_ancestors(ancestor_class, defined)
-              defined << {:class =>ancestor_class.to_s, :obj =>ancestor_object ,  :ancestors => top_ancestors   }
+              top_ancestors = get_class_ancestors(ancestor_object,ancestors[0], defined)
+             defined << {:class =>ancestors[0], :obj =>ancestor_object ,  :ancestors => top_ancestors   }
             end
           ancestors unless  bool_the_same
         end
