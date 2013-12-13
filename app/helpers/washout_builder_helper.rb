@@ -259,7 +259,7 @@ module WashoutBuilderHelper
 
     xml.p("class" => "pre"){ |pre|
       unless formats[:out].nil?
-        complex_class = formats[:out][0].get_complex_class_name  
+        complex_class = get_complex_class_name(formats[:out][0])  
         if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
           xml.span("class" => "blue") { |y| y<<  "#{formats[:out][0].type}" }
         else
