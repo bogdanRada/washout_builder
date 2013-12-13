@@ -26,12 +26,12 @@ module WashoutBuilder
   
   
       def remove_type_inheritable_elements( keys)
-        map.delete_if{|element|  keys.include?(element.name) }
+        self.map.delete_if{|element|  keys.include?(element.name) }
       end
   
-      def get_ancestor_structure
-        {self.class.to_s.downcase =>  self.class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
-      end
+#      def get_ancestor_structure
+#        {self.class.to_s.downcase =>  self.class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
+#      end
       
       
       def fix_descendant_wash_out_type(config, complex_class)

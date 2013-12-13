@@ -65,7 +65,7 @@ module WashoutBuilder
         (input_types + output_types).each do |p|
           defined.concat(get_nested_complex_types(p, defined))
         end
-        defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
+        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq unless defined.blank?
       end
       
 
@@ -79,7 +79,7 @@ module WashoutBuilder
           param.map.each { |obj|   c_names.concat(get_nested_complex_types(obj, defined))  }        
           defined.concat(c_names)
         end
-        defined.sort_by { |hash| hash[:class].downcase }.uniq unless defined.blank?
+        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq unless defined.blank?
       end
 
         
@@ -89,7 +89,7 @@ module WashoutBuilder
         bool_the_same = false
         ancestors   = param.get_ancestors(class_name)
         unless ancestors.blank?
-          ancestor_structure =  ancestors[0].get_ancestor_structure
+          ancestor_structure =  ancestors[0].wash_out_param_map 
           ancestor_object =  WashOut::Param.parse_def(config,ancestor_structure)[0]
           bool_the_same = param.same_structure_as_ancestor?( ancestor_object)
           unless bool_the_same
