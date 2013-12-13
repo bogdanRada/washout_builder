@@ -126,7 +126,11 @@ module WashoutBuilderHelper
     defined = map.select{|operation, formats| !formats[:raises].blank? }
     defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.is_a?(Class) && x.ancestors.include?(WashOut::SOAPError) }  unless defined.blank?
     fault_types = []
-    defined << WashOut::SOAPError
+    if defined.blank?
+      defined = [WashOut::SOAPError] 
+    else
+      defined  << WashOut::SOAPError
+    end
     defined.each{ |item|  get_fault_class_ancestors(item, fault_types, true)}  unless   defined.blank?
     
     complex_types = []
