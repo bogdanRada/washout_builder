@@ -66,9 +66,8 @@ module WashoutBuilderHelper
               
             else
               if  attr_details[:primitive].to_s.downcase == "array"
-                attr_primitive = attr_details[:options][:member_type].primitive.to_s
                 
-                attr_primitive =  WashoutBuilder::Type::BASIC_TYPES.include?(attr_primitive.downcase) ? attr_primitive.downcase : attr_primitive
+                attr_primitive =  WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:member_type].to_s.downcase) ? attr_details[:member_type].to_s.downcase : attr_details[:member_type]
                 pre << "<a href='##{attr_primitive}'><span class='lightBlue'>Array of #{attr_primitive}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"
               else
                 pre << "<a href='##{attr_details[:primitive] }'><span class='lightBlue'>#{attr_details[:primitive]}</span></a>&nbsp;<span class='bold'>#{attribute}</span>"

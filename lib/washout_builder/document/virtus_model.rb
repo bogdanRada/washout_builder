@@ -21,10 +21,22 @@ module WashoutBuilder
         get_virtus_model_structure.delete_if{|key,value|  keys.include?(key) }
       end
        
+      
+      
+      
+      def get_virtus_member_type_primitive(attr_details)
+        complex_class = nil
+        if  attr_details[:primitive].to_s.downcase == "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:member_type].to_s.downcase)
+          complex_class = attr_details[:member_type]
+        elsif attr_details[:primitive].to_s.downcase != "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive].to_s.downcase)
+          complex_class = attr_details[:primitive]
+        end
+        complex_class
+      end
  
        
       def get_virtus_model_structure
-        attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= { :primitive => "#{elem.primitive}", :options => elem.options }; h }
+        attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= { :primitive => "#{elem.primitive}", :member_type => elem.options[:member_type].nil? ? nil: elem.options[:member_type].primitive }; h }
       end
       
       

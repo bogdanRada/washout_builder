@@ -122,20 +122,16 @@ module WashoutBuilder
         complex_types = []
         fault_types.each do |hash| 
           hash[:structure].each do |attribute, attr_details|
-            if  attr_details[:primitive].to_s.downcase == "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:options][:member_type].primitive.to_s.downcase)
-              complex_class = attr_details[:options][:member_type].primitive
-            elsif attr_details[:primitive].to_s.downcase != "array" &&  !WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive].to_s.downcase)
-              complex_class = attr_details[:primitive]
+            complex_class = hash[:fault].get_virtus_member_type_primitive(attr_details)
+            unless complex_class.nil?
+              param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
+              if !param_class.nil? && param_class.ancestors.include?(Virtus::Model::Core)
+                param_class.send :extend, WashoutBuilder::Document::VirtusModel
+                param_class.get_fault_class_ancestors( complex_types)
+              elsif !param_class.nil? && !param_class.ancestors.include?(Virtus::Model::Core)
+                raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
+              end
             end
-             
-            param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
-            if !param_class.nil? && param_class.ancestors.include?(Virtus::Model::Core)
-              param_class.send :extend, WashoutBuilder::Document::VirtusModel
-              param_class.get_fault_class_ancestors( complex_types)
-            elsif !param_class.nil? && !param_class.ancestors.include?(Virtus::Model::Core)
-              raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
-            end
-             
           end 
         end
         complex_types
