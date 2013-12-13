@@ -29,6 +29,9 @@ module WashoutBuilder
         map.delete_if{|element|  keys.include?(element.name) }
       end
   
+      def get_ancestor_structure
+        {self.class.to_s.downcase =>  self.class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
+      end
       
       
       def fix_descendant_wash_out_type(config, complex_class)
@@ -52,19 +55,13 @@ module WashoutBuilder
         end
       end
   
-      def parse_custom_type_class(param_class)
-       if  param_class.is_a?(Class)
-        WashOut::Param.parse_def(config, param_class.wash_out_param_map)[0]
-       else
-       end
-      end
-      
+         
       def get_ancestors(class_name)
         param_class = class_name.is_a?(Class) ? class_name : class_name.constantize rescue nil
         if  param_class.nil?
           return nil
         else
-           (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
+          (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
         end
       end
   

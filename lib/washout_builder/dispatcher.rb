@@ -6,7 +6,6 @@ module WashoutBuilder
   module Dispatcher
     
     def _generate_doc
-      @map = self.class.soap_actions
       @document = WashoutBuilder::Document::Generator.new(
         :config => soap_config, 
         :service_class => self.class,  

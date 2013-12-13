@@ -3,7 +3,7 @@ require 'virtus'
 require 'washout_builder/soap'
 require 'washout_builder/engine'
 require 'washout_builder/document/complex_type'
-require 'washout_builder/document/fault_type'
+require 'washout_builder/document/virtus_model'
 require 'washout_builder/document/generator'
 require 'washout_builder/dispatcher'
 require 'washout_builder/type'
@@ -30,9 +30,10 @@ end
 
 WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
 
+
 WashOut::SOAPError.class_eval do
+  extend WashoutBuilder::Document::VirtusModel
   include Virtus.model
-  include  WashoutBuilder::Document::FaultType
   attribute :code, Integer
   attribute :message, String
   attribute :backtrace, String
