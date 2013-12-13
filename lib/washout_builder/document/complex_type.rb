@@ -13,7 +13,7 @@ module WashoutBuilder
           complex_obj_found = defined.detect {|hash|   hash[:class] == complex_class}
     
           if !complex_obj_found.nil? && struct?  &&  !classified?
-            raise RuntimeError, "Duplicate use of `#{p.basic_type}` type name. Consider using classified types."
+            raise RuntimeError, "Duplicate use of `#{basic_type}` type name. Consider using classified types."
           end
         end
    

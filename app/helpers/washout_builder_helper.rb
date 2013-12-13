@@ -95,16 +95,23 @@ module WashoutBuilderHelper
 
 
     xml.p("class" => "pre"){ |pre|
-      if !formats[:out].nil?
+      unless formats[:out].nil?
+        complex_class = formats[:out][0].get_complex_class_name  
         if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
           xml.span("class" => "blue") { |y| y<<  "#{formats[:out][0].type}" }
         else
-          xml.a("href" => "##{formats[:out][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:out][0].type}" } }
+          unless complex_class.nil?
+            if  formats[:out][0].multiplied == false
+              pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_class}</span></a>"
+            else
+              pre << "<a href='##{complex_class}'><span class='lightBlue'>Array of #{complex_class}</span></a>"
+            end
+          end
         end
       else
         pre << "void"
       end
-
+      
       xml.span("class" => "bold") {|y|  y << "#{operation} (" }
       mlen = formats[:in].size
       xml.br if mlen > 1
