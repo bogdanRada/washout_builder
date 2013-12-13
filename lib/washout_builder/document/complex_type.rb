@@ -6,7 +6,7 @@ module WashoutBuilder
       
       def get_complex_class_name(defined = [])
         complex_class =  struct? ? basic_type : nil
-        complex_class =  complex_class.include?(".") ? complex_class.gsub(".","/").camelize : complex_class.to_s.classify    unless complex_class.nil?
+        complex_class =  complex_class.include?(".") ? complex_class.gsub(".","/").camelize : complex_class.classify    unless complex_class.nil?
      
         unless complex_class.nil? || defined.blank?
      

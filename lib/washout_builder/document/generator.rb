@@ -2,7 +2,7 @@ module WashoutBuilder
   module Document
     class Generator
        
-      @attrs = [:map, :config, :service_class]
+      @attrs = [:soap_actions, :config, :service_class]
       
       attr_reader *@attrs
       attr_accessor  *@attrs
@@ -85,7 +85,7 @@ module WashoutBuilder
        def get_class_ancestors(param, class_name, defined)
         bool_the_same = false
        ancestors   = param.get_ancestors(class_name)
-        unless ancestors.nil?
+         unless ancestors.blank?
             ancestor_structure =  get_ancestor_structure(ancestors[0])
             ancestor_object =  WashOut::Param.parse_def(config,ancestor_structure)[0]
             bool_the_same = param.same_structure_as_ancestor?( ancestor_object)
