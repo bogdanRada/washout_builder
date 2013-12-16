@@ -111,7 +111,7 @@ You can also specify complex types like this:
   
    end
 
-<b>The class MyCustomModel must include +Virtus.model+ if you want it to show up in the documentation!</b> 
+<b>The class MyCustomModel must include +Virtus.model+ or +Virtus.value_object+ or it must include at least one module that includes +Virtus.module+ if you want it to show up in the documentation!</b> 
 
 You can also use aggregation with another fault class exception like this:
 
