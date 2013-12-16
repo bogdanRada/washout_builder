@@ -4,7 +4,6 @@ require 'washout_builder/soap'
 require 'washout_builder/engine'
 require 'washout_builder/document/complex_type'
 require 'washout_builder/document/virtus_model'
-require 'washout_builder/document/fault'
 require 'washout_builder/document/generator'
 require 'washout_builder/dispatcher'
 require 'washout_builder/type'
@@ -40,8 +39,17 @@ end
 
 
 WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
-SOAPError.send :extend, WashoutBuilder::Document::Fault
-WashOut::SOAPError.send :extend, WashoutBuilder::Document::Fault
+
+[WashOut::SOAPError, SOAPError].each do |exception_class|
+  exception_class.class_eval do
+    extend WashoutBuilder::Document::VirtusModel
+     include Virtus.model
+      attribute :code, Integer
+      attribute :message, String
+      attribute :backtrace, String
+  end
+end
+
 
 
 
