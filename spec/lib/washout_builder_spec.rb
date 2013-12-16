@@ -5,8 +5,9 @@ require 'spec_helper'
 describe WashoutBuilder do
 
   before(:each) do
-        WashOut::Rails::Engine.config.wash_out[:wsdl_style] = 'document'
+        WashOut::Rails::Engine.config.wash_out[:wsdl_style] = 'rpc'
         WashOut::Rails::Engine.config.wash_out[:parser] = :nokogiri
+        WashOut::Rails::Engine.config.wash_out[:catch_xml_errors] = true 
   end
   
   let :nori do
@@ -20,8 +21,9 @@ describe WashoutBuilder do
   def savon(method, message={}, &block)
     message = {:value => message} unless message.is_a?(Hash)
 
-    savon = Savon::Client.new(:log => false, :wsdl => 'http://app/api/wsdl', &block)
-    savon.call(method, :message => message).to_hash
+    savon_client = Savon::Client.new(:log => false, :wsdl => 'http://app/api/wsdl', &block)
+   result = savon_client.call(method, :message => message) 
+   result.respond_to?(:to_hash) ? result.to_hash : result
   end
 
   def savon!(method, message={}, &block)
