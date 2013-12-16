@@ -29,8 +29,9 @@ describe WashoutBuilder do
   def savon!(method, message={}, &block)
     message = {:value => message} unless message.is_a?(Hash)
 
-    savon = Savon::Client.new(:log => true, :wsdl => 'http://app/api/wsdl', &block)
-    savon.call(method, :message => message).to_hash
+    savon_client = Savon::Client.new(:log => true, :wsdl => 'http://app/api/wsdl', &block)
+   result = savon_client.call(method, :message => message) 
+   result.respond_to?(:to_hash) ? result.to_hash : result
   end
 
   describe "Module" do
@@ -501,7 +502,7 @@ describe WashoutBuilder do
         }.should raise_exception(Savon::SOAPFault)
       end
 
-      it "raise to report SOAP errors" do
+      it "raise to report SOAP errors", :fails =>true do
         mock_controller do
           soap_action "error", :args => { :need_error => :boolean }, :return => nil
           def error
@@ -556,12 +557,12 @@ describe WashoutBuilder do
         end
 
         lambda { savon(:bad) }.should raise_exception(
-          WashOut::Dispatcher::ProgrammerError,
+          WashOut::ProgrammerError,
           /SOAP response .*wyldness.*Array.*Hash.*stallion/
         )
 
         lambda { savon(:bad2) }.should raise_exception(
-          WashOut::Dispatcher::ProgrammerError,
+          WashOut::ProgrammerError,
           /SOAP response .*oops.*String.*telephone_booths.*Array/
         )
       end
