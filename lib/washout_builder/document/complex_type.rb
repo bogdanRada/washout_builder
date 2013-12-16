@@ -26,7 +26,7 @@ module WashoutBuilder
   
   
       def remove_type_inheritable_elements( keys)
-        self.map =  self.map.reject{|element|  keys.include?(element.name) }
+        self.map =  self.map.delete_if{|element|  keys.include?(element.name) }
       end
   
 #      def get_ancestor_structure
@@ -47,10 +47,11 @@ module WashoutBuilder
       def  same_structure_as_ancestor?(ancestor)
         param_structure = get_param_structure
         ancestor_structure = ancestor.get_param_structure
+        raise [param_structure.keys, ancestor_structure.keys].inspect
         if  param_structure.keys == ancestor_structure.keys
           return true
         else 
-          #remove_type_inheritable_elements( ancestor_structure.keys)
+          remove_type_inheritable_elements( ancestor_structure.keys)
           return false
         end
       end
