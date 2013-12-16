@@ -18,4 +18,5 @@ gem 'tzinfo'
 gem 'pry'
 gem 'simplecov'
 gem 'simplecov-summary'
-
+gem 'nori'
+gem 'nokogiri'
