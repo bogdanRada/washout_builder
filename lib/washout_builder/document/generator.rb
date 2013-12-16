@@ -63,43 +63,11 @@ module WashoutBuilder
       def complex_types
         defined = []
         (input_types + output_types).each do |p|
-          defined.concat(get_nested_complex_types(p, defined))
+          defined.concat(p.get_nested_complex_types(config,  defined))
         end
         defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq unless defined.blank?
       end
-      
-
-      def get_nested_complex_types(param, defined)
-        defined = [] if defined.blank?
-        complex_class = param.get_complex_class_name( defined)
-        param.fix_descendant_wash_out_type( config, complex_class)
-        defined << {:class =>complex_class, :obj => param, :ancestors => param.classified?  ?  get_class_ancestors(param, complex_class, defined) : nil } unless complex_class.nil?
-        if param.struct?
-          c_names = []
-          param.map.each { |obj|   c_names.concat(get_nested_complex_types(obj, defined))  }        
-          defined.concat(c_names)
-        end
-        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq unless defined.blank?
-      end
-
-        
-     
-      
-      def get_class_ancestors(param, class_name, defined)
-        bool_the_same = false
-        ancestors   = param.get_ancestors(class_name)
-        unless ancestors.blank?
-          ancestor_structure =   { ancestors[0].to_s.downcase => ancestors[0].wash_out_param_map }
-          ancestor_object =  WashOut::Param.parse_def(config,ancestor_structure)[0]
-          bool_the_same = param.same_structure_as_ancestor?( ancestor_object)
-          unless bool_the_same
-            top_ancestors = get_class_ancestors(ancestor_object,ancestors[0], defined)
-            defined << {:class =>ancestors[0], :obj =>ancestor_object ,  :ancestors => top_ancestors   }
-          end
-          ancestors unless  bool_the_same
-        end
-      end
-      
+            
        
       def fault_types
         defined = soap_actions.select{|operation, formats| !formats[:raises].blank? }
@@ -110,7 +78,7 @@ module WashoutBuilder
         else
           defined  << WashOut::SOAPError
         end
-        defined.each{ |item|  item.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
+        defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
         complex_types = extract_nested_complex_types_from_exceptions(fault_types)
         complex_types.delete_if{ |hash|  fault_types << hash if  hash[:fault].ancestors.include?(WashOut::SOAPError) } unless complex_types.blank?
         fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?  
@@ -130,7 +98,7 @@ module WashoutBuilder
                 param_class.get_fault_class_ancestors( complex_types)
               elsif !param_class.nil? && !param_class.ancestors.include?(Virtus::Model::Core)
                 raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
-              end
+              end 
             end
           end 
         end

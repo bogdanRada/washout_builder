@@ -29,9 +29,9 @@ module WashoutBuilder
         self.map =  self.map.delete_if{|element|  keys.include?(element.name) }
       end
   
-#      def get_ancestor_structure
-#        {self.class.to_s.downcase =>  self.class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
-#      end
+      #      def get_ancestor_structure
+      #        {self.class.to_s.downcase =>  self.class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
+      #      end
       
       
       def fix_descendant_wash_out_type(config, complex_class)
@@ -47,7 +47,6 @@ module WashoutBuilder
       def  same_structure_as_ancestor?(ancestor)
         param_structure = get_param_structure
         ancestor_structure = ancestor.get_param_structure
-        raise [param_structure.keys, ancestor_structure.keys].inspect
         if  param_structure.keys == ancestor_structure.keys
           return true
         else 
@@ -68,8 +67,34 @@ module WashoutBuilder
   
       
     
-  
+      def get_nested_complex_types(config,defined)
+        defined = [] if defined.blank?
+        complex_class = get_complex_class_name( defined)
+        fix_descendant_wash_out_type( config, complex_class)
+        defined << {:class =>complex_class, :obj => self, :ancestors => classified?  ?  get_class_ancestors(config, complex_class, defined) : nil } unless complex_class.nil?
+        if struct?
+          c_names = []
+          map.each { |obj|   c_names.concat(obj.get_nested_complex_types(config, defined))  }        
+          defined.concat(c_names)
+        end
+        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq unless defined.blank?
+      end
      
+    
+      def get_class_ancestors( config, class_name, defined)
+        bool_the_same = false
+        ancestors   = get_ancestors(class_name)
+        unless ancestors.blank?
+          ancestor_structure =   { ancestors[0].to_s.downcase => ancestors[0].wash_out_param_map }
+          ancestor_object =  WashOut::Param.parse_def(config,ancestor_structure)[0]
+          bool_the_same = same_structure_as_ancestor?( ancestor_object)
+          unless bool_the_same
+            top_ancestors = get_class_ancestors(config, ancestors[0], defined)
+            defined << {:class =>ancestors[0], :obj =>ancestor_object ,  :ancestors => top_ancestors   }
+          end
+          ancestors unless  bool_the_same
+        end
+      end
   
   
     end
