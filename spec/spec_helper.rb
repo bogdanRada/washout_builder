@@ -1,6 +1,8 @@
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
 
+require 'nori'
+require 'nokogiri'
 require 'active_support'
 require "simplecov"
 SimpleCov.start do

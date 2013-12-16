@@ -9,7 +9,8 @@ module WashoutBuilder
       "date",
       "datetime",
       "float",
-      "time"
+      "time",
+      "int"
     ]
 
   end

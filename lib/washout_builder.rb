@@ -2,8 +2,13 @@ require 'wash_out'
 require 'virtus'
 require 'washout_builder/soap'
 require 'washout_builder/engine'
+require 'washout_builder/document/complex_type'
+require 'washout_builder/document/virtus_model'
+require 'washout_builder/document/fault'
+require 'washout_builder/document/generator'
 require 'washout_builder/dispatcher'
 require 'washout_builder/type'
+require 'washout_builder/version'
 
 
 module ActionDispatch::Routing
@@ -23,15 +28,21 @@ module ActionDispatch::Routing
   end
 end
 
-
-
-
-WashOut::SOAPError.class_eval do
-  include Virtus.model
-  attribute :code, Integer
-  attribute :message, String
-  attribute :backtrace, String
+Virtus::InstanceMethods::Constructor.class_eval do
+  alias_method  :original_initialize,:initialize
+  def initialize(attributes = nil)
+    if  self.class.ancestors.include?(WashOut::SOAPError) || self.is_a?(WashOut::SOAPError)
+      attributes = {:message => attributes} unless attributes.is_a?(Hash) 
+    end
+    original_initialize(attributes)
+  end
 end
+
+
+WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
+SOAPError.send :extend, WashoutBuilder::Document::Fault
+WashOut::SOAPError.send :extend, WashoutBuilder::Document::Fault
+
 
 
 ActionController::Base.class_eval do
