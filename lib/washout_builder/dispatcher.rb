@@ -6,13 +6,12 @@ module WashoutBuilder
   module Dispatcher
     
     def _generate_doc
-      @map       = self.class.soap_actions
-      @namespace = soap_config.namespace
-      @name      = controller_path.gsub('/', '_')
-      @service = self.class.name.underscore.gsub("_controller", "").camelize
-      @endpoint  = @namespace.gsub("/wsdl", "/action")
-      @soap_config = soap_config
-
+      @document = WashoutBuilder::Document::Generator.new(
+        :config => soap_config, 
+        :service_class => self.class,  
+        :soap_actions => self.class.soap_actions
+      )
+      
       render :template => "wash_with_html/doc", :layout => false,
         :content_type => 'text/html'
     end
