@@ -29,7 +29,12 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 RSpec.configure do |config|
   require 'rspec/expectations'
   config.include RSpec::Matchers
-
+  
+  # mock framework
+  #  config.mock_with :mocha
+ 
+  #config.include AbstractController::Translation
+  
   config.mock_with :rspec
   config.before(:all) do
     WashoutBuilder::Engine.config.wash_out = {
@@ -62,10 +67,10 @@ def mock_controller(options = {}, &block)
   Object.send :remove_const, :ApiController if defined?(ApiController)
   Object.send :const_set, :ApiController, Class.new(ApplicationController) {
     soap_service options.reverse_merge({
-      snakecase_input: true,
-      camelize_wsdl: true,
-      namespace: false
-    })
+        snakecase_input: true,
+        camelize_wsdl: true,
+        namespace: false
+      })
     class_exec &block if block
   }
 
