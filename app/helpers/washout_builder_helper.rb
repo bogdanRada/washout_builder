@@ -181,12 +181,18 @@ module WashoutBuilderHelper
     xml.p "Return value:"
     xml.ul {
       xml.li {
-        if !formats[:out].nil?
-
+        unless formats[:out].nil?
+          complex_class = formats[:out][0].get_complex_class_name  
           if WashoutBuilder::Type::BASIC_TYPES.include?(formats[:out][0].type)
             xml.span("class" => "pre") { |xml| xml.span("class" => "blue") { |sp| sp << "#{formats[:out][0].type}" } }
           else
-            xml.span("class" => "pre") { xml.a("href" => "##{formats[:out][0].type}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{formats[:out][0].type}" } } }
+            unless complex_class.nil?
+              if  formats[:out][0].multiplied == false
+                xml.span("class" => "pre") { xml.a("href" => "##{complex_class}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"#{complex_class}" } } }
+              else
+                xml.span("class" => "pre") { xml.a("href" => "##{complex_class}") { |xml| xml.span("class" => "lightBlue") { |y| y<<"Array of #{complex_class}" } } }
+              end
+            end
           end
         else
           xml.span("class" => "pre") { |sp| sp << "void" }
