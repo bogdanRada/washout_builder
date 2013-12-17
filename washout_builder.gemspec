@@ -4,10 +4,10 @@ Gem::Specification.new do |s|
   s.name        = "washout_builder"
   s.version     = WashoutBuilder::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.summary     = "WashOut Soap Service Documentation builder (extends WashOut https://github.com/inossidabile/wash_out/)"
+  s.summary     = "WashOut Soap Service HTML-Documentation generator (extends WashOut https://github.com/inossidabile/wash_out/)"
   s.email       = "raoul_ice@yahoo.com"
   s.homepage    = "http://github.com/bogdanRada/washout_builder/"
-  s.description = "WashOut Soap Service Documentation builder (extends WashOut https://github.com/inossidabile/wash_out/) "
+  s.description = "WashOut Soap Service HTML-Documentation generator (extends WashOut https://github.com/inossidabile/wash_out/) "
   s.authors     = ["bogdanRada"]
   s.date = "2013-11-20"
   

@@ -21,6 +21,13 @@ require "pry"
 require "savon"
 require 'wash_out'
 
+require 'capybara/rspec'
+require 'capybara/rails'
+require 'capybara/firebug/rspec'
+require 'forgery/forgery'
+require 'webmock/rspec'
+require 'headless'
+
 Rails.backtrace_cleaner.remove_silencers!
 
 # Load support files
@@ -33,8 +40,19 @@ RSpec.configure do |config|
   # mock framework
   #  config.mock_with :mocha
  
+  #config.include Savon::Spec::Macros
   #config.include AbstractController::Translation
   
+  config.before(:suite) do
+    # Reload factories in spec/factories.
+    FactoryGirl.reload
+    # Blocks all remote HTTP requests by default, they need to be stubbed.
+    WebMock.disable_net_connect!(:allow_localhost => true)
+    if !RUBY_PLATFORM.downcase.include?('darwin') && !ENV['NO_HEADLESS']
+      Headless.new(reuse: false, destroy_on_exit: false).start
+    end
+  end
+
   config.mock_with :rspec
   config.before(:all) do
     WashoutBuilder::Engine.config.wash_out = {
