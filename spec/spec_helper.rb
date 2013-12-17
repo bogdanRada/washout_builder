@@ -24,7 +24,6 @@ require 'wash_out'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara/firebug/rspec'
-require 'forgery/forgery'
 require 'webmock/rspec'
 require 'headless'
 
@@ -37,15 +36,8 @@ RSpec.configure do |config|
   require 'rspec/expectations'
   config.include RSpec::Matchers
   
-  # mock framework
-  #  config.mock_with :mocha
- 
-  #config.include Savon::Spec::Macros
-  #config.include AbstractController::Translation
   
   config.before(:suite) do
-    # Reload factories in spec/factories.
-    FactoryGirl.reload
     # Blocks all remote HTTP requests by default, they need to be stubbed.
     WebMock.disable_net_connect!(:allow_localhost => true)
     if !RUBY_PLATFORM.downcase.include?('darwin') && !ENV['NO_HEADLESS']
@@ -53,7 +45,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.mock_with :rspec
+  config.mock_with :mocha
   config.before(:all) do
     WashoutBuilder::Engine.config.wash_out = {
       snakecase_input: false,

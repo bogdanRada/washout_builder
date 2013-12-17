@@ -37,9 +37,11 @@ module WashoutBuilder
       
       def input_types
         types = []
-        soap_actions.each do |operation, formats|
-          (formats[:in]).each do |p|
-            types << p
+        unless soap_actions.blank?
+          soap_actions.each do |operation, formats|
+            (formats[:in]).each do |p|
+              types << p
+            end
           end
         end
         types
@@ -47,9 +49,11 @@ module WashoutBuilder
       
       def output_types
         types = []
-        soap_actions.each do |operation, formats|
-          (formats[:out]).each do |p|
-            types << p
+        unless soap_actions.blank?
+          soap_actions.each do |operation, formats|
+            (formats[:out]).each do |p|
+              types << p
+            end
           end
         end
         types

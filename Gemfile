@@ -18,15 +18,14 @@ gem 'tzinfo'
 gem 'pry'
 gem 'simplecov'
 gem 'simplecov-summary'
+
 gem 'nori'
 gem 'nokogiri'
+
 gem 'capybara', '1.1.4'
 gem 'selenium-webdriver', '~> 2.37.0'
 gem 'headless'
 gem 'capybara-firebug'
 gem 'mocha', '~> 0.13.3', :require => false
-gem 'factory_girl_rails'
-gem 'forgery'
 gem 'webmock'
-gem 'rspec-instafail'
 

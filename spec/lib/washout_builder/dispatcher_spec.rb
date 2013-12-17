@@ -16,7 +16,7 @@ describe ApiController, :type => :controller do
   render_views(false)
  
   before(:each) do
-    WashoutBuilder::Document::Generator.stub(:new).and_return(document)
+    WashoutBuilder::Document::Generator.stubs(:new).returns(document)
   end
   
   it "inits the document generator" do
