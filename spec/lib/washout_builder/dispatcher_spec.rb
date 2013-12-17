@@ -1,51 +1,46 @@
 #encoding:utf-8
 
 require 'spec_helper'
+mock_controller do
+  soap_action 'dispatcher_method', :args => nil, :return => nil
 
-describe WashoutBuilder::Dispatcher do
-
-  class Dispatcher < ApplicationController
-    soap_service
-
-    def params
-      @_params
-    end
+  def dispatcher_method
+    raise SOAPError.new("some message", 1001) 
   end
+end
 
+describe ApiController, :type => :controller do
 
-
-
-  describe "#_load_params" do
-    let(:dispatcher) { Dispatcher.new }
-    let(:soap_config) { 
-      OpenStruct.new(
-        WashOut::Rails::Engine.config.wash_out.merge( { camelize_wsdl: false })
-      )
-    }
-    it "should load params for an array" do
-      spec = WashOut::Param.parse_def(soap_config, {:my_array => [:integer] } )
-      xml_data = {:my_array => [1, 2, 3]}
-      dispatcher._load_params(spec, xml_data).should == {"my_array" => [1, 2, 3]}
-    end
-
-    it "should load params for an empty array" do
-      spec = WashOut::Param.parse_def(soap_config, {:my_array => [:integer] } )
-      xml_data = {}
-      dispatcher._load_params(spec, xml_data).should == {}
-    end
-
-    it "should load params for a nested array" do
-      spec = WashOut::Param.parse_def(soap_config, {:nested => {:my_array => [:integer]}} )
-      xml_data = {:nested => {:my_array => [1, 2, 3]}}
-      dispatcher._load_params(spec, xml_data).should == {"nested" => {"my_array" => [1, 2, 3]}}
-    end
-
-    it "should load params for an empty nested array" do
-      spec = WashOut::Param.parse_def(soap_config, {:nested => {:empty => [:integer] }} )
-      xml_data = {:nested => nil}
-      dispatcher._load_params(spec, xml_data).should == {"nested" => {}}
-    end
-
+  let(:document) { WashoutBuilder::Document::Generator.new}
+  
+  render_views(false)
+ 
+  before(:each) do
+    WashoutBuilder::Document::Generator.stub(:new).and_return(document)
   end
-
+  
+  it "inits the document generator" do
+    WashoutBuilder::Document::Generator.expects(:new).with(
+      :config => ApiController.soap_config, 
+      :service_class => ApiController,  
+      :soap_actions =>  {'dispatcher_method' => 
+          {:args => nil, :return => nil, :in => [], :out => [], :to => 'dispatcher_method'}
+      }
+    )      
+    get :_generate_doc
+  end
+  
+  it "verifies render" do
+    controller.expects(:render).with(nil)
+    controller.expects(:render).with(:template => "wash_with_html/doc", :layout => false,
+      :content_type => 'text/html')
+    get :_generate_doc
+  end
+   
+  it "renders the template" , :fails =>true do
+    get :_generate_doc
+    response.should render_template("wash_with_html/doc")
+  end
+  
+  
 end
