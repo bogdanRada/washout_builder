@@ -5,9 +5,9 @@ require 'spec_helper'
 describe WashoutBuilder do
 
   before(:each) do
-        WashOut::Rails::Engine.config.wash_out[:wsdl_style] = 'rpc'
-        WashOut::Rails::Engine.config.wash_out[:parser] = :nokogiri
-        WashOut::Rails::Engine.config.wash_out[:catch_xml_errors] = true 
+    WashOut::Rails::Engine.config.wash_out[:wsdl_style] = 'rpc'
+    WashOut::Rails::Engine.config.wash_out[:parser] = :nokogiri
+    WashOut::Rails::Engine.config.wash_out[:catch_xml_errors] = true 
   end
   
   let :nori do
@@ -22,16 +22,16 @@ describe WashoutBuilder do
     message = {:value => message} unless message.is_a?(Hash)
 
     savon_client = Savon::Client.new(:log => false, :wsdl => 'http://app/api/wsdl', &block)
-   result = savon_client.call(method, :message => message) 
-   result.respond_to?(:to_hash) ? result.to_hash : result
+    result = savon_client.call(method, :message => message) 
+    result.respond_to?(:to_hash) ? result.to_hash : result
   end
 
   def savon!(method, message={}, &block)
     message = {:value => message} unless message.is_a?(Hash)
 
     savon_client = Savon::Client.new(:log => true, :wsdl => 'http://app/api/wsdl', &block)
-   result = savon_client.call(method, :message => message) 
-   result.respond_to?(:to_hash) ? result.to_hash : result
+    result = savon_client.call(method, :message => message) 
+    result.respond_to?(:to_hash) ? result.to_hash : result
   end
 
   describe "Module" do
@@ -59,12 +59,12 @@ describe WashoutBuilder do
 
         soap_action "getArea", :args => {
           :circle => [{
-            :center => { :x => [:integer], :y => :integer },
-            :radius => :double
-          }]},
+              :center => { :x => [:integer], :y => :integer },
+              :radius => :double
+            }]},
           :return => { :area => :double }
         soap_action "rocky", :args   => { :circle1 => { :x => :integer } },
-                             :return => { :circle2 => { :y => :integer } }
+          :return => { :circle2 => { :y => :integer } }
       end
 
       HTTPI.get("http://app/api/wsdl").body
@@ -192,20 +192,20 @@ describe WashoutBuilder do
       it "accept nested structures" do
         mock_controller do
           soap_action "getArea", :args   => { :circle => { :center => { :x => :integer,
-                                                                        :y => :integer },
-                                                           :radius => :double } },
-                                 :return => { :area => :double,
-                                              :distance_from_o => :double },
-                                 :to     => :get_area
+                :y => :integer },
+              :radius => :double } },
+            :return => { :area => :double,
+            :distance_from_o => :double },
+            :to     => :get_area
           def get_area
             circle = params[:circle]
             render :soap => { :area            => Math::PI * circle[:radius] ** 2,
-                              :distance_from_o => Math.sqrt(circle[:center][:x] ** 2 + circle[:center][:y] ** 2) }
+              :distance_from_o => Math.sqrt(circle[:center][:x] ** 2 + circle[:center][:y] ** 2) }
           end
         end
 
         message = { :circle => { :center => { :x => 3, :y => 4 },
-                                 :radius => 5 } }
+            :radius => 5 } }
 
         savon(:get_area, message)[:get_area_response].
           should == ({ :area => (Math::PI * 25).to_s, :distance_from_o => (5.0).to_s })
@@ -214,10 +214,10 @@ describe WashoutBuilder do
       it "accept arrays" do
         mock_controller do
           soap_action "rumba",
-                      :args   => {
-                        :rumbas => [:integer]
-                      },
-                      :return => nil
+            :args   => {
+            :rumbas => [:integer]
+          },
+            :return => nil
           def rumba
             params.should == {"rumbas" => [1, 2, 3]}
             render :soap => nil
@@ -230,10 +230,10 @@ describe WashoutBuilder do
       it "accept empty arrays" do
         mock_controller do
           soap_action "rumba",
-                      :args   => {
-                        :my_array => [:integer]
-                      },
-                      :return => nil
+            :args   => {
+            :my_array => [:integer]
+          },
+            :return => nil
           def rumba
             params.should == {}
             render :soap => nil
@@ -245,10 +245,10 @@ describe WashoutBuilder do
       it "accept nested empty arrays" do
         mock_controller do
           soap_action "rumba",
-                      :args   => {
-                        :nested => {:my_array => [:integer] }
-                      },
-                      :return => nil
+            :args   => {
+            :nested => {:my_array => [:integer] }
+          },
+            :return => nil
           def rumba
             params.should == {"nested" => {}}
             render :soap => nil
@@ -260,13 +260,13 @@ describe WashoutBuilder do
       it "accept nested structures inside arrays" do
         mock_controller do
           soap_action "rumba",
-                      :args   => {
-                        :rumbas => [ {
-                          :zombies => :string,
-                          :puppies => :string
-                        } ]
-                      },
-                      :return => nil
+            :args   => {
+            :rumbas => [ {
+                :zombies => :string,
+                :puppies => :string
+              } ]
+          },
+            :return => nil
           def rumba
             params.should == {
               "rumbas" => [
@@ -287,11 +287,11 @@ describe WashoutBuilder do
       it "respond with nested structures" do
         mock_controller do
           soap_action "gogogo",
-                      :args   => nil,
-                      :return => {
-                        :zoo => :string,
-                        :boo => { :moo => :string, :doo => :string }
-                      }
+            :args   => nil,
+            :return => {
+            :zoo => :string,
+            :boo => { :moo => :string, :doo => :string }
+          }
           def gogogo
             render :soap => {
               :zoo => 'zoo',
@@ -307,8 +307,8 @@ describe WashoutBuilder do
       it "respond with arrays" do
         mock_controller do
           soap_action "rumba",
-                      :args   => nil,
-                      :return => [:integer]
+            :args   => nil,
+            :return => [:integer]
           def rumba
             render :soap => [1, 2, 3]
           end
@@ -322,15 +322,15 @@ describe WashoutBuilder do
           soap_action "rumba",
             :args   => nil,
             :return => {
-              :rumbas => [{:zombies => :string, :puppies => :string}]
-            }
+            :rumbas => [{:zombies => :string, :puppies => :string}]
+          }
           def rumba
             render :soap =>
               {:rumbas => [
-                  {:zombies => "suck1", :puppies => "rock1" },
-                  {:zombies => "suck2", :puppies => "rock2" }
-                ]
-              }
+                {:zombies => "suck1", :puppies => "rock1" },
+                {:zombies => "suck2", :puppies => "rock2" }
+              ]
+            }
           end
         end
 
@@ -377,7 +377,7 @@ describe WashoutBuilder do
         it "respond with simple definition" do
           mock_controller do
             soap_action "rocknroll",
-                        :args => nil, :return => { :my_value => [:integer] }
+              :args => nil, :return => { :my_value => [:integer] }
             def rocknroll
               render :soap => {}
             end
@@ -389,7 +389,7 @@ describe WashoutBuilder do
         it "respond with complext definition" do
           mock_controller do
             soap_action "rocknroll",
-                        :args => nil, :return => { :my_value => [{ :value => :integer }] }
+              :args => nil, :return => { :my_value => [{ :value => :integer }] }
             def rocknroll
               render :soap => {}
             end
@@ -401,7 +401,7 @@ describe WashoutBuilder do
         it "respond with nested simple definition" do
           mock_controller do
             soap_action "rocknroll",
-                        :args => nil, :return => { :my_value => { :my_array => [{ :value => :integer }] } }
+              :args => nil, :return => { :my_value => { :my_array => [{ :value => :integer }] } }
             def rocknroll
               render :soap => {}
             end
@@ -414,7 +414,7 @@ describe WashoutBuilder do
         it "handles incomplete array response" do
           mock_controller do
             soap_action "rocknroll",
-                        :args => nil, :return => { :my_value => [{ :value => :string }] }
+              :args => nil, :return => { :my_value => [{ :value => :string }] }
             def rocknroll
               render :soap => { :my_value => [nil] }
             end
@@ -566,6 +566,42 @@ describe WashoutBuilder do
           /SOAP response .*oops.*String.*telephone_booths.*Array/
         )
       end
+      
+      context "custom exceptions" do
+        let(:error_message) { "some message" }
+        let(:error_code) { 1001 }
+        let(:soap_exception) { SOAPError.new(error_message,error_code) }
+        
+        before(:each) do
+          # Savon::Response.raise_errors = false
+        end
+
+        it "raises a savon soapfault" do
+          mock_controller do
+            soap_action 'bad', :args => nil, :return => nil
+
+            def bad
+              raise SOAPError.new("some message", 1001) 
+            end
+          end
+
+          lambda { savon(:bad) }.should raise_exception{ |error|
+            error_hash = error.to_hash
+            error_hash[:fault][:faultcode].should eq(error_code.to_s)
+            error_hash[:fault][:faultstring].should eq(error_message)
+            expect(error).to be_a(Savon::SOAPFault)
+          }
+
+        end
+     
+        it "intanstiates correctly a custom exception" do
+          soap_exception.attributes.should eq({:code=>error_code, :message=>error_message, :backtrace=>nil})
+        end
+      end
+      
+     
+      
+      
     end
 
     context "deprecates" do
@@ -576,8 +612,8 @@ describe WashoutBuilder do
         mock_controller do
           lambda {
             soap_action "rumba",
-                        :args   => :integer,
-                        :return => []
+            :args   => :integer,
+            :return => []
           }.should raise_runtime_exception
           def rumba
             render :soap => nil
