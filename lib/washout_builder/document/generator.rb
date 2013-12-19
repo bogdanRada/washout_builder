@@ -39,7 +39,7 @@ module WashoutBuilder
         types = []
         unless soap_actions.blank?
           soap_actions.each do |operation, formats|
-            (formats[:in]).each do |p|
+            (formats[:builder_in]).each do |p|
               types << p
             end
           end
@@ -51,7 +51,7 @@ module WashoutBuilder
         types = []
         unless soap_actions.blank?
           soap_actions.each do |operation, formats|
-            (formats[:out]).each do |p|
+            (formats[:builder_out]).each do |p|
               types << p
             end
           end

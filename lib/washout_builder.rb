@@ -43,16 +43,50 @@ WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
 [WashOut::SOAPError, SOAPError].each do |exception_class|
   exception_class.class_eval do
     extend WashoutBuilder::Document::VirtusModel
-     include Virtus.model
-      attribute :code, Integer
-      attribute :message, String
-      attribute :backtrace, String
+    include Virtus.model
+    attribute :code, Integer
+    attribute :message, String
+    attribute :backtrace, String
+  end
+end
+
+
+if defined?(WashOut::SOAP)
+  WashOut::SOAP::ClassMethods.class_eval do
+    alias_method :original_soap_action, :soap_action
+  end
+end
+
+
+if defined?(WashOut::Rails::Controller)
+  WashOut::Rails::Controller::ClassMethods.class_eval do
+    alias_method :original_soap_action, :soap_action
   end
 end
 
 
 
+WashOut::Param.class_eval do
+   
+  def self.parse_builder_def(soap_config, definition)
+    raise RuntimeError, "[] should not be used in your params. Use nil if you want to mark empty set." if definition == []
+    return [] if definition == nil
 
+    definition = { :value => definition } unless definition.is_a?(Hash)
+
+    definition.collect do |name, opt|
+      if opt.is_a? WashOut::Param
+        opt
+      elsif opt.is_a? Array
+        WashOut::Param.new(soap_config, name, opt[0], true)
+      else
+        WashOut::Param.new(soap_config, name, opt)
+      end
+    end
+  end
+  
+end
+  
 ActionController::Base.class_eval do
 
   # Define a SOAP service. The function has no required +options+:

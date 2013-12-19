@@ -24,7 +24,7 @@ describe ApiController, :type => :controller do
       :config => ApiController.soap_config, 
       :service_class => ApiController,  
       :soap_actions =>  {'dispatcher_method' => 
-          {:args => nil, :return => nil, :in => [], :out => [], :to => 'dispatcher_method'}
+          {:args => nil, :return => nil, :in => [], :out => [],:builder_in => [], :builder_out => [],  :to => 'dispatcher_method'}
       }
     )      
     get :_generate_doc
