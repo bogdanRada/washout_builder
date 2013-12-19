@@ -204,7 +204,7 @@ module WashoutBuilderHelper
       faults = formats[:raises]
       faults = [formats[:raises]] if !faults.is_a?(Array)
       
-      faults = faults.select { |x| x.is_a?(Class) && (x.ancestors.include?(WashOut::SOAPError) ||  x.ancestors.include?(SOAPError) ) }
+      faults = faults.select { |x| x.is_a?(Class) && (x.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present? || WashoutBuilder::Type.get_fault_classes.include?(x)     ) }
       unless faults.blank?
         xml.p "Exceptions:"
         xml.ul {

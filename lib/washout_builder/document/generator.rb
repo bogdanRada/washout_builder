@@ -27,7 +27,7 @@ module WashoutBuilder
       end
       
       def service_description
-        config.description
+        config.respond_to?(:description) ? config.description : nil
       end
       
       def operations
@@ -75,16 +75,16 @@ module WashoutBuilder
        
       def fault_types
         defined = soap_actions.select{|operation, formats| !formats[:raises].blank? }
-        defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| x.is_a?(Class) && (x.ancestors.include?(WashOut::SOAPError) || x.ancestors.include?(SOAPError) ) }  unless defined.blank?
+        defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| (x.is_a?(Class) && x.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (x.is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(x)) }  unless defined.blank?
         fault_types = []
         if defined.blank?
-          defined = [WashOut::SOAPError] 
+          defined = [WashoutBuilder::Type.get_fault_classes.first]
         else
-          defined  << WashOut::SOAPError
+          defined  << WashoutBuilder::Type.get_fault_classes.first
         end
         defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
         complex_types = extract_nested_complex_types_from_exceptions(fault_types)
-        complex_types.delete_if{ |hash|  fault_types << hash if  hash[:fault].ancestors.include?(WashOut::SOAPError) ||  hash[:fault].ancestors.include?(SOAPError) } unless complex_types.blank?
+        complex_types.delete_if{ |hash|  fault_types << hash if  (hash[:fault].is_a?(Class) && hash[:fault].ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (hash[:fault].is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(hash[:fault]))  } unless complex_types.blank?
         fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?  
         complex_types = complex_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless complex_types.blank?
         [fault_types, complex_types]
