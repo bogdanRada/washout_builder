@@ -5,7 +5,7 @@ mock_controller do
   soap_action 'dispatcher_method', :args => nil, :return => nil
 
   def dispatcher_method
-    raise SOAPError.new("some message", 1001) 
+     #nothing
   end
 end
 
@@ -23,9 +23,17 @@ describe ApiController, :type => :controller do
     WashoutBuilder::Document::Generator.expects(:new).with(
       :config => ApiController.soap_config, 
       :service_class => ApiController,  
-      :soap_actions =>  {'dispatcher_method' => 
-          {:args => nil, :return => nil, :in => [], :out => [],:builder_in => [], :builder_out => [],  :to => 'dispatcher_method'}
-      }
+      :soap_actions =>  {"dispatcher_method"=>{
+          :args=>nil,
+          :return=>nil,
+          :in=>[], 
+          :out=>[], 
+          :to=>"dispatcher_method", 
+          :response_tag=>"tns:dispatcher_methodResponse", 
+          :builder_in=>[], 
+          :builder_out=>[]
+          }
+        }
     )      
     get :_generate_doc
   end

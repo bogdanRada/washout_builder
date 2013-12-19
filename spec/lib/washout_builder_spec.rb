@@ -5,10 +5,10 @@ require 'spec_helper'
 describe WashoutBuilder do
 
   before(:each) do
-    WashOut::Rails::Engine.config.wash_out[:wsdl_style] = 'rpc'
-    WashOut::Rails::Engine.config.wash_out[:parser] = :nokogiri
-    WashOut::Rails::Engine.config.wash_out[:catch_xml_errors] = true
-    WashOut::Rails::Engine.config.wash_out[:camelize_wsdl] = "lower"
+    WashOut::Engine.config.wash_out[:wsdl_style] = 'rpc'
+    WashOut::Engine.config.wash_out[:parser] = :nokogiri
+    WashOut::Engine.config.wash_out[:catch_xml_errors] = true
+    WashOut::Engine.config.wash_out[:camelize_wsdl] = "lower"
   end
   
   let :nori do
@@ -558,12 +558,12 @@ describe WashoutBuilder do
         end
 
         lambda { savon(:bad) }.should raise_exception(
-          WashOut::ProgrammerError,
+          WashOut::Dispatcher::ProgrammerError,
           /SOAP response .*wyldness.*Array.*Hash.*stallion/
         )
 
         lambda { savon(:bad2) }.should raise_exception(
-          WashOut::ProgrammerError,
+          WashOut::Dispatcher::ProgrammerError,
           /SOAP response .*oops.*String.*telephone_booths.*Array/
         )
       end
@@ -571,7 +571,7 @@ describe WashoutBuilder do
       context "custom exceptions" do
         let(:error_message) { "some message" }
         let(:error_code) { 1001 }
-        let(:soap_exception) { SOAPError.new(error_message,error_code) }
+        let(:soap_exception) { WashOut::Dispatcher::SOAPError.new(error_message,error_code) }
         
         before(:each) do
           # Savon::Response.raise_errors = false
@@ -582,7 +582,7 @@ describe WashoutBuilder do
             soap_action 'bad', :args => nil, :return => nil
 
             def bad
-              raise SOAPError.new("some message", 1001) 
+              raise WashOut::Dispatcher::SOAPError.new("some message", 1001) 
             end
           end
 
