@@ -7,7 +7,8 @@ describe WashoutBuilder do
   before(:each) do
     WashOut::Rails::Engine.config.wash_out[:wsdl_style] = 'rpc'
     WashOut::Rails::Engine.config.wash_out[:parser] = :nokogiri
-    WashOut::Rails::Engine.config.wash_out[:catch_xml_errors] = true 
+    WashOut::Rails::Engine.config.wash_out[:catch_xml_errors] = true
+    WashOut::Rails::Engine.config.wash_out[:camelize_wsdl] = "lower"
   end
   
   let :nori do

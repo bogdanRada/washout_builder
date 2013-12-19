@@ -12,7 +12,7 @@ describe WashoutBuilder::Document::Generator do
   
   let(:soap_actions) {
     {'dispatcher_method' => 
-        {:args => nil, :return => nil, :in => [], :out => [], :to => 'dispatcher_method'}
+        {:args => nil, :return => nil, :in => [], :out => [], :builder_in => [], :builder_out => [],  :to => 'dispatcher_method'}
     }
   }
   let(:service_class) { ApiController }
@@ -68,7 +68,7 @@ describe WashoutBuilder::Document::Generator do
   context "input types" do
     let(:expected) { types = []
       soap_actions.each do |operation, formats|
-        (formats[:in]).each do |p|
+        (formats[:builder_in]).each do |p|
           types << p
         end
       end
@@ -81,7 +81,7 @@ describe WashoutBuilder::Document::Generator do
   context "output types" do
     let(:expected) { types = []
       soap_actions.each do |operation, formats|
-        (formats[:out]).each do |p|
+        (formats[:builder_out]).each do |p|
           types << p
         end
       end
