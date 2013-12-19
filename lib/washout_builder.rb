@@ -30,7 +30,7 @@ end
 Virtus::InstanceMethods::Constructor.class_eval do
   alias_method  :original_initialize,:initialize
   def initialize(attributes = nil)
-    if self.class.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present? or WashoutBuilder::Type.get_fault_classes.include?(self.class)    
+    if self.class.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present? || WashoutBuilder::Type.get_fault_classes.include?(self.class)    
       attributes = {:message => attributes} unless attributes.is_a?(Hash) 
     end
     original_initialize(attributes)
