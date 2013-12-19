@@ -83,7 +83,7 @@ WashOut::Param.class_eval do
         WashOut::Param.new(soap_config, name, opt)
       end
     end
-  end
+ end
   
 end
   
