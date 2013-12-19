@@ -30,7 +30,7 @@ end
 Virtus::InstanceMethods::Constructor.class_eval do
   alias_method  :original_initialize,:initialize
   def initialize(attributes = nil)
-    if  self.class.ancestors.include?(WashOut::SOAPError) || self.is_a?(WashOut::SOAPError)  ||  self.class.ancestors.include?(SOAPError) ||self.is_a?(SOAPError)
+    if self.class.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present? or WashoutBuilder::Type.get_fault_classes.include?(self.class)    
       attributes = {:message => attributes} unless attributes.is_a?(Hash) 
     end
     original_initialize(attributes)
@@ -40,7 +40,15 @@ end
 
 WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
 
-[WashOut::SOAPError, SOAPError].each do |exception_class|
+if defined?(WashOut::Model)
+  WashOut::Model.class_eval do
+    def wash_out_param_name(*args)
+      return name.underscore
+    end
+  end
+end
+
+WashoutBuilder::Type.get_fault_classes.each do |exception_class|
   exception_class.class_eval do
     extend WashoutBuilder::Document::VirtusModel
     include Virtus.model
@@ -83,7 +91,7 @@ WashOut::Param.class_eval do
         WashOut::Param.new(soap_config, name, opt)
       end
     end
- end
+  end
   
 end
   

@@ -90,11 +90,11 @@ Here is an example :
   :description => "some description about this method to show in the documentation"
 
 
-The exception classes used <b>must inherit</b> from  <tt>WashOut::SOAPError</tt>, which has  by default  a error code and a message as attributes but you can extend it by adding more attributes to your own custom class. 
+The exception classes used <b>must inherit</b> from  <tt>WashOut::Dispatcher::SOAPError</tt>, which has  by default  a error code and a message as attributes but you can extend it by adding more attributes to your own custom class. 
 
 The WashOut::SoapError now includes Virtus.model from +virtus+ gem. This way you can add attributes like this:
 
-  class MyCustomSoapError < WashOut::SOAPError
+  class MyCustomSoapError < WashOut::Dispatcher::SOAPError
   
     attribute :custom_attribute, String
     attribute :other_custom_attribute, Integer
@@ -103,7 +103,7 @@ The WashOut::SoapError now includes Virtus.model from +virtus+ gem. This way you
    
 You can also specify complex types like this:
 
-  class MyCustomSoapError < WashOut::SOAPError
+  class MyCustomSoapError < WashOut::Dispatcher::SOAPError
   
    attribute :errors,Array[Integer]
    attribute :custom, Array[MyCustomModel]
@@ -116,7 +116,7 @@ Please checkout {Virtus Gem}[https://github.com/solnic/virtus] for further docum
 
 You can also use aggregation with another fault class exception like this:
 
-  class MyCustomSoapError < WashOut::SOAPError
+  class MyCustomSoapError < WashOut::Dispatcher::SOAPError
   
    attribute :errors, Array[MyOtherCustomSoapError]
   
