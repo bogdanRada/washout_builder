@@ -1,4 +1,4 @@
-= washout_builder {<img src="https://travis-ci.org/bogdanRada/washout_builder.png" />}[https://travis-ci.org/bogdanRada/washout_builder] {<img src="https://badge.fury.io/rb/washout_builder.png" alt="Gem Version" />}[http://badge.fury.io/rb/washout_builder]
+= washout_builder {<img src="https://travis-ci.org/bogdanRada/washout_builder.png?branch=master,develop" />}[https://travis-ci.org/bogdanRada/washout_builder] {<img src="https://badge.fury.io/rb/washout_builder.png" alt="Gem Version" />}[http://badge.fury.io/rb/washout_builder]
 
 = Overview
 WashOutBuilder is a  Soap Service Documentation generator (extends WashOut https://github.com/inossidabile/wash_out/)
