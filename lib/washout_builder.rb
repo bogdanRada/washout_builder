@@ -40,13 +40,6 @@ end
 
 WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
 
-if defined?(WashOut::Model)
-  WashOut::Model.class_eval do
-    def wash_out_param_name(*args)
-      return name.underscore
-    end
-  end
-end
 
 WashoutBuilder::Type.get_fault_classes.each do |exception_class|
   exception_class.class_eval do
