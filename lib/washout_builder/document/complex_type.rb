@@ -37,7 +37,7 @@ module WashoutBuilder
       def fix_descendant_wash_out_type(config, complex_class)
         param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
         if !param_class.nil? && param_class.ancestors.include?(WashOut::Type) && !map[0].nil? 
-          descendant = WashOut::Param.parse_def(config, param_class.wash_out_param_map)[0]
+          descendant = WashOut::Param.parse_builder_def(config, param_class.wash_out_param_map)[0]
           self.name =  descendant.name 
           self.map = descendant.map
         end
