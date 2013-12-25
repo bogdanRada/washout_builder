@@ -13,7 +13,7 @@ describe WashoutBuilderController, :type => :controller  do
   end
 
   it "gets the services" do
-    pending("test fails with rails 4.0 because of symbols. ")
+    pending("test fails with rails 4.0 and jruby but work with other versions of ruby . Reason is because of symbols. ")
     get :all
     assigns(:services).should eq([{:service_name=>"Api", :namespace=>"/api/wsdl", :endpoint=>"/api/action", :documentation_url=>"http://test.host/api/doc"}])
   end
