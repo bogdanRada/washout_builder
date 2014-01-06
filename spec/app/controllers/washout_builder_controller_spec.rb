@@ -14,7 +14,11 @@ describe WashoutBuilderController, :type => :controller  do
 
   it "gets the services" do
     get :all
+<<<<<<< Updated upstream
     assigns(:services).should eq([{"service_name"=>"Api", "namespace"=>"/api/wsdl", "endpoint"=>"/api/action", "documentation_url"=>"http://test.host/api/doc"}])
+=======
+    assigns(:services).should eq([{'service_name'=>"Api", 'namespace'=>"/api/wsdl", 'endpoint'=>"/api/action", 'documentation_url'=>"http://test.host/api/doc"}])
+>>>>>>> Stashed changes
   end
   
   
