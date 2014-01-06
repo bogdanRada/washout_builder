@@ -14,10 +14,10 @@ class WashoutBuilderController < ActionController::Base
       controllers.map do |hash|
         namespace  = hash[:class].soap_config.namespace
         @services << {
-          :service_name =>  hash[:class].to_s.underscore.gsub("_controller", "").camelize ,
-          :namespace => namespace,
-          :endpoint => namespace.gsub("/wsdl", "/action"),
-          :documentation_url => "#{request.protocol}#{request.host_with_port}/#{hash[:name]}/doc",
+          'service_name' =>  hash[:class].to_s.underscore.gsub("_controller", "").camelize ,
+          'namespace' => namespace,
+          'endpoint' => namespace.gsub("/wsdl", "/action"),
+          'documentation_url' => "#{request.protocol}#{request.host_with_port}/#{hash[:name]}/doc",
         }
       end
     end
