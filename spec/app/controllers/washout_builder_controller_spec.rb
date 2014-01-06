@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe WashoutBuilderController, :type => :controller  do
   
   let(:soap_config) { OpenStruct.new(
@@ -17,11 +16,9 @@ describe WashoutBuilderController, :type => :controller  do
     assigns(:services).should eq([{'service_name'=>"Api", 'namespace'=>"/api/wsdl", 'endpoint'=>"/api/action", 'documentation_url'=>"http://test.host/api/doc"}])
   end
   
-  
   it "renders the template" do
     get :all
     response.should render_template("wash_with_html/all_services")
   end
-  
 
 end
