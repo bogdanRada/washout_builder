@@ -69,7 +69,7 @@ module WashoutBuilder
         (input_types + output_types).each do |p|
           defined.concat(p.get_nested_complex_types(config,  defined))
         end
-        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq unless defined.blank?
+        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq{|hash| hash[:class] } unless defined.blank?
       end
             
        
@@ -85,8 +85,8 @@ module WashoutBuilder
         defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
         complex_types = extract_nested_complex_types_from_exceptions(fault_types)
         complex_types.delete_if{ |hash|  fault_types << hash if  (hash[:fault].is_a?(Class) && hash[:fault].ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (hash[:fault].is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(hash[:fault]))  } unless complex_types.blank?
-        fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless fault_types.blank?  
-        complex_types = complex_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq unless complex_types.blank?
+        fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq {|hash| hash[:fault] } unless fault_types.blank?  
+        complex_types = complex_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq {|hash| hash[:fault] } unless complex_types.blank?
         [fault_types, complex_types]
       end
       
