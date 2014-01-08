@@ -65,6 +65,22 @@ if defined?(WashOut::Rails::Controller)
   end
 end
 
+if defined?(WashOut::SoapConfig)
+  WashOut::SoapConfig.class_eval do
+    self.singleton_class.send(:alias_method, :original_config, :config)
+    self.singleton_class.send(:alias_method, :original_keys, :keys)
+      
+    def self.keys
+      @keys = config.keys
+    end
+    
+    def self.config
+      original_config.merge({description: nil})
+    end
+    
+  end
+  WashOut::SoapConfig.soap_accessor(:description)
+end
 
 
 WashOut::Param.class_eval do
