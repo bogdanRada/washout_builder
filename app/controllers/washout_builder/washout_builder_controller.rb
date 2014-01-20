@@ -1,4 +1,4 @@
-class WashoutBuilderController < ActionController::Base
+class WashoutBuilder::WashoutBuilderController < ActionController::Base
   protect_from_forgery
 
   def all

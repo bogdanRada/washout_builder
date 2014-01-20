@@ -18,7 +18,7 @@ module ActionDispatch::Routing
     # Adds the routes for a SOAP endpoint at +controller+.
     def wash_out(controller_name, options={})
       options.reverse_merge!(@scope) if @scope
-
+          
       match "#{controller_name}/doc"   => "#{controller_name}#_generate_doc", :via => :get, :format => false
       original_wash_out(controller_name, options)
 
