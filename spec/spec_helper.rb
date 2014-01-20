@@ -14,6 +14,7 @@ SimpleCov.start do
 end
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require File.expand_path("../../config/routes.rb",  __FILE__)
 require "rails/test_help"
 require "rspec/rails"
 require 'rspec/autorun'
@@ -71,7 +72,6 @@ HTTPI.adapter = :rack
 HTTPI::Adapter::Rack.mount 'app', Dummy::Application
 Dummy::Application.routes.draw do
   wash_out :api
-  mount WashoutBuilder::Engine => "/washout"
 end
 
 def mock_controller(options = {}, &block)
