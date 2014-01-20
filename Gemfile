@@ -29,3 +29,7 @@ gem 'capybara-firebug'
 gem 'mocha', '~> 0.13.3', :require => false
 gem 'webmock'
 
+unless ENV["TRAVIS"]
+  gem 'rvm-tester'
+end 
+
