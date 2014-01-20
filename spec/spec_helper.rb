@@ -71,6 +71,7 @@ HTTPI.adapter = :rack
 HTTPI::Adapter::Rack.mount 'app', Dummy::Application
 Dummy::Application.routes.draw do
   wash_out :api
+  mount WashoutBuilder::Engine => "/washout"
 end
 
 def mock_controller(options = {}, &block)
