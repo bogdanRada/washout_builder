@@ -6,8 +6,8 @@ gemspec
 gem 'wash_out',  git: 'git://github.com/inossidabile/wash_out.git'
 gem 'virtus'
 gem 'wasabi'
-gem 'savon', '>= 2.0.0'
-gem 'httpi', :git => 'git://github.com/savonrb/httpi.git'
+gem 'savon'
+gem 'httpi'
 
 gem 'rspec-rails'
 gem 'guard'
@@ -22,11 +22,11 @@ gem 'simplecov-summary'
 gem 'nori'
 gem 'nokogiri'
 
-gem 'capybara', '1.1.4'
-gem 'selenium-webdriver', '~> 2.37.0'
+gem 'capybara'
+gem 'selenium-webdriver'
 gem 'headless'
 gem 'capybara-firebug'
-gem 'mocha', '~> 0.13.3', :require => false
+gem 'mocha', :require => false
 gem 'webmock'
 
 unless ENV["TRAVIS"]
