@@ -32,9 +32,9 @@ end
 
 
 desc "Default: run the unit tests."
-task :default => [ :all]
+task :default => [:all]
 
 desc 'Test the plugin under all supported Rails versions.'
-task :all => ["appraisal:install"] do |t|
-  exec('rake appraisal spec')
+task :all   do |t|
+  exec(' bundle exec appraisal install && bundle exec rake appraisal spec')
 end
