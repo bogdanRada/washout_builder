@@ -28,6 +28,7 @@ gem 'headless'
 gem 'capybara-firebug'
 gem "mocha", "~> 0.12.8", :require => false
 gem 'webmock'
+gem 'coveralls', require: false
 
 unless ENV["TRAVIS"]
   gem 'rvm-tester'

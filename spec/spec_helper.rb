@@ -1,5 +1,7 @@
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
+require 'coveralls'
+Coveralls.wear!
 
 require 'nori'
 require 'nokogiri'
