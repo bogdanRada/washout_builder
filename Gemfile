@@ -26,7 +26,8 @@ gem 'capybara'
 gem 'selenium-webdriver'
 gem 'headless'
 gem 'capybara-firebug'
-gem "mocha", "~> 0.12.8", :require => false
+gem 'mocha',  ">=1.1.0", :require => false
+#gem "mocha", "~> 0.12.8", :require => false
 gem 'webmock'
 gem 'coveralls', require: false
 
