@@ -2,9 +2,11 @@ require 'bundler/setup'
 require 'bundler/gem_tasks'
 require 'appraisal'
 require 'rspec/core/rake_task'
+require 'coveralls/rake/task'
+Coveralls::RakeTask.new
 
 RSpec::Core::RakeTask.new(:spec) do |spec|
- # spec.rspec_opts = ['--backtrace '] 
+  # spec.rspec_opts = ['--backtrace '] 
 end
 
 #desc "Prepare dummy application"
@@ -36,5 +38,9 @@ task :default => [:all]
 
 desc 'Test the plugin under all supported Rails versions.'
 task :all   do |t|
-  exec(' bundle exec appraisal install && bundle exec rake appraisal spec')
+  if ENV["TRAVIS"]
+    exec(' bundle exec appraisal install && bundle exec rake appraisal spec && bundle exec coveralls:push')
+  else
+    exec(' bundle exec appraisal install && bundle exec rake appraisal spec')
+  end
 end
