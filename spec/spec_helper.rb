@@ -1,12 +1,10 @@
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
+
+require "simplecov"
 require 'coveralls'
 Coveralls.wear!
-
-require 'nori'
-require 'nokogiri'
-require 'active_support'
-require "simplecov"
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
   add_filter 'spec'
   add_group 'Library', 'lib'
@@ -14,6 +12,9 @@ SimpleCov.start do
 
   at_exit do; end
 end
+
+require 'nori'
+require 'nokogiri'
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require File.expand_path("../../config/routes.rb",  __FILE__)
