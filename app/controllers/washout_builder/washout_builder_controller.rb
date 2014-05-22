@@ -1,9 +1,14 @@
+require_relative "../../../lib/washout_builder/document/generator"
 class WashoutBuilder::WashoutBuilderController < ActionController::Base
   protect_from_forgery
 
   def all
-    if params[:name].present? && controller_is_a_service?(params[:name])
-      redirect_to service_documentation_url(params[:name])
+    route = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
+    if route.present?
+      #redirect_to service_documentation_url( route.defaults[:controller])
+      @document = initialize_service_generator(route) 
+      render :template => "wash_with_html/doc", :layout => false,
+        :content_type => 'text/html'
     else
       all_services
     end
@@ -11,6 +16,17 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   
   
   private
+  
+  
+  def initialize_service_generator(route)
+    controller_class_name = controller_class(route.defaults[:controller])
+    WashoutBuilder::Document::Generator.new(
+      :config => controller_class_name.soap_config, 
+      :service_class => controller_class_name,  
+      :soap_actions => controller_class_name.soap_actions
+    )
+  end
+  
   
   def all_services
     @map_controllers = map_controllers
@@ -39,9 +55,8 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   
   def  controller_is_a_service?(controller)
     route = all_controllers.detect do |route|
-      route.defaults[:controller] == controller && route.defaults[:action] == "_generate_doc"
+      route.defaults[:controller].try(:camelize) == controller.camelize && route.defaults[:action] == "_generate_doc"
     end
-    route.present? ? true : false
   end
 
   def controller_class(controller)
