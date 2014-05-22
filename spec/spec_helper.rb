@@ -12,7 +12,7 @@ SimpleCov.start do
 
   at_exit do; end
 end
-
+require 'active_support'
 require 'nori'
 require 'nokogiri'
 
