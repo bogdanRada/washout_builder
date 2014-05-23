@@ -2,6 +2,7 @@ module WashoutBuilder
   module Document
     module ComplexType
       extend ActiveSupport::Concern
+      include WashoutBuilder::Document::SharedComplexType
       
       
       def get_complex_class_name(defined = [])
@@ -66,7 +67,7 @@ module WashoutBuilder
         if  param_class.nil?
           return nil
         else
-          (param_class.ancestors - param_class.included_modules).delete_if{ |x| x.to_s.downcase == class_name.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject" || x.to_s == "WashOut::Type" }
+          get_complex_type_ancestors(param_class, ["ActiveRecord::Base", "Object", "BasicObject",  "WashOut::Type" ])
         end
       end
   
