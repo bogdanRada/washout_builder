@@ -5,7 +5,6 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   def all
     route = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
     if route.present?
-      #redirect_to service_documentation_url( route.defaults[:controller])
       @document = initialize_service_generator(route) 
       render :template => "wash_with_html/doc", :layout => false,
         :content_type => 'text/html'
