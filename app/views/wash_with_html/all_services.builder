@@ -39,9 +39,9 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
 
       @services.each do |service|
         xml.h1 "#{service['service_name']} Soap Webservice"
-        xml.p {|pre| pre << "Documentation URI: &nbsp;<a href='#{service['documentation_url']}'><span class='pre'>#{service['documentation_url']}</span></a>" }
-        xml.p {|pre| pre << "Endpoint URI: &nbsp;<span class='pre'>#{service['endpoint']}</span>" }
-        xml.p {|pre|  pre << "WSDL URI: &nbsp;<a href='#{service['namespace']}'><span class='pre'>#{service['namespace']}</span></a>" }
+        xml.p {|pre| pre << "Documentation URI: &nbsp;<a href='#{service['documentation_url']}'>#{service['documentation_url']}</a>" }
+        xml.p {|pre| pre << "Endpoint URI: &nbsp;<a href='javascript:void(0)'>#{service['endpoint']}</a>" }
+        xml.p {|pre|  pre << "WSDL URI: &nbsp;<a href='#{service['namespace']}'>#{service['namespace']}</a>" }
       end
     end
     
