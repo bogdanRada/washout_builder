@@ -2,6 +2,11 @@ module WashoutBuilder
   module Document
     module VirtusModel
       extend ActiveSupport::Concern
+      include WashoutBuilder::Document::SharedComplexType  
+      
+      def self.included(base)
+        base.send :include, WashoutBuilder::Document::SharedComplexType
+      end
       
       def get_fault_class_ancestors( defined, debug = false)
         bool_the_same = false
@@ -21,7 +26,7 @@ module WashoutBuilder
       end
       
       def fault_ancestors
-        (self.ancestors - self.included_modules).delete_if{ |x| x.to_s.downcase == self.to_s.downcase  ||  x.to_s == "ActiveRecord::Base" ||  x.to_s == "Object" || x.to_s =="BasicObject"   || x.to_s == "Exception" }
+        get_complex_type_ancestors(self, ["ActiveRecord::Base", "Object", "BasicObject",  "Exception" ])
       end
       
       def fault_ancestor_hash( structure, ancestors)
