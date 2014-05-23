@@ -34,8 +34,8 @@ module WashoutBuilder
         soap_actions.map { |operation, formats| operation }
       end
       
-      def sort_fault_types(types)
-         types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq {|hash| hash[:fault] } unless types.blank?
+      def sort_complex_types(types, type)
+         types.sort_by { |hash| hash[type.to_sym].to_s.downcase }.uniq {|hash| hash[type.to_sym] } unless types.blank?
       end
       
       
@@ -70,7 +70,7 @@ module WashoutBuilder
         (input_types + output_types).each do |p|
           defined.concat(p.get_nested_complex_types(config,  defined))
         end
-        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq{|hash| hash[:class] } unless defined.blank?
+        defined =  sort_complex_types(defined, "class")
       end
             
        
@@ -79,25 +79,42 @@ module WashoutBuilder
       end
       
       def exceptions_raised
-       actions = actions_with_exceptions
-       faults= actions.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| (x.is_a?(Class) && x.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (x.is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(x)) }  unless actions.blank?
-       if faults.blank?
-          faults = [WashoutBuilder::Type.get_fault_classes.first]
-        else
-          faults  << WashoutBuilder::Type.get_fault_classes.first
-        end
-        faults
+         actions_with_exceptions.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten
       end
       
+      def fault_classes
+          WashoutBuilder::Type.get_fault_classes
+      end
+      
+      def has_ancestor_fault?(fault_class)
+        fault_class.ancestors.detect{ |fault|  fault_classes.include?(fault)  }.present?
+      end
+      
+      def valid_fault_class?(fault)
+         fault.is_a?(Class) &&   ( has_ancestor_fault?(fault) ||  fault_classes.include?(fault)) 
+      end
+      
+      def filter_exceptions_raised
+        exceptions_raised.select { |x|  valid_fault_class?(x)  }  unless actions_with_exceptions.blank?
+      end
+      
+      def get_complex_fault_types(fault_types)
+        defined  = filter_exceptions_raised
+        if defined.blank?
+          defined = [fault_classes.first]
+        else
+          defined  << fault_classes.first
+        end
+        defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
+        fault_types 
+      end
       
       def fault_types
-        defined = exceptions_raised
-        fault_types = []
-        defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
+        fault_types = get_complex_fault_types([])
         complex_types = extract_nested_complex_types_from_exceptions(fault_types)
-        complex_types.delete_if{ |hash|  fault_types << hash if  (hash[:fault].is_a?(Class) && hash[:fault].ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (hash[:fault].is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(hash[:fault]))  } unless complex_types.blank?
-        fault_types = sort_fault_types(fault_types)
-        complex_types = sort_fault_types(complex_types)
+        complex_types.delete_if{ |hash|  fault_types << hash   if  valid_fault_class?(hash[:fault])  } unless complex_types.blank?
+        fault_types = sort_complex_types(fault_types, "fault")
+        complex_types = sort_complex_types(complex_types, "fault")
         [fault_types, complex_types]
       end
       
