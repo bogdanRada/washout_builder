@@ -34,12 +34,17 @@ module WashoutBuilder
         soap_actions.map { |operation, formats| operation }
       end
       
+      def sort_fault_types(types)
+         types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq {|hash| hash[:fault] } unless types.blank?
+      end
       
-      def input_types
+      
+      def argument_types(type)
+        format_type = (type == "input") ? "builder_in" : ":builder_out"
         types = []
         unless soap_actions.blank?
           soap_actions.each do |operation, formats|
-            (formats[:builder_in]).each do |p|
+            (formats[format_type.to_sym]).each do |p|
               types << p
             end
           end
@@ -47,16 +52,12 @@ module WashoutBuilder
         types
       end
       
+      def input_types
+        argument_types("input")
+      end
+      
       def output_types
-        types = []
-        unless soap_actions.blank?
-          soap_actions.each do |operation, formats|
-            (formats[:builder_out]).each do |p|
-              types << p
-            end
-          end
-        end
-        types
+        argument_types("output")
       end
       
       def get_soap_action_names
@@ -73,20 +74,30 @@ module WashoutBuilder
       end
             
        
-      def fault_types
-        defined = soap_actions.select{|operation, formats| !formats[:raises].blank? }
-        defined = defined.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| (x.is_a?(Class) && x.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (x.is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(x)) }  unless defined.blank?
-        fault_types = []
-        if defined.blank?
-          defined = [WashoutBuilder::Type.get_fault_classes.first]
+      def actions_with_exceptions
+         soap_actions.select{|operation, formats| !formats[:raises].blank? }
+      end
+      
+      def exceptions_raised
+       actions = actions_with_exceptions
+       faults= actions.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten.select { |x| (x.is_a?(Class) && x.ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (x.is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(x)) }  unless actions.blank?
+       if faults.blank?
+          faults = [WashoutBuilder::Type.get_fault_classes.first]
         else
-          defined  << WashoutBuilder::Type.get_fault_classes.first
+          faults  << WashoutBuilder::Type.get_fault_classes.first
         end
+        faults
+      end
+      
+      
+      def fault_types
+        defined = exceptions_raised
+        fault_types = []
         defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
         complex_types = extract_nested_complex_types_from_exceptions(fault_types)
         complex_types.delete_if{ |hash|  fault_types << hash if  (hash[:fault].is_a?(Class) && hash[:fault].ancestors.detect{ |fault|  WashoutBuilder::Type.get_fault_classes.include?(fault)  }.present?) || (hash[:fault].is_a?(Class) && WashoutBuilder::Type.get_fault_classes.include?(hash[:fault]))  } unless complex_types.blank?
-        fault_types = fault_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq {|hash| hash[:fault] } unless fault_types.blank?  
-        complex_types = complex_types.sort_by { |hash| hash[:fault].to_s.downcase }.uniq {|hash| hash[:fault] } unless complex_types.blank?
+        fault_types = sort_fault_types(fault_types)
+        complex_types = sort_fault_types(complex_types)
         [fault_types, complex_types]
       end
       
