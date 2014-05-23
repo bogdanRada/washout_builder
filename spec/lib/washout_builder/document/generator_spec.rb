@@ -1,6 +1,12 @@
 #encoding:utf-8
 require 'spec_helper'
-
+mock_controller do
+   soap_action 'dispatcher_method', :args => nil, :return => nil
+ 
+   def dispatcher_method
+      #nothing
+   end
+ end
 
 describe WashoutBuilder::Document::Generator do
   
