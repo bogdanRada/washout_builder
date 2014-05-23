@@ -48,13 +48,13 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   
   def map_controllers
     all_controllers.map do |route|
-      route.defaults[:controller]   if route.defaults[:action] == "_generate_doc"
+      route.defaults[:controller]   if route.defaults[:action] == "_generate_wsdl"
     end.uniq.compact
   end
   
   def  controller_is_a_service?(controller)
     route = all_controllers.detect do |route|
-      route.defaults[:controller].try(:camelize) == controller.camelize && route.defaults[:action] == "_generate_doc"
+      route.defaults[:controller].try(:camelize) == controller.camelize && route.defaults[:action] == "_generate_wsdl"
     end
   end
 
@@ -71,7 +71,7 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   end
   
   def service_documentation_url(controller_name)
-    "#{request.protocol}#{request.host_with_port}/#{controller_name}/doc"
+    "#{washout_builder.root_url}#{controller_name.camelize}"
   end
 
 end
