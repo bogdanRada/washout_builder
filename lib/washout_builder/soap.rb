@@ -38,7 +38,6 @@ module WashoutBuilder
     included do
       include WashOut::Configurable if defined?(WashOut::Configurable)
       include  WashOut::Dispatcher if defined?(WashOut::Dispatcher)
-      include WashoutBuilder::Dispatcher
       self.soap_actions = {}
     end
   end
