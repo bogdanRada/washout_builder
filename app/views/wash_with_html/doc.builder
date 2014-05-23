@@ -41,9 +41,8 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
       xml.span( "class" => "pre") {
         xml.a( "href" => "#{@document.namespace}") { |y| y << "#{@document.namespace}" }
       };}
-
+      xml.p ""
     unless @document.service_description.blank?
-      xml.h1 "#{@document.service}"
       xml.p "#{@document.service_description}"
     end
 
