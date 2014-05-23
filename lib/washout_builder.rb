@@ -6,27 +6,10 @@ require 'washout_builder/document/shared_complex_type'
 require 'washout_builder/document/complex_type'
 require 'washout_builder/document/virtus_model'
 require 'washout_builder/document/generator'
-require 'washout_builder/dispatcher'
 require 'washout_builder/type'
 require 'washout_builder/version'
 
 
-module ActionDispatch::Routing
-  class  Mapper
-
-    alias_method  :original_wash_out,:wash_out
-
-    # Adds the routes for a SOAP endpoint at +controller+.
-    def wash_out(controller_name, options={})
-      options.reverse_merge!(@scope) if @scope
-          
-      match "#{controller_name}/doc"   => "#{controller_name}#_generate_doc", :via => :get, :format => false
-      original_wash_out(controller_name, options)
-
-
-    end
-  end
-end
 
 Virtus::InstanceMethods::Constructor.class_eval do
   alias_method  :original_initialize,:initialize
