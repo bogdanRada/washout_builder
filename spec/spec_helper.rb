@@ -12,6 +12,12 @@ SimpleCov.start do
 
   at_exit do; end
 end
+
+if ENV["TRAVIS"]
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+end
+
 require 'active_support'
 require 'nori'
 require 'nokogiri'

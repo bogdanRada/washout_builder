@@ -30,6 +30,7 @@ gem 'mocha',  ">=1.1.0", :require => false
 #gem "mocha", "~> 0.12.8", :require => false
 gem 'webmock'
 gem 'coveralls', require: false
+gem "codeclimate-test-reporter", group: :test, require: nil
 
 unless ENV["TRAVIS"]
   gem 'rvm-tester'
