@@ -40,7 +40,7 @@ module WashoutBuilder
       
       
       def argument_types(type)
-        format_type = (type == "input") ? "builder_in" : ":builder_out"
+        format_type = (type == "input") ? "builder_in" : "builder_out"
         types = []
         unless soap_actions.blank?
           soap_actions.each do |operation, formats|
