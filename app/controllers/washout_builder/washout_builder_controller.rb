@@ -5,7 +5,7 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   def all
     route = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
     if route.present?
-      @document = initialize_service_generator(route) 
+      @document =  WashoutBuilder::Document::Generator.new(route.defaults[:controller])
       render :template => "wash_with_html/doc", :layout => false,
         :content_type => 'text/html'
     else
@@ -15,16 +15,6 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   
   
   private
-  
-  
-  def initialize_service_generator(route)
-    controller_class_name = controller_class(route.defaults[:controller])
-    WashoutBuilder::Document::Generator.new(
-      :config => controller_class_name.soap_config, 
-      :service_class => controller_class_name,  
-      :soap_actions => controller_class_name.soap_actions
-    )
-  end
   
   
   def all_services

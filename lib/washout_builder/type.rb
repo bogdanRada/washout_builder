@@ -21,6 +21,15 @@ module WashoutBuilder
       return faults
     end
     
+      
+    def self.has_ancestor_fault?(fault_class)
+      fault_class.ancestors.detect{ |fault|  get_fault_classes.include?(fault)  }.present?
+    end
+      
+    def self.valid_fault_class?(fault)
+      fault.is_a?(Class) &&   ( has_ancestor_fault?(fault) ||  get_fault_classes.include?(fault)) 
+    end
+    
     
   end
 end

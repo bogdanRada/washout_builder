@@ -62,6 +62,18 @@ module WashoutBuilder
       end
       
       
+      def self.extract_nested_complex_types(complex_class, complex_types)
+          unless complex_class.nil?
+            param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
+            if param_class.present? && param_class.ancestors.include?(Virtus::Model::Core)
+              param_class.send :extend, WashoutBuilder::Document::VirtusModel
+              param_class.get_fault_class_ancestors( complex_types)
+            elsif param_class.present? && !param_class.ancestors.include?(Virtus::Model::Core)
+              raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
+            end 
+          end
+      end
+      
     end
   end
 end
