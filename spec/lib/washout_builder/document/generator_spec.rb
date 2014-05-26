@@ -1,12 +1,14 @@
 #encoding:utf-8
 require 'spec_helper'
 mock_controller do
-   soap_action 'dispatcher_method', :args => nil, :return => nil
+  soap_service  namespace: "/api/wsdl", description: "some description"
+
+  soap_action 'dispatcher_method', :args => nil, :return => nil
  
-   def dispatcher_method
-      #nothing
-   end
- end
+  def dispatcher_method
+    #nothing
+  end
+end
 
 describe WashoutBuilder::Document::Generator do
   
@@ -22,32 +24,12 @@ describe WashoutBuilder::Document::Generator do
     }
   }
   let(:service_class) { ApiController }
-  let(:attributes) {
-    {
-      :config => soap_config,
-      :service_class => service_class,  
-      :soap_actions =>  soap_actions
-    }}
-  
   before(:each) do
-    @document = WashoutBuilder::Document::Generator.new(attributes)
-  end
-    
-  context "initialize" do
-  
-    it "sets the config " do
-      @document.config.should eq(soap_config) 
-    end
-   
-    it "sets the service_class " do
-      @document.service_class.should eq(service_class) 
-    end
-    
-    it "sets the soap_actions " do
-      @document.soap_actions.should eq(soap_actions) 
-    end
+    @document = WashoutBuilder::Document::Generator.new("api")
+    @document.stubs(:controller_class).returns(service_class)
     
   end
+    
   
   
   context "namespace" do
