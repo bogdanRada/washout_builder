@@ -194,7 +194,6 @@ module WashoutBuilderHelper
   end
   
   def create_html_public_method_arguments(xml, pre, operation, formats)
-    xml.span("class" => "bold") {|y|  y << "#{operation} (" }
     mlen = formats[:builder_in].size
     xml.br if mlen > 1
     spacer = "&nbsp;&nbsp;&nbsp;&nbsp;"
@@ -234,6 +233,7 @@ module WashoutBuilderHelper
 
     xml.p("class" => "pre"){ |pre|
       create_html_public_method_return_type(xml,pre, formats)
+       xml.span("class" => "bold") {|y|  y << "#{operation} (" }
       create_html_public_method_arguments(xml, pre, operation, formats)
     }
     xml.p "#{formats[:description]}" if !formats[:description].blank?
