@@ -1,29 +1,34 @@
+require_relative "./virtus_model"
 module WashoutBuilder
   module Document
     class Generator
        
-      @attrs = [:soap_actions, :config, :service_class]
+      @attrs = [:soap_actions, :config, :controller_name]
       
       attr_reader *@attrs
       attr_accessor  *@attrs
       
-      def initialize(attrs = {})
-        self.config = attrs[:config]
-        self.service_class = attrs[:service_class]
-        self.soap_actions = attrs[:soap_actions]
+      def initialize(controller)
+          controller_class_name = controller_class(controller)
+          self.config =controller_class_name.soap_config
+          self.soap_actions = controller_class_name.soap_actions
+          self.controller_name = controller
       end
      
       def namespace
-        config.namespace
+        config.respond_to?(:namespace) ? config.namespace : nil
       end
       
-      
+      def controller_class(controller)
+        "#{controller}_controller".camelize.constantize
+      end
+  
       def endpoint 
-        namespace.gsub("/wsdl", "/action")
+        namespace.blank? ? nil : namespace.gsub("/wsdl", "/action")
       end
       
       def service 
-        service_class.name.underscore.gsub("_controller", "").camelize
+        controller_name.blank? ? nil : controller_name.camelize
       end
       
       def service_description
@@ -35,7 +40,7 @@ module WashoutBuilder
       end
       
       def sort_complex_types(types, type)
-         types.sort_by { |hash| hash[type.to_sym].to_s.downcase }.uniq {|hash| hash[type.to_sym] } unless types.blank?
+        types.sort_by { |hash| hash[type.to_sym].to_s.downcase }.uniq {|hash| hash[type.to_sym] } unless types.blank?
       end
       
       
@@ -75,35 +80,24 @@ module WashoutBuilder
             
        
       def actions_with_exceptions
-         soap_actions.select{|operation, formats| !formats[:raises].blank? }
+        soap_actions.select{|operation, formats| !formats[:raises].blank? }
       end
       
       def exceptions_raised
-         actions_with_exceptions.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten
+        actions_with_exceptions.collect {|operation, formats|  formats[:raises].is_a?(Array)  ? formats[:raises] : [formats[:raises]] }.flatten
       end
-      
-      def fault_classes
-          WashoutBuilder::Type.get_fault_classes
-      end
-      
-      def has_ancestor_fault?(fault_class)
-        fault_class.ancestors.detect{ |fault|  fault_classes.include?(fault)  }.present?
-      end
-      
-      def valid_fault_class?(fault)
-         fault.is_a?(Class) &&   ( has_ancestor_fault?(fault) ||  fault_classes.include?(fault)) 
-      end
-      
+     
+     
       def filter_exceptions_raised
-        exceptions_raised.select { |x|  valid_fault_class?(x)  }  unless actions_with_exceptions.blank?
+        exceptions_raised.select { |x|  WashoutBuilder::Type.valid_fault_class?(x)  }  unless actions_with_exceptions.blank?
       end
       
       def get_complex_fault_types(fault_types)
         defined  = filter_exceptions_raised
         if defined.blank?
-          defined = [fault_classes.first]
+          defined = [WashoutBuilder::Type.get_fault_classes.first]
         else
-          defined  << fault_classes.first
+          defined  << WashoutBuilder::Type.get_fault_classes.first
         end
         defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
         fault_types 
@@ -112,7 +106,7 @@ module WashoutBuilder
       def fault_types
         fault_types = get_complex_fault_types([])
         complex_types = extract_nested_complex_types_from_exceptions(fault_types)
-        complex_types.delete_if{ |hash|  fault_types << hash   if  valid_fault_class?(hash[:fault])  } unless complex_types.blank?
+        complex_types.delete_if{ |hash|  fault_types << hash   if  WashoutBuilder::Type.valid_fault_class?(hash[:fault])  } unless complex_types.blank?
         fault_types = sort_complex_types(fault_types, "fault")
         complex_types = sort_complex_types(complex_types, "fault")
         [fault_types, complex_types]
@@ -123,20 +117,12 @@ module WashoutBuilder
         fault_types.each do |hash| 
           hash[:structure].each do |attribute, attr_details|
             complex_class = hash[:fault].get_virtus_member_type_primitive(attr_details)
-            unless complex_class.nil?
-              param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
-              if !param_class.nil? && param_class.ancestors.include?(Virtus::Model::Core)
-                param_class.send :extend, WashoutBuilder::Document::VirtusModel
-                param_class.get_fault_class_ancestors( complex_types)
-              elsif !param_class.nil? && !param_class.ancestors.include?(Virtus::Model::Core)
-                raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
-              end 
-            end
-          end 
+            WashoutBuilder::Document::VirtusModel.extract_nested_complex_types(complex_class, complex_types)
+          end
         end
         complex_types
       end
-       
+      
        
        
     
