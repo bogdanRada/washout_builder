@@ -595,9 +595,6 @@ describe WashoutBuilder do
 
         end
      
-        it "intanstiates correctly a custom exception" do
-          soap_exception.attributes.should eq({:code=>error_code, :message=>error_message, :backtrace=>nil})
-        end
       end
       
      
