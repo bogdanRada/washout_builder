@@ -92,22 +92,18 @@ module WashoutBuilder
         exceptions_raised.select { |x|  WashoutBuilder::Type.valid_fault_class?(x)  }  unless actions_with_exceptions.blank?
       end
       
-      def get_complex_fault_types
+      def get_complex_fault_types(base_fault_array)
         fault_types =[]
         defined  = filter_exceptions_raised
-        if defined.blank?
-          defined = [WashoutBuilder::Type.get_fault_classes.first]
-        else
-          defined  << WashoutBuilder::Type.get_fault_classes.first
-        end
+        defined = defined.blank? ?  base_fault_array  :  defined.concat(base_fault_array)
         defined.each{ |exception_class|  exception_class.get_fault_class_ancestors( fault_types, true)}  unless   defined.blank?
         fault_types 
       end
       
       def fault_types
-        fault_types = get_complex_fault_types
-        fault_types = sort_complex_types(fault_types, "fault")
-        [fault_types, []]
+         base_fault =[WashoutBuilder::Type.get_fault_classes.first]
+        fault_types = get_complex_fault_types(base_fault)
+        sort_complex_types(fault_types, "fault")
       end
       
     end
