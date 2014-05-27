@@ -1,6 +1,6 @@
 module WashoutBuilder
   module Document
-    module VirtusModel
+    module ExceptionModel
       extend ActiveSupport::Concern
       include WashoutBuilder::Document::SharedComplexType  
       
@@ -56,22 +56,47 @@ module WashoutBuilder
         complex_class
       end
  
-       
+      
+      def get_exception_attributes
+        attrs = self.instance_methods.find_all do |method|
+          method != :== &&
+            method != :! &&
+            self.instance_methods.include?(:"#{method}=") 
+        end
+        attrs.concat(["message", "backtrace"])
+      end
+      
+      
       def get_virtus_model_structure
-        attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= { :primitive => "#{elem.primitive}", :member_type => elem.options[:member_type].nil? ? nil: elem.options[:member_type].primitive }; h }
+        h = {}
+        get_exception_attributes.each do |method_name|
+          primitive_type = case method_name.to_s.downcase
+          when "code" 
+             "integer"
+          when "message", "backtrace"
+             "string"
+          else
+             "string"
+          end
+          h["#{method_name}"]= { 
+            :primitive => "#{primitive_type}", 
+            :member_type => nil
+          }
+        end
+        return h
       end
       
       
       def self.extract_nested_complex_types(complex_class, complex_types)
-          unless complex_class.nil?
-            param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
-            if param_class.present? && param_class.ancestors.include?(Virtus::Model::Core)
-              param_class.send :extend, WashoutBuilder::Document::VirtusModel
-              param_class.get_fault_class_ancestors( complex_types)
-            elsif param_class.present? && !param_class.ancestors.include?(Virtus::Model::Core)
-              raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
-            end 
-          end
+        unless complex_class.nil?
+          param_class = complex_class.is_a?(Class) ? complex_class : complex_class.constantize rescue nil
+          if param_class.present? && WashoutBuilder::Type.valid_fault_class?(param_class)
+            param_class.send :extend, WashoutBuilder::Document::ExceptionModel
+            param_class.get_fault_class_ancestors( complex_types)
+          elsif param_class.present? && !WashoutBuilder::Type.valid_fault_class?(param_class)
+            raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
+          end 
+        end
       end
       
     end
