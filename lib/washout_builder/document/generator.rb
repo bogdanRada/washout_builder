@@ -1,4 +1,4 @@
-require_relative "./virtus_model"
+require_relative "./exception_model"
 module WashoutBuilder
   module Document
     class Generator
@@ -117,7 +117,7 @@ module WashoutBuilder
         fault_types.each do |hash| 
           hash[:structure].each do |attribute, attr_details|
             complex_class = hash[:fault].get_virtus_member_type_primitive(attr_details)
-            WashoutBuilder::Document::VirtusModel.extract_nested_complex_types(complex_class, complex_types)
+            WashoutBuilder::Document::ExceptionModel.extract_nested_complex_types(complex_class, complex_types)
           end
         end
         complex_types

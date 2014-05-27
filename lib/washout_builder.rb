@@ -1,26 +1,12 @@
 require 'wash_out'
-#require 'virtus'
-require 'washout_builder/track_exception_attributes'
 require 'washout_builder/soap'
 require 'washout_builder/engine'
 require 'washout_builder/document/shared_complex_type'
 require 'washout_builder/document/complex_type'
-require 'washout_builder/document/virtus_model'
+require 'washout_builder/document/exception_model'
 require 'washout_builder/document/generator'
 require 'washout_builder/type'
 require 'washout_builder/version'
-
-
-
-#Virtus::InstanceMethods::Constructor.class_eval do
-#  alias_method  :original_initialize,:initialize
-#  def initialize(attributes = nil)
-#    if WashoutBuilder::Type.valid_fault_class?(self.class)
-#      attributes = {:message => attributes} unless attributes.is_a?(Hash) 
-#    end
-#    original_initialize(attributes)
-#  end
-#end
 
 
 WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
@@ -28,11 +14,7 @@ WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
 
 WashoutBuilder::Type.get_fault_classes.each do |exception_class|
   exception_class.class_eval do
-    extend WashoutBuilder::Document::VirtusModel
-#    include Virtus.model
-#    attribute :code, Integer
-#    attribute :message, String
-#    attribute :backtrace, String
+    extend WashoutBuilder::Document::ExceptionModel
   end
 end
 
