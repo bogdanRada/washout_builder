@@ -105,23 +105,23 @@ module WashoutBuilder
       
       def fault_types
         fault_types = get_complex_fault_types([])
-        complex_types = extract_nested_complex_types_from_exceptions(fault_types)
+     #   complex_types = extract_nested_complex_types_from_exceptions(fault_types)
         complex_types.delete_if{ |hash|  fault_types << hash   if  WashoutBuilder::Type.valid_fault_class?(hash[:fault])  } unless complex_types.blank?
         fault_types = sort_complex_types(fault_types, "fault")
         complex_types = sort_complex_types(complex_types, "fault")
         [fault_types, complex_types]
       end
       
-      def extract_nested_complex_types_from_exceptions(fault_types)
-        complex_types = []
-        fault_types.each do |hash| 
-          hash[:structure].each do |attribute, attr_details|
-            complex_class = hash[:fault].get_virtus_member_type_primitive(attr_details)
-            WashoutBuilder::Document::ExceptionModel.extract_nested_complex_types(complex_class, complex_types)
-          end
-        end
-        complex_types
-      end
+#      def extract_nested_complex_types_from_exceptions(fault_types)
+#        complex_types = []
+#        fault_types.each do |hash| 
+#          hash[:structure].each do |attribute, attr_details|
+#            complex_class = hash[:fault].get_virtus_member_type_primitive(attr_details)
+#            WashoutBuilder::Document::ExceptionModel.extract_nested_complex_types(complex_class, complex_types)
+#          end
+#        end
+#        complex_types
+#      end
       
        
        
