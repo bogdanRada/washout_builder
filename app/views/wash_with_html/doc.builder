@@ -50,18 +50,13 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
 
       xml.h2 "Index "
       @complex_types =  @document.complex_types
-      @fault_types, @fault_complex_types = @document.fault_types
+      @fault_types = @document.fault_types
       unless @complex_types.blank?
         xml.p  "Complex Types: "
       
         xml.ul do
           @complex_types.each do |hash|
             xml.li { |y| y << "<a href='##{hash[:class]}'><span class='pre'>#{hash[:class]}</span></a>" }
-          end
-          unless @fault_complex_types.blank?
-            @fault_complex_types.each do |hash| 
-              xml.li { |y| y << "<a href='##{hash[:fault].to_s}'><span class='pre'>#{hash[:fault].to_s}</span></a>" } 
-            end
           end
         end
       
