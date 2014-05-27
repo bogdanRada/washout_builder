@@ -25,7 +25,6 @@ The way WashOut is used is not modified, it just extends its functionality by ge
 1. {Ruby 1.9.x or Ruby 2.0.x}[http://www.ruby-lang.org]
 2. {Ruby on Rails}[http://rubyonrails.org].
 3. {WashOut Gem version >= 0.9.1}[https://github.com/inossidabile/wash_out]
-4. {Virtus Gem}[https://github.com/solnic/virtus]
 
 = Compatibility
 
