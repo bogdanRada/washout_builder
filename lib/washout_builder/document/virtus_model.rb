@@ -3,9 +3,11 @@ module WashoutBuilder
     module VirtusModel
       extend ActiveSupport::Concern
       include WashoutBuilder::Document::SharedComplexType  
+      include WashoutBuilder::TrackExceptionAttributes
       
       def self.included(base)
         base.send :include, WashoutBuilder::Document::SharedComplexType
+        base.send :include, WashoutBuilder::TrackExceptionAttributes
       end
       
       def get_fault_class_ancestors( defined, debug = false)
@@ -56,9 +58,24 @@ module WashoutBuilder
         complex_class
       end
  
-       
+      
+      def get_exception_attributes
+        attrs = self.instance_methods.find_all do |method|
+          method != :== &&
+            method != :! &&
+            self.instance_methods.include?(:"#{method}=")
+        end
+        attrs.concat(["message", "backtrace"])
+      end
+      
+      
       def get_virtus_model_structure
-        attribute_set.inject({}) {|h, elem|  h["#{elem.name}"]= { :primitive => "#{elem.primitive}", :member_type => elem.options[:member_type].nil? ? nil: elem.options[:member_type].primitive }; h }
+          
+       raise self.attributes.inspect
+           get_exception_attributes.inject({}) {|h, elem|  
+             h["#{elem}"]= { :primitive => "#{elem.primitive}", 
+               :member_type => elem.options[:member_type].nil? ? nil: elem.options[:member_type].primitive 
+             }; h }
       end
       
       
