@@ -94,7 +94,7 @@ module WashoutBuilder
             param_class.send :extend, WashoutBuilder::Document::ExceptionModel
             param_class.get_fault_class_ancestors( complex_types)
           elsif param_class.present? && !WashoutBuilder::Type.valid_fault_class?(param_class)
-            raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not use Virtus.model. Consider using classified types that include Virtus.mode for exception atribute types."
+            raise RuntimeError, "Non-existent use of `#{param_class}` type name or this class does not inherit from SoapError. Consider using classified types that include SoapError  for exception classes."
           end 
         end
       end

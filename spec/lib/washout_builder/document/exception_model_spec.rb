@@ -5,14 +5,14 @@ class SOAPError < WashOut::Dispatcher::SOAPError
   
 end
 
-describe WashoutBuilder::Document::VirtusModel do
+describe WashoutBuilder::Document::ExceptionModel do
 
   let(:subject) { SOAPError}
   
   
   
   it "gets the strcuture" do
-    subject.get_virtus_model_structure.should eq({"code"=>{:primitive=>"Integer", :member_type=>nil}, "message"=>{:primitive=>"String", :member_type=>nil}, "backtrace"=>{:primitive=>"String", :member_type=>nil}})
+    subject.get_virtus_model_structure.should eq({"code"=>{:primitive=>"integer", :member_type=>nil}, "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}})
   end
   
   it "gets the member type for arrays" do
@@ -29,7 +29,7 @@ describe WashoutBuilder::Document::VirtusModel do
   
     
   it "gets the strcuture" do
-    subject.remove_fault_type_inheritable_elements(["code"]).should eq({ "message"=>{:primitive=>"String", :member_type=>nil}, "backtrace"=>{:primitive=>"String", :member_type=>nil}})
+    subject.remove_fault_type_inheritable_elements(["code"]).should eq({ "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}})
   end
   
 end
