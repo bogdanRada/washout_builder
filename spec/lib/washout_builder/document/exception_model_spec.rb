@@ -1,18 +1,19 @@
 #encoding:utf-8
 require 'spec_helper'
 
-class SOAPError < WashOut::Dispatcher::SOAPError
-  
-end
 
 describe WashoutBuilder::Document::ExceptionModel do
 
-  let(:subject) { SOAPError}
+  let(:subject) { WashOut::Dispatcher::SOAPError}
   
   
   
   it "gets the strcuture" do
-    subject.get_virtus_model_structure.should eq({"code"=>{:primitive=>"integer", :member_type=>nil}, "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}})
+    subject.get_fault_model_structure.should eq({"code"=>{:primitive=>"integer", :member_type=>nil}, "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}})
+  end
+  
+    it "gets the strcuture" do
+    subject.get_fault_attributes.should eq(["code","message", "backtrace"])
   end
 #  
 #  it "gets the member type for arrays" do

@@ -39,6 +39,19 @@ module WashoutBuilder
         soap_actions.map { |operation, formats| operation }
       end
       
+      def sorted_operations
+          soap_actions.sort_by { |operation, formats| operation.downcase }.uniq unless soap_actions.blank?
+      end
+      
+      def operation_exceptions(operation_name)
+        hash_object = soap_actions.detect {|operation, formats|  operation.to_s.downcase == operation_name.to_s.downcase}
+        unless hash_object.blank?
+          faults =  hash_object[1][:raises] 
+          faults = faults.is_a?(Array) ? faults :  [faults]
+          faults.select { |x| WashoutBuilder::Type.valid_fault_class?(x)  }
+        end
+      end
+      
       def sort_complex_types(types, type)
         types.sort_by { |hash| hash[type.to_sym].to_s.downcase }.uniq {|hash| hash[type.to_sym] } unless types.blank?
       end
