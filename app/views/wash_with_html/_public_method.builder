@@ -12,7 +12,9 @@ xml.p "#{description}" unless description.blank?
  xml.p "Parameters:"
     xml.ul {
       input.each do |element|
-        create_parameters_element_list_html(xml,element)
+        xml.li("class" => "pre") { |pre|
+          create_element_type_html(pre, element)
+        }
       end
     }
 
@@ -30,7 +32,7 @@ unless operation_exceptions.blank?
 xml.p "Exceptions:"
     xml.ul {
       operation_exceptions.each do |p|
-       create_element_exceptions_list_html(p)
+       xml.li("class" => "pre"){ |y| y<< "<a href='##{p.to_s}'><span class='lightBlue'> #{p.to_s}</span></a>" }
       end
     }
 end

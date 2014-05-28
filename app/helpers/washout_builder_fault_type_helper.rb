@@ -6,11 +6,9 @@ module WashoutBuilderFaultTypeHelper
   end
   
   
-  def create_html_fault_model_element_type(xml, attribute, attr_details)
-    xml.li { |pre|
+  def create_html_fault_model_element_type(pre, attribute, attr_details)
       if WashoutBuilder::Type::BASIC_TYPES.include?(attr_details[:primitive].to_s.downcase) || attr_details[:primitive] == "nilclass" 
         pre << "<span class='blue'>#{attr_details[:primitive].to_s.downcase == "nilclass" ? "string" : attr_details[:primitive].to_s.downcase }</span>&nbsp;<span class='bold'>#{attribute}</span>"
-        
       else
         if  attr_details[:primitive].to_s.downcase == "array"
           
@@ -20,6 +18,6 @@ module WashoutBuilderFaultTypeHelper
           create_fault_model_complex_element_type(pre,attr_details[:primitive], attribute, false )
         end
       end
-    }
+   
   end
 end
