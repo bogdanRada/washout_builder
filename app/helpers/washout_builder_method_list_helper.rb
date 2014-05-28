@@ -1,18 +1,6 @@
 module WashoutBuilderMethodListHelper
   
-  def create_element_exceptions_list_html(p)
-    xml.li("class" => "pre"){ |y| y<< "<a href='##{p.to_s}'><span class='lightBlue'> #{p.to_s}</span></a>" }
-  end
-  
-  def create_parameters_element_list_html(xml, param)
-    xml.li("class" => "pre") { |pre|
-      if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
-        pre << "<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"
-      else
-        create_element_type_html(pre, param)
-      end
-    }
-  end
+ 
   
   def create_return_complex_type_list_html(xml, complex_class, builder_out)
     return_content =  builder_out[0].multiplied == false ? "#{complex_class}" : "Array of #{complex_class}"
