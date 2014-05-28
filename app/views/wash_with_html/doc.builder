@@ -41,7 +41,7 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
       xml.span( "class" => "pre") {
         xml.a( "href" => "#{@document.namespace}") { |y| y << "#{@document.namespace}" }
       };}
-      xml.p ""
+    xml.p ""
     unless @document.service_description.blank?
       xml.p "#{@document.service_description}"
     end
@@ -87,18 +87,25 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
 
     unless @complex_types.blank?
       xml.h2 "Complex types:"
-      create_html_complex_types(xml, @complex_types)
-    end
-    unless @fault_complex_types.blank?
-      create_html_fault_types_details(xml, @fault_complex_types)
+      @complex_types.each  { |hash|            
+        xml <<    render(:partial => "wash_with_html/complex_type", :locals => { :object => hash[:obj], :class_name =>  hash[:class], :ancestors => hash[:ancestors]})
+      }
     end
     unless @fault_types.blank?
       xml.h2 "Fault types:"
-      create_html_fault_types_details(xml, @fault_types)
+      @fault_types.each  { |hash|            
+        xml <<    render(:partial => "wash_with_html/fault_type", :locals => { :object => hash[:fault], :structure =>  hash[:structure], :ancestors => hash[:ancestors]})
+      }
     end
     unless @methods.blank?
       xml.h2 "Public methods:"
-      create_html_public_methods(xml, @document.soap_actions)
+      @map =  @document.sorted_operations
+      unless @map.blank?
+        @map.each {  |operation, formats| 
+          xml <<    render(:partial => "wash_with_html/public_method", :locals => { :operation=> operation, :input =>  formats[:in], :output => formats[:out] , :exceptions => formats[:raises], :description => formats[:description]})
+        }
+      end
+      
     end
     
     if @complex_types.blank? && @fault_types.blank? &&  @methods.blank?
