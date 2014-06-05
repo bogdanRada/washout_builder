@@ -16,7 +16,7 @@ describe WashoutBuilder::WashoutBuilderController, :type => :controller  do
   
   let(:washout_builder) { stub(:root_url => "#{request.protocol}#{request.host_with_port}/")}
   let(:route) {stub(:defaults => {:controller => "api"})}
-  let(:params) {{:name => "some_name"  }}
+    let(:params) {{:name => "some_name"  }}
    
   before(:each) do
     ApiController.stubs(:soap_config).returns(soap_config)
@@ -33,6 +33,10 @@ describe WashoutBuilder::WashoutBuilderController, :type => :controller  do
     response.should render_template("wash_with_html/all_services")
   end
  
+  
+  it "checks it controller is a service" do
+    controller.send(:controller_is_a_service?,"api").should_not eq nil
+  end
    
   it "render a service documentation" do
     controller.expects(:controller_is_a_service?).with(params[:name]).returns(route)

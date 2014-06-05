@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe WashoutBuilder::Type do
 
-  let(:exception) { WashOut::Dispatcher::SOAPError}
+  let(:exception) { WashoutBuilderTestError}
   let(:fault_classes) {  [exception]  }
   
   it "defines a list of types" do
@@ -21,12 +21,12 @@ describe WashoutBuilder::Type do
   end
   
   it "gets the fault classes defined" do
-    WashoutBuilder::Type.get_fault_classes.should eq fault_classes
+    WashoutBuilder::Type.get_fault_classes.should eq ([base_exception])
   end
   
   context "exception" do
     before(:each) do
-      WashoutBuilder::Type.stubs(:get_fault_classes).returns(fault_classes)
+      WashoutBuilder::Type.stubs(:get_fault_classes).returns([base_exception])
     end
     
     it "checks if exception has ancestor" do
@@ -34,7 +34,6 @@ describe WashoutBuilder::Type do
     end
     
     it "checks if exception valid" do
-      WashoutBuilder::Type.stubs(:has_ancestor_fault?).returns(true)
       WashoutBuilder::Type.valid_fault_class?(exception).should eq(true)
     end
   end

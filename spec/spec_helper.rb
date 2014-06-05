@@ -3,6 +3,7 @@ ENV["RAILS_ENV"] = "test"
 
 require 'codeclimate-test-reporter'
 require 'simplecov'
+require 'simplecov-summary'
 require 'coveralls'
  
 formatters = [SimpleCov::Formatter::HTMLFormatter]
@@ -25,20 +26,18 @@ end
 require 'active_support'
 require 'nori'
 require 'nokogiri'
+require 'ostruct'
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require File.expand_path("../../config/routes.rb",  __FILE__)
 require "rails/test_help"
 require "rspec/rails"
 require 'rspec/autorun'
-require "pry"
 require "savon"
 require 'wash_out'
 
 require 'capybara/rspec'
 require 'capybara/rails'
-require 'capybara/firebug/rspec'
-require 'webmock/rspec'
 require 'headless'
 
 Rails.backtrace_cleaner.remove_silencers!
@@ -49,16 +48,15 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 RSpec.configure do |config|
   require 'rspec/expectations'
   config.include RSpec::Matchers
-  
+  config.infer_spec_type_from_file_location!
   
   config.before(:suite) do
     # Blocks all remote HTTP requests by default, they need to be stubbed.
-    WebMock.disable_net_connect!(:allow_localhost => true, :allow => "codeclimate.com")
     if !RUBY_PLATFORM.downcase.include?('darwin') && !ENV['NO_HEADLESS']
       Headless.new(reuse: false, destroy_on_exit: false).start
     end
   end
-
+  
   config.mock_with :mocha
   config.before(:all) do
     WashoutBuilder::Engine.config.wash_out = {
@@ -99,4 +97,18 @@ def mock_controller(options = {}, &block)
   }
 
   ActiveSupport::Dependencies::Reference.instance_variable_get(:'@store').delete('ApiController')
+end
+
+def base_exception
+  WashOut::Dispatcher::SOAPError
+end
+
+
+class WashoutBuilderTestError < base_exception
+  
+  
+end
+
+def get_wash_out_param(class_name_or_structure, soap_config = soap_config)
+  WashOut::Param.parse_builder_def(soap_config, class_name_or_structure)[0]
 end
