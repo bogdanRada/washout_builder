@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
   s.test_files = s.files.grep(/^(spec)/)
   s.require_paths = ["lib"]
-  s.add_runtime_dependency 'wash_out', '~> 0.9.1', '>= 0.9.1'
+  s.add_runtime_dependency 'wash_out', '~> 0.9', '>= 0.9.1'
   
   s.add_development_dependency 'wasabi', '~> 3.3', '>= 3.3.0'
   s.add_development_dependency 'savon', '~> 2.5', '>= 2.5.1'
