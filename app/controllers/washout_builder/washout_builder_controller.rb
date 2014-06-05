@@ -44,7 +44,7 @@ class WashoutBuilder::WashoutBuilderController < ActionController::Base
   
   def  controller_is_a_service?(controller)
     route = all_controllers.detect do |route|
-      route.defaults[:controller].try(:camelize) == controller.camelize && route.defaults[:action] == "_generate_wsdl"
+      route.defaults[:controller].camelize == controller.camelize && route.defaults[:action] == "_generate_wsdl"
     end
   end
 
