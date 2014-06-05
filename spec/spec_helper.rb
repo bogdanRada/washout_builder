@@ -3,6 +3,10 @@ ENV["RAILS_ENV"] = "test"
 
 require "simplecov"
 require 'coveralls'
+if ENV["CODECLIMATE_REPO_TOKEN"]
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+end
 Coveralls.wear!
 SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
@@ -11,11 +15,6 @@ SimpleCov.start do
   add_group 'App', 'app'
 
   at_exit do; end
-end
-
-if ENV["TRAVIS"]
-  require "codeclimate-test-reporter"
-  CodeClimate::TestReporter.start
 end
 
 require 'active_support'
