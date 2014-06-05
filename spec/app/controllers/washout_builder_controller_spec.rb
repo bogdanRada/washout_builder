@@ -1,20 +1,22 @@
 require 'spec_helper'
 mock_controller do
-   soap_action 'dispatcher_method', :args => nil, :return => nil
+  soap_action 'dispatcher_method', :args => nil, :return => nil
  
-   def dispatcher_method
-      #nothing
-   end
- end
+  def dispatcher_method
+    #nothing
+  end
+end
 describe WashoutBuilder::WashoutBuilderController, :type => :controller  do
-    routes { WashoutBuilder::Engine.routes }
+  routes { WashoutBuilder::Engine.routes }
  
   let(:soap_config) { OpenStruct.new(
       camelize_wsdl: false,
       namespace: "/api/wsdl",
     ) }
   
-   let(:washout_builder) { stub(:root_url => "#{request.protocol}#{request.host_with_port}/")}
+  let(:washout_builder) { stub(:root_url => "#{request.protocol}#{request.host_with_port}/")}
+  let(:route) {stub(:defaults => {:controller => "api"})}
+  let(:params) {{:name => "some_name"  }}
    
   before(:each) do
     ApiController.stubs(:soap_config).returns(soap_config)
@@ -30,5 +32,15 @@ describe WashoutBuilder::WashoutBuilderController, :type => :controller  do
     get :all
     response.should render_template("wash_with_html/all_services")
   end
-
+ 
+   
+  it "render a service documentation" do
+    controller.expects(:controller_is_a_service?).with(params[:name])
+    WashoutBuilder::Document::Generator.expects(:new).with(route.defaults[:controller])
+    get :all, params
+    response.should render_template "wash_with_html/doc"
+  end
+  
+     
+     
 end

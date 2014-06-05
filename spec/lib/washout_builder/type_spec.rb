@@ -16,5 +16,15 @@ describe WashoutBuilder::Type do
         "time",
         "int"])
   end
+  
+  it "gets the fault classes defined" do
+    subject.expects(:defined?).with(WashOut::SOAPError).returns(false)
+    subject.expects(:defined?).with(WashOut::Dispatcher::SOAPError).returns(true)
+     subject.expects(:defined?).with(SOAPError).returns(false)
+     WashoutBuilder::Type.get_fault_classes.should eq [WashOut::Dispatcher::SOAPError]
+  end
+  
+  
+  
  
 end
