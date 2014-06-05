@@ -4,33 +4,67 @@ require 'spec_helper'
 
 describe WashoutBuilder::Document::ExceptionModel do
 
-  let(:subject) { WashOut::Dispatcher::SOAPError}
+  let(:subject) { WashoutBuilderTestError}
   
+  let(:structure) { {"message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}}}
+  let(:base_structure) { {"code"=>{:primitive=>"integer", :member_type=>nil}, "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}}}
+  let(:ancestors) {[base_exception]}
   
+  def fault_ancestor_hash(subject,  structure, ancestors)
+    {:fault => subject,:structure =>structure  ,:ancestors => ancestors   }
+  end
   
   it "gets the strcuture" do
-    subject.get_fault_model_structure.should eq({"code"=>{:primitive=>"integer", :member_type=>nil}, "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}})
+    subject.get_fault_model_structure.should eq(structure)
   end
   
-    it "gets the strcuture" do
-    subject.get_fault_attributes.should eq(["code","message", "backtrace"])
+  it "gets the strcuture" do
+    base_exception.get_fault_model_structure.should eq(base_structure)
   end
-#  
-#  it "gets the member type for arrays" do
-#    subject.get_virtus_member_type_primitive({:primitive=>"Array", :member_type=>"SomeInexistentClass"}).should eq("SomeInexistentClass")
-#  end
-#  
-#  it "gets the member type for clasified types" do
-#    subject.get_virtus_member_type_primitive({:primitive=>"SomeInexistentClass", :member_type=>nil}).should eq("SomeInexistentClass")
-#  end
-#    
-#  it "returns nil because is not a classified object" do
-#    subject.get_virtus_member_type_primitive({:primitive=>"integer", :member_type=>nil}).should eq(nil)
-#  end
+  it "gets the strcuture" do
+    subject.get_fault_attributes.should eq(["message", "backtrace"])
+  end
+  it "gets the strcuture" do
+    base_exception.get_fault_attributes.should eq(["code","message", "backtrace"])
+  end
   
+  specify { subject.check_valid_fault_method?("code").should eq(true) }
+  specify { subject.get_fault_type_method("code").should eq("integer") }
+  specify { subject.get_fault_type_method("message").should eq("string") }
+  specify { subject.get_fault_type_method("backtrace").should eq("string") }
     
   it "gets the strcuture" do
     subject.remove_fault_type_inheritable_elements(["code"]).should eq({ "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}})
+  end
+  
+  it "fault_ancestor_hash" do
+    subject.fault_ancestor_hash( structure, ancestors).should eq(fault_ancestor_hash(subject,  structure, ancestors))
+  end
+  
+  it "gets the fault_ancestors" do
+    subject.expects(:get_complex_type_ancestors).with(subject, ["ActiveRecord::Base", "Object", "BasicObject",  "Exception" ]).returns(ancestors)
+    subject.fault_ancestors.should eq ancestors
+  end
+  
+  it "gets the fault_without_inheritable_elements" do
+    ancestors[0].expects(:get_fault_model_structure).returns(structure)
+    subject.expects(:remove_fault_type_inheritable_elements).with(structure.keys)
+    subject.fault_without_inheritable_elements(ancestors)
+  end
+  
+  it "gets the ancestors" do
+    subject.expects(:fault_ancestors).returns(nil)
+    subject.expects(:get_fault_model_structure).returns(structure)
+    subject.expects(:fault_ancestor_hash).with(structure, []).returns(fault_ancestor_hash(subject,  structure, ancestors))
+    subject.get_fault_class_ancestors([]).should eq(nil)
+  end
+  
+  it "gets the ancestors" do
+   expected_defined = fault_ancestor_hash(subject,  structure, ancestors)
+    subject.expects(:fault_ancestors).returns(ancestors)
+    subject.expects(:fault_without_inheritable_elements).with(ancestors).returns(structure)
+    subject.expects(:fault_ancestor_hash).returns(expected_defined)
+    subject.get_fault_class_ancestors([])
   end
   
 end

@@ -3,7 +3,6 @@ class ProjectType < WashOut::Type
     :name                                    => :string,
     :description                           => :string,
     :users                                    => [{:mail => :string }],
-  #  'dada'                                    => [Project]
   }
 end
  

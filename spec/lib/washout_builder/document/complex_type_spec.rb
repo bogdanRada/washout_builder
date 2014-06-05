@@ -8,11 +8,7 @@ describe WashoutBuilder::Document::ComplexType do
       namespace: "/api/wsdl",
       description: "some description"
     ) }
-  
-  def get_wash_out_param(class_name_or_structure, soap_config = soap_config)
-    WashOut::Param.parse_builder_def(soap_config, class_name_or_structure)[0]
-  end
-  
+    
   let(:subject) {  get_wash_out_param(ProjectType) }
   let(:namespaced_object) { get_wash_out_param(Api::TestType) }
   
