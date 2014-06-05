@@ -1,14 +1,19 @@
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
 
-require "simplecov"
+require 'codeclimate-test-reporter'
+require 'simplecov'
 require 'coveralls'
-if ENV["CODECLIMATE_REPO_TOKEN"]
-  require "codeclimate-test-reporter"
-  CodeClimate::TestReporter.start
-end
+ 
+formatters = [SimpleCov::Formatter::HTMLFormatter]
+
+formatters << Coveralls::SimpleCov::Formatter if ENV['COVERALLS_REPO_TOKEN']
+formatters << CodeClimate::TestReporter::Formatter if ENV['CODECLIMATE_REPO_TOKEN']
+ 
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
+
+
 Coveralls.wear!
-SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
   add_filter 'spec'
   add_group 'Library', 'lib'
@@ -48,7 +53,7 @@ RSpec.configure do |config|
   
   config.before(:suite) do
     # Blocks all remote HTTP requests by default, they need to be stubbed.
-    WebMock.disable_net_connect!(:allow_localhost => true)
+    WebMock.disable_net_connect!(:allow_localhost => true, :allow => "codeclimate.com")
     if !RUBY_PLATFORM.downcase.include?('darwin') && !ENV['NO_HEADLESS']
       Headless.new(reuse: false, destroy_on_exit: false).start
     end
