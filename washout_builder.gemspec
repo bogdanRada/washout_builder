@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/bogdanRada/washout_builder/"
   s.description = "WashOut Soap Service HTML-Documentation generator (extends WashOut https://github.com/inossidabile/wash_out/) "
   s.authors     = ["bogdanRada"]
-  s.date = "2013-11-20"
+  s.date =  Date.today
   
   s.licenses = ["MIT"]
   s.files = `git ls-files`.split("\n")
