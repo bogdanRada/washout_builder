@@ -34,7 +34,7 @@ describe WashoutBuilder do
     result = savon_client.call(method, :message => message) 
     result.respond_to?(:to_hash) ? result.to_hash : result
   end
-
+ 
   describe "Module" do
     it "includes" do
       lambda {

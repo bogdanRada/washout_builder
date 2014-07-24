@@ -17,3 +17,7 @@ end
 appraise "rails-4.1.1" do
   gem "rails", "4.1.1"
 end
+
+appraise "rails-4.1.4" do
+  gem "rails", "4.1.4"
+end
