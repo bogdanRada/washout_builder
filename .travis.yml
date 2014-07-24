@@ -10,4 +10,6 @@ env:
  - RAILS_ENV=test RACK_ENV=test  CODECLIMATE_REPO_TOKEN=6914d2ef5cd8835295d483ff2143e58ed06bb20b25aca3e451be29f8963f76f4 
 addons:
    code_climate:
-     repo_token: 914d2ef5cd8835295d483ff2143e58ed06bb20b25aca3e451be29f8963f76f4  
+     repo_token: 914d2ef5cd8835295d483ff2143e58ed06bb20b25aca3e451be29f8963f76f4 
+after_script:
+  - cat lcov.info | codeclimate 
