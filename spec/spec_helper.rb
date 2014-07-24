@@ -5,7 +5,9 @@ require 'codeclimate-test-reporter'
 require 'simplecov'
 require 'simplecov-summary'
 require 'coveralls'
- 
+require "codeclimate-test-reporter"
+ CodeClimate::TestReporter.start 
+
 formatters = [SimpleCov::Formatter::HTMLFormatter]
 
 formatters << Coveralls::SimpleCov::Formatter if ENV['TRAVIS']
