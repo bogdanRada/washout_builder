@@ -10,6 +10,13 @@ describe WashoutBuilder::Document::ExceptionModel do
   let(:base_structure) { {"code"=>{:primitive=>"integer", :member_type=>nil}, "message"=>{:primitive=>"string", :member_type=>nil}, "backtrace"=>{:primitive=>"string", :member_type=>nil}}}
   let(:ancestors) {[base_exception]}
   
+  [
+    WashoutBuilder::Document::SharedComplexType
+  ].each do |extension|
+    specify { described_class.included_modules.should include(extension) }
+  end
+  
+  
   def fault_ancestor_hash(subject,  structure, ancestors)
     {:fault => subject,:structure =>structure  ,:ancestors => ancestors   }
   end
@@ -46,6 +53,11 @@ describe WashoutBuilder::Document::ExceptionModel do
     subject.fault_ancestors.should eq ancestors
   end
   
+  it "gets the attribute type" do
+    subject.get_fault_type_method("some_name").should eq "string"
+  end
+  
+  
   it "gets the fault_without_inheritable_elements" do
     ancestors[0].expects(:get_fault_model_structure).returns(structure)
     subject.expects(:remove_fault_type_inheritable_elements).with(structure.keys)
@@ -60,7 +72,7 @@ describe WashoutBuilder::Document::ExceptionModel do
   end
   
   it "gets the ancestors" do
-   expected_defined = fault_ancestor_hash(subject,  structure, ancestors)
+    expected_defined = fault_ancestor_hash(subject,  structure, ancestors)
     subject.expects(:fault_ancestors).returns(ancestors)
     subject.expects(:fault_without_inheritable_elements).with(ancestors).returns(structure)
     subject.expects(:fault_ancestor_hash).returns(expected_defined)

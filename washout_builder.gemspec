@@ -2,7 +2,7 @@ require File.expand_path("../lib/washout_builder/version", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "washout_builder"
-  s.version     = WashoutBuilder::VERSION
+  s.version     = WashoutBuilder.gem_version
   s.platform    = Gem::Platform::RUBY
   s.summary     = "WashOut Soap Service HTML-Documentation generator (extends WashOut https://github.com/inossidabile/wash_out/)"
   s.email       = "raoul_ice@yahoo.com"

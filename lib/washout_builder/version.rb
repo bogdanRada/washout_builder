@@ -1,3 +1,14 @@
-module WashoutBuilder
-  VERSION = "0.13.7"
+module WashoutBuilder   # Returns the version of the currently loaded Rails as a <tt>Gem::Version</tt>
+  def self.gem_version
+    Gem::Version.new VERSION::STRING
+  end
+
+  module VERSION
+    MAJOR = 0
+    MINOR = 13
+    TINY  = 8
+    PRE   = nil
+
+    STRING = [MAJOR, MINOR, TINY, PRE].compact.join(".")
+  end
 end
