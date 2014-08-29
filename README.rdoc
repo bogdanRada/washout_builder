@@ -5,6 +5,7 @@
 {<img src="https://codeclimate.com/github/bogdanRada/washout_builder.png" />}[https://codeclimate.com/github/bogdanRada/washout_builder]
 {<img src="https://reposs.herokuapp.com/?path=bogdanRada/washout_builder"  alt="Repo Size"/>}[https://github.com/bogdanRada/washout_builder]
 {<img src="https://ruby-gem-downloads-badge.herokuapp.com/washout_builder?type=total&style=dynamic"  alt="Gem Downloads"/>}[https://rubygems.org/gems/washout_builder]
+{<img src="http://stillmaintained.com/bogdanRada/washout_builder.png"  alt=""/>}[https://rubygems.org/gems/washout_builder]
 
 = Overview
 WashOutBuilder is a  Soap Service Documentation generator (extends WashOut https://github.com/inossidabile/wash_out/)
