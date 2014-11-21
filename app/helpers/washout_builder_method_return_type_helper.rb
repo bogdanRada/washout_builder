@@ -6,8 +6,10 @@ module WashoutBuilderMethodReturnTypeHelper
       if WashoutBuilder::Type::BASIC_TYPES.include?(output[0].type)
         xml.span("class" => "blue") { |y| y<<  "#{output[0].type}" }
       else
-        complex_return_type =  output[0].multiplied == false ? "#{complex_class}" : "Array of #{complex_class}"
-        pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_return_type}</span></a>" unless complex_class.nil?
+        unless complex_class.nil?
+          complex_return_type =  output[0].multiplied == false ? "#{complex_class}" : "Array of #{complex_class}"
+          pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_return_type}</span></a>" 
+        end
       end
     else
       pre << "void"

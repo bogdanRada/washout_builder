@@ -15,10 +15,10 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
 
 
 Coveralls.wear!
-SimpleCov.start do
+SimpleCov.start "rails" do
   add_filter 'spec'
-  add_group 'Library', 'lib'
-  add_group 'App', 'app'
+  #add_group 'Library', 'lib'
+ # add_group 'App', 'app'
 
   at_exit do; end
 end
