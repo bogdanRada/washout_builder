@@ -5,8 +5,8 @@ module WashoutBuilder   # Returns the version of the currently loaded Rails as a
 
   module VERSION
     MAJOR = 0
-    MINOR = 13
-    TINY  = 9
+    MINOR = 14
+    TINY  = 0
     PRE   = nil
 
     STRING = [MAJOR, MINOR, TINY, PRE].compact.join(".")
