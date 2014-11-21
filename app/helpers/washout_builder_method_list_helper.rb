@@ -9,18 +9,16 @@ module WashoutBuilderMethodListHelper
 
   
   def create_return_type_list_html(xml, output)
-    unless output.nil?
+    if output.nil?
+      xml.span("class" => "pre") { |sp| sp << "void" }
+    else
       complex_class = output[0].get_complex_class_name  
       if WashoutBuilder::Type::BASIC_TYPES.include?(output[0].type)
         xml.span("class" => "pre") { |xml| xml.span("class" => "blue") { |sp| sp << "#{output[0].type}" } }
       else
         create_return_complex_type_html(xml, complex_class, output) unless complex_class.nil?
       end
-    else
-      xml.span("class" => "pre") { |sp| sp << "void" }
     end
-    
-  
   end  
     
 end

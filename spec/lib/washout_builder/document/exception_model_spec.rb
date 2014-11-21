@@ -1,6 +1,11 @@
 #encoding:utf-8
 require 'spec_helper'
 
+class InheritedExceptionModel 
+  include WashoutBuilder::Document::ExceptionModel
+  
+end
+
 
 describe WashoutBuilder::Document::ExceptionModel do
 
@@ -16,6 +21,7 @@ describe WashoutBuilder::Document::ExceptionModel do
     specify { described_class.included_modules.should include(extension) }
   end
   
+  specify {InheritedExceptionModel.included_modules.should include(WashoutBuilder::Document::SharedComplexType) }
   
   def fault_ancestor_hash(subject,  structure, ancestors)
     {:fault => subject,:structure =>structure  ,:ancestors => ancestors   }
