@@ -1,3 +1,4 @@
+require_relative "./shared_complex_type"
 module WashoutBuilder
   module Document
     module ExceptionModel

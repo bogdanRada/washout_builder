@@ -1,13 +1,5 @@
 require 'wash_out'
-require 'washout_builder/soap'
-require 'washout_builder/engine'
-require 'washout_builder/document/shared_complex_type'
-require 'washout_builder/document/complex_type'
-require 'washout_builder/document/exception_model'
-require 'washout_builder/document/generator'
-require 'washout_builder/type'
-require 'washout_builder/version'
-
+Gem.find_files("washout_builder/**/*.rb").each { |path| require path }
 
 WashOut::Param.send :include, WashoutBuilder::Document::ComplexType
 
