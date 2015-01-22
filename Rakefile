@@ -18,7 +18,6 @@ end
 #
 #  Rake::Task["db:test:prepare"].invoke
 #end
-
 unless ENV["TRAVIS"]
   require 'rvm-tester'
   RVM::Tester::TesterTask.new(:suite) do |t|
