@@ -16,7 +16,7 @@ module WashoutBuilderComplexTypeHelper
   # and retrieves the complex class name of the attribute and prints it
   def create_complex_element_type_html(pre, element)
     complex_class = element.get_complex_class_name
-    return unless complex_class.nil?
+    return if complex_class.nil?
     complex_class_content = element.multiplied == false ? "#{complex_class}" : "Array of #{complex_class}"
     pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_class_content}</span></a>&nbsp;<span class='bold'>#{element.name}</span>"
   end
