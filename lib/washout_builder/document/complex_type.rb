@@ -7,17 +7,13 @@ module WashoutBuilder
 
       def find_complex_class_name(defined = [])
         complex_class = struct? ? basic_type.gsub('.', '/').camelize : nil
-        return unless complex_class.nil? || defined.blank?
-        check_duplicate_complex_class(defined, complex_class)
+        check_duplicate_complex_class(defined, complex_class) unless complex_class.nil? || defined.blank?
+        complex_class
       end
 
       def check_duplicate_complex_class(defined, complex_class)
         complex_obj_found = defined.find { |hash| hash[:class] == complex_class }
-        if !complex_obj_found.nil? && struct? && !classified?
-          raise "Duplicate use of `#{basic_type}` type name. Consider using classified types."
-        else
-          complex_class
-        end
+        raise "Duplicate use of `#{basic_type}` type name. Consider using classified types." if !complex_obj_found.nil? && struct? && !classified?
       end
 
       def complex_type_ancestors(config, complex_class, defined)
