@@ -87,11 +87,11 @@ describe WashoutBuilder do
 
     it 'defines arrays' do
       x = xml[:definitions][:types][:schema][:complex_type]
-          .find { |x| x[:'@name'] == 'Center' }[:sequence][:element]
-          .find { |x| x[:'@name'] == 'X' }
+          .find { |inneer_x| inneer_x[:'@name'] == 'Center' }[:sequence][:element]
+          .find { |inneer_x| inneer_x[:'@name'] == 'X' }
 
-      x[:'@min_occurs'].should == '0'
-      x[:'@max_occurs'].should == 'unbounded'
+      x[:'@min_occurs'].should eq('0')
+      x[:'@max_occurs'].should eq('unbounded')
     end
   end
 
@@ -171,8 +171,8 @@ describe WashoutBuilder do
           end
         end
 
-        savon(:check_answer, 42)[:check_answer_response][:value].should == true
-        savon(:check_answer, 13)[:check_answer_response][:value].should == false
+        savon(:check_answer, 42)[:check_answer_response][:value].should eq true
+        savon(:check_answer, 13)[:check_answer_response][:value].should eq false
       end
 
       it 'accept two parameters' do
@@ -190,13 +190,13 @@ describe WashoutBuilder do
     context 'complex actions' do
       it 'accept nested structures' do
         mock_controller do
-          soap_action 'getArea', args: { circle: { center: { x: :integer,
-                                                             y: :integer },
-                                                   radius: :double } },
-                                 return: { area: :double,
-                                           distance_from_o: :double },
-                                 to: :get_area
-          def get_area
+          soap_action 'findArea', args: { circle: { center: { x: :integer,
+                                                              y: :integer },
+                                                    radius: :double } },
+                                  return: { area: :double,
+                                            distance_from_o: :double },
+                                  to: :find_area
+          def find_area
             circle = params[:circle]
             render soap: { area: Math::PI * circle[:radius]**2,
                            distance_from_o: Math.sqrt(circle[:center][:x]**2 + circle[:center][:y]**2) }
@@ -206,7 +206,7 @@ describe WashoutBuilder do
         message = { circle: { center: { x: 3, y: 4 },
                               radius: 5 } }
 
-        savon(:get_area, message)[:get_area_response]
+        savon(:find_area, message)[:find_area_response]
           .should == ({ area: (Math::PI * 25).to_s, distance_from_o: (5.0).to_s })
       end
 
@@ -218,7 +218,7 @@ describe WashoutBuilder do
                       },
                       return: nil
           def rumba
-            params.should == { 'rumbas' => [1, 2, 3] }
+            raise 'not ok' unless params == { 'rumbas' => [1, 2, 3] }
             render soap: nil
           end
         end
@@ -234,7 +234,7 @@ describe WashoutBuilder do
                       },
                       return: nil
           def rumba
-            params.should == {}
+            raise 'not ok' unless params == {}
             render soap: nil
           end
         end
@@ -249,7 +249,7 @@ describe WashoutBuilder do
                       },
                       return: nil
           def rumba
-            params.should == { 'nested' => {} }
+            raise 'not ok' unless params == { 'nested' => {} }
             render soap: nil
           end
         end
@@ -267,12 +267,10 @@ describe WashoutBuilder do
                       },
                       return: nil
           def rumba
-            params.should == {
-              'rumbas' => [
-                { 'zombies' => 'suck', 'puppies' => 'rock' },
-                { 'zombies' => 'slow', 'puppies' => 'fast' }
-              ]
-            }
+            raise 'not ok' unless params == { 'rumbas' => [
+              { 'zombies' => 'suck', 'puppies' => 'rock' },
+              { 'zombies' => 'slow', 'puppies' => 'fast' }
+            ] }
             render soap: nil
           end
         end
@@ -428,13 +426,13 @@ describe WashoutBuilder do
         mock_controller do
           soap_action 'true', args: :boolean, return: :nil
           def true
-            params[:value].should == true
+            raise 'not ok' unless params[:value] == true
             render soap: nil
           end
 
           soap_action 'false', args: :boolean, return: :nil
           def false
-            params[:value].should == false
+            raise 'not ok' unless params[:value] == false
             render soap: nil
           end
         end
@@ -640,7 +638,7 @@ describe WashoutBuilder do
       mock_controller(snakecase_input: false, camelize_wsdl: false) do
         soap_action 'rocknroll', args: { ZOMG: :string }, return: nil
         def rocknroll
-          params['ZOMG'].should == 'yam!'
+          raise 'not ok' unless params['ZOMG'] == 'yam!'
           render soap: nil
         end
       end

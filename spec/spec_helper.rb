@@ -19,7 +19,7 @@ SimpleCov.start 'rails' do
   # add_group 'Library', 'lib'
   # add_group 'App', 'app'
 
-  at_exit do; end
+  at_exit {}
 end
 
 # CodeClimate::TestReporter.configure do |config|
@@ -95,7 +95,7 @@ def mock_controller(options = {}, &block)
     soap_service options.reverse_merge(snakecase_input: true,
                                        camelize_wsdl: true,
                                        namespace: false)
-    class_exec &block if block
+    class_exec(&block) if block
   }
 
   ActiveSupport::Dependencies::Reference.instance_variable_get(:'@store').delete('ApiController')

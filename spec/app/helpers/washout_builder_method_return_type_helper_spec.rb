@@ -6,7 +6,7 @@ describe WashoutBuilderMethodReturnTypeHelper, type: :helper do
 
   context 'create_html_public_method_return_type' do
     let(:complex_class) { 'SomeComplexClass' }
-    let (:builder_elem) { mock }
+    let(:builder_elem) { mock }
     let(:output) { [builder_elem] }
     let(:type) { 'string' }
 

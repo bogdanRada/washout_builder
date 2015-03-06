@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe WashoutBuilderComplexTypeHelper, type: :helper do
   context '#create_element_type_html' do
-    let (:pre) { [] }
+    let(:pre) { [] }
     let(:element_name) { 'custom_name' }
     let(:element) { mock }
 
@@ -47,7 +47,7 @@ describe WashoutBuilderComplexTypeHelper, type: :helper do
   end
 
   context 'create_complex_element_type_html' do
-    let (:pre) { [] }
+    let(:pre) { [] }
     let(:element_name) { 'custom_name' }
     let(:complex_class) { 'SomeClass' }
     let(:element) { mock }

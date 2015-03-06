@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - washout_builder.gemspec
     - bin/**/*
+    - Guardfile
 
 Documentation:
   Enabled: false

@@ -11,7 +11,7 @@ describe WashoutBuilder::Type do
   end
 
   it 'gets the fault classes defined' do
-    WashoutBuilder::Type.all_fault_classes.should eq ([base_exception])
+    WashoutBuilder::Type.all_fault_classes.should eq([base_exception])
   end
 
   context 'exception' do

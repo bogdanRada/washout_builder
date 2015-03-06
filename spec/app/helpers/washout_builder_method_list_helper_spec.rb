@@ -5,7 +5,7 @@ describe WashoutBuilderMethodListHelper, type: :helper do
 
   context 'create_return_complex_type_list_html' do
     let(:complex_class) { 'SomeComplexClass' }
-    let (:builder_elem) { mock }
+    let(:builder_elem) { mock }
     let(:builder_out) { [builder_elem] }
 
     it 'returns simple type ' do
@@ -23,7 +23,7 @@ describe WashoutBuilderMethodListHelper, type: :helper do
 
   context 'create_return_type_list_html' do
     let(:complex_class) { 'SomeComplexClass' }
-    let (:builder_elem) { mock }
+    let(:builder_elem) { mock }
     let(:output) { [builder_elem] }
     let(:type) { 'string' }
 
