@@ -38,6 +38,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'selenium-webdriver',  '~> 2.41', '>= 2.41.0'
   s.add_development_dependency 'headless','~> 1.0', '>= 1.0.1'
   s.add_development_dependency 'rubocop', '0.29'
-  s.add_development_dependency 'phare'
-  s.add_development_dependency "scss-lint"
+  s.add_development_dependency 'phare', '~> 0.6', '>= 0.6'
+  s.add_development_dependency "scss-lint", '~> 0.34', '>= 0.34'
 end
