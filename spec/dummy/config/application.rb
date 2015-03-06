@@ -1,7 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
-require "action_controller/railtie"
-require "rails/test_unit/railtie"
+require 'action_controller/railtie'
+require 'rails/test_unit/railtie'
 
 if Rails::VERSION::MAJOR >= 4
   # Ugly hack to make Rails 4 JRuby-compatible to escape Travis errors
@@ -13,7 +13,7 @@ if Rails::VERSION::MAJOR >= 4
 end
 
 Bundler.require
-require "wash_out"
+require 'wash_out'
 
 module Dummy
   class Application < Rails::Application
@@ -43,7 +43,7 @@ module Dummy
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]

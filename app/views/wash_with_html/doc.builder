@@ -72,7 +72,7 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         end
       end
 
-      @methods = @document.get_soap_action_names
+      @methods = @document.all_soap_action_names
       unless @methods.blank?
         xml.p  "Public Methods:"
 
