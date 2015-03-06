@@ -1,7 +1,4 @@
 require 'spec_helper'
 
-feature "Service" do
-  
-  
-  
+feature 'Service' do
 end

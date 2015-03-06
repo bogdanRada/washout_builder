@@ -30,11 +30,14 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov-summary', '~> 0.0.4', '>= 0.0.4'
   s.add_development_dependency 'mocha','~> 1.1', '>= 1.1'
   s.add_development_dependency 'coveralls','~> 0.7', '>= 0.7'
-#  s.add_development_dependency 'codeclimate-test-reporter','~> 0.3', '>= 0.3'
-#  s.add_development_dependency 'rubyntlm','~> 0.3.4', '>= 0.3'
+  #  s.add_development_dependency 'codeclimate-test-reporter','~> 0.3', '>= 0.3'
+  #  s.add_development_dependency 'rubyntlm','~> 0.3.4', '>= 0.3'
   s.add_development_dependency 'rvm-tester','~> 1.1', '>= 1.1'
   
   s.add_development_dependency 'capybara', '~> 2.2', '>= 2.2.1'
   s.add_development_dependency 'selenium-webdriver',  '~> 2.41', '>= 2.41.0'
   s.add_development_dependency 'headless','~> 1.0', '>= 1.0.1'
+  s.add_development_dependency 'rubocop', '0.29'
+  s.add_development_dependency 'phare'
+  s.add_development_dependency "scss-lint"
 end
