@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - washout_builder.gemspec
+    - bin/**/*
 
 Documentation:
   Enabled: false

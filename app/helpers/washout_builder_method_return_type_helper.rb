@@ -1,7 +1,7 @@
 module WashoutBuilderMethodReturnTypeHelper
   def create_html_public_method_return_type(xml, pre, output)
     if !output.nil?
-      complex_class = output[0].get_complex_class_name
+      complex_class = output[0].find_complex_class_name
       if WashoutBuilder::Type::BASIC_TYPES.include?(output[0].type)
         xml.span('class' => 'blue') { |y| y << "#{output[0].type}" }
       else

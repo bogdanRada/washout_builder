@@ -1,7 +1,7 @@
 module WashoutBuilderMethodArgumentsHelper
   def create_method_argument_element(pre, param, mlen)
     spacer = '&nbsp;&nbsp;&nbsp;&nbsp;'
-    complex_class = param.get_complex_class_name
+    complex_class = param.find_complex_class_name
     use_spacer = mlen > 1 ? true : false
     if WashoutBuilder::Type::BASIC_TYPES.include?(param.type)
       pre << "#{use_spacer ? spacer : ''}<span class='blue'>#{param.type}</span>&nbsp;<span class='bold'>#{param.name}</span>"

@@ -14,7 +14,7 @@ module WashoutBuilderMethodListHelper
     if output.nil?
       xml.span('class' => 'pre') { |sp| sp << 'void' }
     else
-      complex_class = output[0].get_complex_class_name
+      complex_class = output[0].find_complex_class_name
       if WashoutBuilder::Type::BASIC_TYPES.include?(output[0].type)
         xml.span('class' => 'pre') do |inner_xml|
           inner_xml.span('class' => 'blue') do |sp|
