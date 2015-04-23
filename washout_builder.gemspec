@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   #  s.add_development_dependency 'codeclimate-test-reporter','~> 0.3', '>= 0.3'
   #  s.add_development_dependency 'rubyntlm','~> 0.3.4', '>= 0.3'
   s.add_development_dependency 'rvm-tester','~> 1.1', '>= 1.1'
+  s.add_development_dependency 'wwtd','~> 0.9', '>= 0.9.1'
   
   s.add_development_dependency 'capybara', '~> 2.2', '>= 2.2.1'
   s.add_development_dependency 'selenium-webdriver',  '~> 2.41', '>= 2.41.0'
