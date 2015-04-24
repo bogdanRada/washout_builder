@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
   s.test_files = s.files.grep(/^(spec)/)
   s.require_paths = ["lib"]
   s.add_runtime_dependency 'wash_out', '~> 0.9.1', '>= 0.9.1'
-  s.add_runtime_dependency 'activesupport', '>= 3', '<= 4.2.0'
-  
+
   s.add_development_dependency 'wasabi', '~> 3.3', '>= 3.3'
   s.add_development_dependency 'savon', '~> 2.5', '>= 2.5'
   s.add_development_dependency 'httpi', '~> 2.1', '>= 2.1'
@@ -32,9 +31,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov-summary', '~> 0.0.4', '>= 0.0.4'
   s.add_development_dependency 'mocha','~> 1.1', '>= 1.1'
   s.add_development_dependency 'coveralls','~> 0.7', '>= 0.7'
-  s.add_development_dependency 'test-unit','>= 1.0'
-  s.add_development_dependency 'minitest','>= 4.2'
-  s.add_development_dependency 'hoe','>= 1.0'
   #  s.add_development_dependency 'codeclimate-test-reporter','~> 0.3', '>= 0.3'
   #  s.add_development_dependency 'rubyntlm','~> 0.3.4', '>= 0.3'
   s.add_development_dependency 'rvm-tester','~> 1.1', '>= 1.1'
