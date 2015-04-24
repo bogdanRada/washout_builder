@@ -16,11 +16,12 @@ Gem::Specification.new do |s|
   s.test_files = s.files.grep(/^(spec)/)
   s.require_paths = ["lib"]
   s.add_runtime_dependency 'wash_out', '~> 0.9.1', '>= 0.9.1'
-  
+
   s.add_development_dependency 'wasabi', '~> 3.3', '>= 3.3'
   s.add_development_dependency 'savon', '~> 2.5', '>= 2.5'
   s.add_development_dependency 'httpi', '~> 2.1', '>= 2.1'
   s.add_development_dependency 'nokogiri', '~> 1.6', '>= 1.6'
+  
     
   s.add_development_dependency 'rspec-rails', '~> 2.0', '>= 2.0'
   s.add_development_dependency 'guard', '~> 2.6.1', '>= 2.6'
@@ -47,5 +48,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'github-markup', '~> 1.3.3', '>= 1.3.3'
   s.add_development_dependency 'inch', '~> 0.5.10'
   s.add_development_dependency 'guard-inch', '~> 0.1.0'
-  s.add_development_dependency "scss-lint", '~> 0.34', '>= 0.34'
 end
