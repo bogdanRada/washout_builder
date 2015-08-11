@@ -36,21 +36,23 @@ describe WashoutBuilder do
 
   describe 'Module' do
     it 'includes' do
-     expect { lambda do
-         mock_controller do
-          # nothing
+      expect do
+        lambda do
+          mock_controller do
+            # nothing
+          end
         end
-     end
-    }.to_not raise_exception
+      end.to_not raise_exception
     end
 
     it 'allows definition of a simple action' do
-     expect {  lambda do
-         mock_controller do
-          soap_action 'answer', args: nil, return: :integer
+      expect do
+        lambda do
+          mock_controller do
+            soap_action 'answer', args: nil, return: :integer
+          end
         end
-     end
-        }.to_not raise_exception
+      end.to_not raise_exception
     end
   end
 
@@ -78,13 +80,13 @@ describe WashoutBuilder do
 
     it 'lists operations' do
       operations = xml[:definitions][:binding][:operation]
-       expect(operations).to be_a_kind_of(Array)
+      expect(operations).to be_a_kind_of(Array)
 
-      expect(operations.map { |e| e[:'@name'] }.sort ).to eq %w(Result getArea rocky).sort
+      expect(operations.map { |e| e[:'@name'] }.sort).to eq %w(Result getArea rocky).sort
     end
 
     it 'defines complex types' do
-       expect(wsdl.include?('<xsd:complexType name="Circle1">')).to eq true
+      expect(wsdl.include?('<xsd:complexType name="Circle1">')).to eq true
     end
 
     it 'defines arrays' do
@@ -92,7 +94,7 @@ describe WashoutBuilder do
           .find { |inneer_x| inneer_x[:'@name'] == 'Center' }[:sequence][:element]
           .find { |inneer_x| inneer_x[:'@name'] == 'X' }
 
-       expect(x[:'@min_occurs']).to eq('0')
+      expect(x[:'@min_occurs']).to eq('0')
       expect(x[:'@max_occurs']).to eq('unbounded')
     end
   end
@@ -118,7 +120,7 @@ describe WashoutBuilder do
           </env:Envelope>
         XML
 
-        expect( HTTPI.post('http://app/api/action', request).body).to eq( <<-XML
+        expect(HTTPI.post('http://app/api/action', request).body).to eq(<<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="false">
   <soap:Body>
@@ -128,7 +130,7 @@ describe WashoutBuilder do
   </soap:Body>
 </soap:Envelope>
         XML
-        )
+                                                                       )
       end
 
       it 'accept no parameters' do
@@ -139,8 +141,8 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:answer)[:answer_response][:value]
-          ).to eq '42'
+        expect(savon(:answer)[:answer_response][:value]
+              ).to eq '42'
       end
 
       it 'accept insufficient parameters' do
@@ -151,8 +153,8 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:answer)[:answer_response][:value]
-          ).to eq '42'
+        expect(savon(:answer)[:answer_response][:value]
+              ).to eq '42'
       end
 
       it 'accept empty parameter' do
@@ -162,8 +164,7 @@ describe WashoutBuilder do
             render soap: { a: params[:a] }
           end
         end
-         expect(savon(:answer, a: '')[:answer_response][:a]
-          ).to eq ({ :"@xsi:type" =>  'xsd:string' })
+        expect(savon(:answer, a: '')[:answer_response][:a]).to eq("@xsi:type": 'xsd:string')
       end
 
       it 'accept one parameter' do
@@ -174,8 +175,8 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:check_answer, 42)[:check_answer_response][:value]).to eq true
-         expect(savon(:check_answer, 13)[:check_answer_response][:value]).to eq false
+        expect(savon(:check_answer, 42)[:check_answer_response][:value]).to eq true
+        expect(savon(:check_answer, 13)[:check_answer_response][:value]).to eq false
       end
 
       it 'accept two parameters' do
@@ -186,7 +187,7 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:funky, a: 42, b: 'k')[:funky_response][:value]).to eq '420k'
+        expect(savon(:funky, a: 42, b: 'k')[:funky_response][:value]).to eq '420k'
       end
     end
 
@@ -209,8 +210,8 @@ describe WashoutBuilder do
         message = { circle: { center: { x: 3, y: 4 },
                               radius: 5 } }
 
-         expect(savon(:find_area, message)[:find_area_response]
-          ).to eq ({ area: (Math::PI * 25).to_s, distance_from_o: (5.0).to_s })
+        expect(savon(:find_area, message)[:find_area_response]
+              ).to eq(area: (Math::PI * 25).to_s, distance_from_o: (5.0).to_s)
       end
 
       it 'accept arrays' do
@@ -300,8 +301,8 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:gogogo)[:gogogo_response]
-          ).to eq ({ zoo: 'zoo', boo: { moo: 'moo', doo: 'doo', :"@xsi:type" => 'tns:Boo' } })
+        expect(savon(:gogogo)[:gogogo_response]
+              ).to eq(zoo: 'zoo', boo: { moo: 'moo', doo: 'doo', "@xsi:type": 'tns:Boo' })
       end
 
       it 'respond with arrays' do
@@ -314,7 +315,7 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:rumba)[:rumba_response]).to eq ({ value: %w(1 2 3) })
+        expect(savon(:rumba)[:rumba_response]).to eq(value: %w(1 2 3))
       end
 
       it 'respond with complex structures inside arrays' do
@@ -333,12 +334,10 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:rumba)[:rumba_response]).to eq ({
-          rumbas: [
-            { zombies: 'suck1', puppies: 'rock1', :"@xsi:type" => 'tns:Rumbas' },
-            { zombies: 'suck2', puppies: 'rock2', :"@xsi:type" => 'tns:Rumbas' }
-          ]
-        })
+        expect(savon(:rumba)[:rumba_response]).to eq(rumbas: [
+          { zombies: 'suck1', puppies: 'rock1', "@xsi:type": 'tns:Rumbas' },
+          { zombies: 'suck2', puppies: 'rock2', "@xsi:type": 'tns:Rumbas' }
+        ])
       end
 
       it 'respond with structs in structs in arrays' do
@@ -352,24 +351,22 @@ describe WashoutBuilder do
           end
         end
 
-         expect(savon(:rumba)[:rumba_response]).to eq ({
-          value: [
-            {
-              rumbas: {
-                zombies: '100000',
-                :"@xsi:type" => 'tns:Rumbas'
-              },
-              :"@xsi:type" => 'tns:Value'
+        expect(savon(:rumba)[:rumba_response]).to eq(value: [
+          {
+            rumbas: {
+              zombies: '100000',
+              "@xsi:type": 'tns:Rumbas'
             },
-            {
-              rumbas: {
-                zombies: '2',
-                :"@xsi:type"=> 'tns:Rumbas'
-              },
-              :"@xsi:type"=> 'tns:Value'
-            }
-          ]
-        })
+            "@xsi:type": 'tns:Value'
+          },
+          {
+            rumbas: {
+              zombies: '2',
+              "@xsi:type": 'tns:Rumbas'
+            },
+            "@xsi:type": 'tns:Value'
+          }
+        ])
       end
 
       context 'with arrays missing' do
@@ -382,7 +379,7 @@ describe WashoutBuilder do
             end
           end
 
-          expect( savon(:rocknroll)[:rocknroll_response]).to be_nil
+          expect(savon(:rocknroll)[:rocknroll_response]).to be_nil
         end
 
         it 'respond with complext definition' do
@@ -394,7 +391,7 @@ describe WashoutBuilder do
             end
           end
 
-           expect(savon(:rocknroll)[:rocknroll_response]).to be_nil
+          expect(savon(:rocknroll)[:rocknroll_response]).to be_nil
         end
 
         it 'respond with nested simple definition' do
@@ -406,8 +403,8 @@ describe WashoutBuilder do
             end
           end
 
-           expect(savon(:rocknroll)[:rocknroll_response][:my_value]
-            ).to eq ({ :"@xsi:type" => 'tns:MyValue' })
+          expect(savon(:rocknroll)[:rocknroll_response][:my_value]
+                ).to eq("@xsi:type": 'tns:MyValue')
         end
 
         it 'handles incomplete array response' do
@@ -450,7 +447,7 @@ describe WashoutBuilder do
         mock_controller do
           soap_action 'date', args: :date, return: :nil
           def date
-             raise Exception if params[:value].present? &&  params[:value] !=  Date.parse('2000-12-30') 
+            raise Exception if params[:value].present? && params[:value] != Date.parse('2000-12-30')
             render soap: nil
           end
         end
@@ -463,7 +460,7 @@ describe WashoutBuilder do
         mock_controller do
           soap_action 'base64', args: :base64Binary, return: :nil
           def base64
-            raise Exception if  params[:value].present? &&  params[:value] !=  'test'
+            raise Exception if params[:value].present? && params[:value] != 'test'
             render soap: nil
           end
         end
@@ -484,9 +481,9 @@ describe WashoutBuilder do
           end
         end
 
-       expect {
+        expect do
           savon(:duty, bad: 42, good: nil)
-       }.to raise_exception(Savon::SOAPFault)
+        end.to raise_exception(Savon::SOAPFault)
       end
 
       it 'raise for date in incorrect format' do
@@ -496,9 +493,9 @@ describe WashoutBuilder do
             render soap: nil
           end
         end
-        expect { 
+        expect do
           savon(:date, value: 'incorrect format')
-       }.to raise_exception(Savon::SOAPFault)
+        end.to raise_exception(Savon::SOAPFault)
       end
 
       it 'raise to report SOAP errors', fails: true do
@@ -586,8 +583,8 @@ describe WashoutBuilder do
 
           expect { savon(:bad) }.to raise_exception{ |error|
             error_hash = error.to_hash
-             expect(error_hash[:fault][:faultcode]).to eq(error_code.to_s)
-             expect(error_hash[:fault][:faultstring]).to eq(error_message)
+            expect(error_hash[:fault][:faultcode]).to eq(error_code.to_s)
+            expect(error_hash[:fault][:faultstring]).to eq(error_message)
             expect(error).to be_a(Savon::SOAPFault)
           }
         end
@@ -600,16 +597,15 @@ describe WashoutBuilder do
         raise_runtime_exception = raise_exception(RuntimeError)
 
         mock_controller do
-            soap_action 'rumba',
-                        args: :integer,
-                        return: nil
+          soap_action 'rumba',
+                      args: :integer,
+                      return: nil
           def rumba
             raise RuntimeError
-            render soap: nil
           end
         end
-        
-          expect { savon(:rumba) }.to raise_runtime_exception
+
+        expect { savon(:rumba) }.to raise_runtime_exception
       end
     end
 
@@ -624,7 +620,7 @@ describe WashoutBuilder do
       end
 
       expect(savon(name.underscore.to_sym)["#{name.underscore}_response".to_sym][:value]
-        ).to eq 'forty two'
+            ).to eq 'forty two'
     end
 
     it 'respects :response_tag option' do
@@ -635,7 +631,7 @@ describe WashoutBuilder do
         end
       end
 
-       expect(savon(:specific)).to eq({ test: { value: 'test' } })
+      expect(savon(:specific)).to eq(test: { value: 'test' })
     end
 
     it 'handles snakecase option properly' do

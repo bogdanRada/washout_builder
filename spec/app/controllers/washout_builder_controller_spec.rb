@@ -43,6 +43,6 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
     controller.expects(:controller_is_a_service?).with(params[:name]).returns(route)
     WashoutBuilder::Document::Generator.expects(:new).with(route.defaults[:controller])
     get :all, params
-     expect(response).to  render_template 'wash_with_html/doc'
+    expect(response).to render_template 'wash_with_html/doc'
   end
 end

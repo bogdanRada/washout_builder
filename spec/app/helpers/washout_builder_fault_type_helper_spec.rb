@@ -46,7 +46,7 @@ describe WashoutBuilderFaultTypeHelper, type: :helper do
     it 'returns false' do
       attr_details = { primitive: 'STRING' }
       WashoutBuilder::Type::BASIC_TYPES.expects(:include?).with(attr_details[:primitive].to_s.downcase).returns(false)
-     expect(helper.primitive_type_is_basic?(attr_details)).to eq(false)
+      expect(helper.primitive_type_is_basic?(attr_details)).to eq(false)
     end
   end
 
@@ -54,14 +54,14 @@ describe WashoutBuilderFaultTypeHelper, type: :helper do
     %w(NILCLASS nilclass).each do |primitive|
       it 'returns string in case of nilclass' do
         attr_details = { primitive: primitive }
-         expect(helper.get_primitive_type_string(attr_details)).to eq('string')
+        expect(helper.get_primitive_type_string(attr_details)).to eq('string')
       end
     end
 
     %w(BLA bla).each do |primitive|
       it 'returns the primitive if not niclass' do
         attr_details = { primitive: primitive }
-         expect(helper.get_primitive_type_string(attr_details)).to eq(primitive.to_s.downcase)
+        expect(helper.get_primitive_type_string(attr_details)).to eq(primitive.to_s.downcase)
       end
     end
   end
@@ -71,14 +71,14 @@ describe WashoutBuilderFaultTypeHelper, type: :helper do
       it 'checks the member type to be basic if primitive type array' do
         attr_details = { primitive: primitive }
         helper.expects(:member_type_is_basic?).with(attr_details).returns(true)
-        expect(helper.get_member_type_string(attr_details) ).to eq(true)
+        expect(helper.get_member_type_string(attr_details)).to eq(true)
       end
     end
 
     %w(BLA Bla bla).each do |primitive|
       it 'returns the primitive type as it is if not array' do
         attr_details = { primitive: primitive }
-         expect( helper.get_member_type_string(attr_details) ).to  eq(primitive)
+        expect(helper.get_member_type_string(attr_details)).to eq(primitive)
       end
     end
   end
@@ -120,7 +120,7 @@ describe WashoutBuilderFaultTypeHelper, type: :helper do
         helper.expects(:get_member_type_string).with(attr_details).returns(member_type)
         helper.expects(:create_fault_model_complex_element_type).with(pre, member_type, attribute, true).returns(expected)
         result = helper.create_html_fault_model_element_type(pre, attribute, attr_details)
-         expect(result).to eq(expected)
+        expect(result).to eq(expected)
       end
     end
   end

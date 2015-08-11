@@ -7,11 +7,11 @@ describe WashoutBuilder::Type do
   let(:fault_classes) { [exception] }
 
   it 'defines a list of types' do
-     expect(WashoutBuilder::Type::BASIC_TYPES).to eq(%w(string integer double boolean date datetime float time int))
+    expect(WashoutBuilder::Type::BASIC_TYPES).to eq(%w(string integer double boolean date datetime float time int))
   end
 
   it 'gets the fault classes defined' do
-     expect(WashoutBuilder::Type.all_fault_classes).to eq([base_exception])
+    expect(WashoutBuilder::Type.all_fault_classes).to eq([base_exception])
   end
 
   context 'exception' do
@@ -20,11 +20,11 @@ describe WashoutBuilder::Type do
     end
 
     it 'checks if exception has ancestor' do
-       expect(WashoutBuilder::Type.ancestor_fault?(exception)).to eq(true)
+      expect(WashoutBuilder::Type.ancestor_fault?(exception)).to eq(true)
     end
 
     it 'checks if exception valid' do
-       expect(WashoutBuilder::Type.valid_fault_class?(exception)).to eq(true)
+      expect(WashoutBuilder::Type.valid_fault_class?(exception)).to eq(true)
     end
   end
 end

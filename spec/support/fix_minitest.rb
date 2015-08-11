@@ -6,16 +6,16 @@ module FIxMinitest
     override_minitest_unit_run
   end
 
-  # rubocop:disable NestedMethodDefinition
+  # rubocop:disable all
   def self.override_minitest_run
     Minitest.instance_eval do
       def run(*)
         FIxMinitest.run_mininitest
-      end
+      end    
     end if defined?(Minitest)
   end
-  
-# rubocop:disable NestedMethodDefinition
+ 
+  # rubocop:disable NestedMethodDefinition
   def self.run_mininitest
     case $ERROR_INFO
       when SystemExit

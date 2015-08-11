@@ -44,20 +44,20 @@ describe WashoutBuilder::Document::ExceptionModel do
   specify {  expect(subject.get_fault_type_method('backtrace')).to eq('string') }
 
   it 'gets the strcuture' do
-     expect(subject.remove_fault_type_inheritable_elements(['code'])).to eq('message' => { primitive: 'string', member_type: nil }, 'backtrace' => { primitive: 'string', member_type: nil })
+    expect(subject.remove_fault_type_inheritable_elements(['code'])).to eq('message' => { primitive: 'string', member_type: nil }, 'backtrace' => { primitive: 'string', member_type: nil })
   end
 
   it 'fault_ancestor_hash' do
-     expect(subject.fault_ancestor_hash(structure, ancestors)).to eq(fault_ancestor_hash(subject, structure, ancestors))
+    expect(subject.fault_ancestor_hash(structure, ancestors)).to eq(fault_ancestor_hash(subject, structure, ancestors))
   end
 
   it 'gets the fault_ancestors' do
     subject.expects(:get_complex_type_ancestors).with(subject, ['ActiveRecord::Base', 'Object', 'BasicObject', 'Exception']).returns(ancestors)
-     expect(subject.fault_ancestors).to eq ancestors
+    expect(subject.fault_ancestors).to eq ancestors
   end
 
   it 'gets the attribute type' do
-     expect(subject.get_fault_type_method('some_name')).to eq 'string'
+    expect(subject.get_fault_type_method('some_name')).to eq 'string'
   end
 
   it 'gets the fault_without_inheritable_elements' do
@@ -70,7 +70,7 @@ describe WashoutBuilder::Document::ExceptionModel do
     subject.expects(:fault_ancestors).returns(nil)
     subject.expects(:find_fault_model_structure).returns(structure)
     subject.expects(:fault_ancestor_hash).with(structure, []).returns(fault_ancestor_hash(subject, structure, ancestors))
-     expect(subject.get_fault_class_ancestors([])).to eq(nil)
+    expect(subject.get_fault_class_ancestors([])).to eq(nil)
   end
 
   it 'gets the ancestors' do

@@ -70,7 +70,7 @@ RSpec.configure do |config|
       namespace: false
     }
   end
-#config.expect_with(:rspec) { |c| c.syntax = :should }
+  # config.expect_with(:rspec) { |c| c.syntax = :should }
 
   config.after(:suite) do
     if SimpleCov.running
