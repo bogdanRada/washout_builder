@@ -6,7 +6,7 @@ module WashoutBuilder
       include WashoutBuilder::Document::SharedComplexType
 
       def find_complex_class_name(defined = [])
-        complex_class = struct? ? basic_type.gsub('.', '/').camelize : nil
+        complex_class = struct? ? basic_type.tr('.', '/').camelize : nil
         check_duplicate_complex_class(defined, complex_class) unless complex_class.nil? || defined.blank?
         complex_class
       end

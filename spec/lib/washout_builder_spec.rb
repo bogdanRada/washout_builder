@@ -160,7 +160,7 @@ describe WashoutBuilder do
           end
         end
         savon(:answer, a: '')[:answer_response][:a]
-          .should == { :"@xsi:type" => 'xsd:string' }
+          .should == { "@xsi:type": 'xsd:string' }
       end
 
       it 'accept one parameter' do
@@ -298,7 +298,7 @@ describe WashoutBuilder do
         end
 
         savon(:gogogo)[:gogogo_response]
-          .should == { zoo: 'zoo', boo: { :moo => 'moo', :doo => 'doo', :"@xsi:type" => 'tns:Boo' } }
+          .should == { zoo: 'zoo', boo: { moo: 'moo', doo: 'doo', "@xsi:type": 'tns:Boo' } }
       end
 
       it 'respond with arrays' do
@@ -332,8 +332,8 @@ describe WashoutBuilder do
 
         savon(:rumba)[:rumba_response].should == {
           rumbas: [
-            { :zombies => 'suck1', :puppies => 'rock1', :"@xsi:type" => 'tns:Rumbas' },
-            { :zombies => 'suck2', :puppies => 'rock2', :"@xsi:type" => 'tns:Rumbas' }
+            { zombies: 'suck1', puppies: 'rock1', "@xsi:type": 'tns:Rumbas' },
+            { zombies: 'suck2', puppies: 'rock2', "@xsi:type": 'tns:Rumbas' }
           ]
         }
       end
@@ -352,18 +352,18 @@ describe WashoutBuilder do
         savon(:rumba)[:rumba_response].should == {
           value: [
             {
-              :rumbas => {
-                :zombies => '100000',
-                :"@xsi:type" => 'tns:Rumbas'
+              rumbas: {
+                zombies: '100000',
+                "@xsi:type": 'tns:Rumbas'
               },
-              :"@xsi:type" => 'tns:Value'
+              "@xsi:type": 'tns:Value'
             },
             {
-              :rumbas => {
-                :zombies => '2',
-                :"@xsi:type" => 'tns:Rumbas'
+              rumbas: {
+                zombies: '2',
+                "@xsi:type": 'tns:Rumbas'
               },
-              :"@xsi:type" => 'tns:Value'
+              "@xsi:type": 'tns:Value'
             }
           ]
         }
@@ -404,7 +404,7 @@ describe WashoutBuilder do
           end
 
           savon(:rocknroll)[:rocknroll_response][:my_value]
-            .should == { :"@xsi:type" => 'tns:MyValue' }
+            .should == { "@xsi:type": 'tns:MyValue' }
         end
 
         it 'handles incomplete array response' do

@@ -16,36 +16,31 @@ Gem::Specification.new do |s|
   s.test_files = s.files.grep(/^(spec)/)
   s.require_paths = ["lib"]
   s.add_runtime_dependency 'wash_out', '~> 0.9.1', '>= 0.9.1'
-
-  s.add_development_dependency 'wasabi', '~> 3.3', '>= 3.3'
-  s.add_development_dependency 'savon', '~> 2.5', '>= 2.5'
-  s.add_development_dependency 'httpi', '~> 2.1', '>= 2.1'
-  s.add_development_dependency 'nokogiri', '~> 1.6', '>= 1.6'
   
     
-  s.add_development_dependency 'rspec-rails', '~> 2.0', '>= 2.0'
-  s.add_development_dependency 'guard', '~> 2.6.1', '>= 2.6'
-  s.add_development_dependency 'guard-rspec', '~> 4.2.9', '>= 4.2'
-  s.add_development_dependency 'appraisal', '~> 1.0', '>= 1.0'
+  s.add_development_dependency 'rspec-rails', '~> 3.3', '>= 3.3'
+  s.add_development_dependency 'guard', '~> 2.13', '>= 2.13'
+  s.add_development_dependency 'guard-rspec', '~> 4.6', '>= 4.6'
+  s.add_development_dependency 'appraisal', '~> 2.0', '>= 2.0'
   s.add_development_dependency 'simplecov', '~> 0.9', '>= 0.9'
   s.add_development_dependency 'simplecov-summary', '~> 0.0.4', '>= 0.0.4'
   s.add_development_dependency 'mocha','~> 1.1', '>= 1.1'
-  s.add_development_dependency 'coveralls','~> 0.7', '>= 0.7'
+  s.add_development_dependency 'coveralls','~> 0.8', '>= 0.8'
   #  s.add_development_dependency 'codeclimate-test-reporter','~> 0.3', '>= 0.3'
   #  s.add_development_dependency 'rubyntlm','~> 0.3.4', '>= 0.3'
   s.add_development_dependency 'rvm-tester','~> 1.1', '>= 1.1'
   s.add_development_dependency 'wwtd','~> 0.9', '>= 0.9.1'
   
-  s.add_development_dependency 'capybara', '~> 2.2', '>= 2.2.1'
+  s.add_development_dependency 'capybara', '~> 2.4', '>= 2.4'
   s.add_development_dependency 'selenium-webdriver',  '~> 2.41', '>= 2.41.0'
-  s.add_development_dependency 'headless','~> 1.0', '>= 1.0.1'
+  s.add_development_dependency 'headless','~> 2.2', '>= 2.2'
   
-  s.add_development_dependency 'rubocop', '0.29'
-  s.add_development_dependency 'phare', '~> 0.6', '>= 0.6'
+  s.add_development_dependency 'rubocop',  '~> 0.3', '>= 0.33'
+  s.add_development_dependency 'phare', '~> 0.7', '>= 0.7'
   s.add_development_dependency 'yard', '~> 0.8.7', '>= 0.8.7'
   s.add_development_dependency 'yard-rspec', '~> 0.1', '>= 0.1'
-  s.add_development_dependency 'redcarpet', '~> 3.2.2', '>= 3.2.2'
-  s.add_development_dependency 'github-markup', '~> 1.3.3', '>= 1.3.3'
-  s.add_development_dependency 'inch', '~> 0.5.10'
+  s.add_development_dependency 'redcarpet', '~> 3.3', '>= 3.3'
+  s.add_development_dependency 'github-markup', '~> 1.4', '>= 1.4'
+  s.add_development_dependency 'inch', '~> 0.6'
   s.add_development_dependency 'guard-inch', '~> 0.1.0'
 end
