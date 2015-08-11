@@ -17,7 +17,11 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_runtime_dependency 'wash_out', '~> 0.9.1', '>= 0.9.1'
   
-    
+  s.add_development_dependency 'wasabi', '~> 3.5', '>= 3.5'
+  s.add_development_dependency 'savon', '~> 2.11', '>= 2.11'
+  s.add_development_dependency 'httpi', '~> 2.4', '>= 2.4'
+  s.add_development_dependency 'nokogiri', '~> 1.6', '>= 1.6'
+
   s.add_development_dependency 'rspec-rails', '~> 3.3', '>= 3.3'
   s.add_development_dependency 'guard', '~> 2.13', '>= 2.13'
   s.add_development_dependency 'guard-rspec', '~> 4.6', '>= 4.6'
@@ -26,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov-summary', '~> 0.0.4', '>= 0.0.4'
   s.add_development_dependency 'mocha','~> 1.1', '>= 1.1'
   s.add_development_dependency 'coveralls','~> 0.8', '>= 0.8'
+  s.add_development_dependency 'test-unit','~> 3.1', '>= 3.1'
   #  s.add_development_dependency 'codeclimate-test-reporter','~> 0.3', '>= 0.3'
   #  s.add_development_dependency 'rubyntlm','~> 0.3.4', '>= 0.3'
   s.add_development_dependency 'rvm-tester','~> 1.1', '>= 1.1'
