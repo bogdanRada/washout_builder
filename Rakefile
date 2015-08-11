@@ -42,3 +42,19 @@ task :all do |_t|
     exec(' bundle exec rubocop -a . && bundle exec phare &&  bundle exec appraisal install && bundle exec rake appraisal spec')
   end
 end
+
+
+
+YARD::Config.options[:load_plugins] = true
+YARD::Config.load_plugins
+
+YARD::Rake::YardocTask.new do |t|
+  t.files = ['lib/**/*.rb', 'spec/**/*_spec.rb'] # optional
+  t.options = ['--any', '--extra', '--opts', '--markup-provider=redcarpet', '--markup=markdown', '--debug'] # optional
+  t.stats_options = ['--list-undoc'] # optional
+end
+
+
+task :docs do
+  exec(' bundle exec rubocop -a .  && bundle exec phare  && bundle exec inch --pedantic && bundle exec yard')
+end
