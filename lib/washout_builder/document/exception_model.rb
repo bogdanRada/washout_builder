@@ -41,7 +41,7 @@ module WashoutBuilder
         method != :== && method != :! &&
           (instance_methods.include?(:"#{method}=") ||
             instance_methods.include?(:"#{method}")
-        )
+          )
       end
 
       def find_fault_attributes
@@ -49,7 +49,7 @@ module WashoutBuilder
         attrs = instance_methods(nil).map do |method|
           method.to_s if check_valid_fault_method?(method)
         end
-        attrs = attrs.delete_if { |method| method.end_with?('=') && attrs.include?(method.gsub('=', '')) }
+        attrs = attrs.delete_if { |method| method.end_with?('=') && attrs.include?(method.delete('=')) }
         attrs.concat(%w(message backtrace))
       end
 
@@ -67,7 +67,7 @@ module WashoutBuilder
       def find_fault_model_structure
         h = {}
         find_fault_attributes.each do |method_name|
-          method_name = method_name.to_s.end_with?('=') ? method_name.to_s.gsub('=', '') : method_name
+          method_name = method_name.to_s.end_with?('=') ? method_name.to_s.delete('=') : method_name
           primitive_type = get_fault_type_method(method_name)
           h["#{method_name}"] = {
             primitive: "#{primitive_type}",
