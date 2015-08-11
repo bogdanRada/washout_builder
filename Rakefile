@@ -3,6 +3,8 @@ require 'bundler/gem_tasks'
 require 'appraisal'
 require 'rspec/core/rake_task'
 require 'coveralls/rake/task'
+require 'yard'
+require 'yard-rspec'
 Coveralls::RakeTask.new
 
 RSpec::Core::RakeTask.new(:spec) do |spec|
