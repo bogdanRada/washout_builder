@@ -36,7 +36,6 @@ require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require File.expand_path('../../config/routes.rb', __FILE__)
 require 'rails/test_help'
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'savon'
 require 'wash_out'
 
@@ -49,6 +48,8 @@ Rails.backtrace_cleaner.remove_silencers!
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
+FIxMinitest.disable_autorun
+# Test::Unit.run = true if defined?(Test::Unit) && Test::Unit.respond_to?(:run=)
 RSpec.configure do |config|
   require 'rspec/expectations'
   config.include RSpec::Matchers
@@ -69,6 +70,7 @@ RSpec.configure do |config|
       namespace: false
     }
   end
+#config.expect_with(:rspec) { |c| c.syntax = :should }
 
   config.after(:suite) do
     if SimpleCov.running
@@ -108,6 +110,9 @@ end
 class WashoutBuilderTestError < base_exception
 end
 
-def get_wash_out_param(class_name_or_structure, soap_config = soap_config)
+def get_wash_out_param(class_name_or_structure, soap_config = OpenStruct.new(
+  camelize_wsdl: false,
+  namespace: '/api/wsdl'
+))
   WashOut::Param.parse_builder_def(soap_config, class_name_or_structure)[0]
 end
