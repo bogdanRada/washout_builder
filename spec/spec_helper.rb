@@ -116,3 +116,31 @@ def get_wash_out_param(class_name_or_structure, soap_config = OpenStruct.new(
 ))
   WashOut::Param.parse_builder_def(soap_config, class_name_or_structure)[0]
 end
+
+class Hash
+  def deep_include?(sub_hash)
+    sub_hash.keys.all? do |key|
+      if check_key_type(key, Hash)
+        sub_hash[key].is_a?(Hash) && self[key].deep_include?(sub_hash[key])
+      elsif check_key_type(key, Array)
+        sub_hash[key].is_a?(Array) && deep_include_array(key, sub_hash)
+      else
+        self[key] == sub_hash[key]
+      end
+    end
+  end
+
+  def check_key_type(key, type)
+    self.key?(key) && self[key].is_a?(type)
+  end
+
+  def deep_include_array(key, sub_hash)
+    self[key].each_with_index do |value, index|
+      if value.is_a?(Hash)
+        value.deep_include?(sub_hash[key][index])
+      else
+        value == sub_hash[key][index]
+      end
+    end
+  end
+end
