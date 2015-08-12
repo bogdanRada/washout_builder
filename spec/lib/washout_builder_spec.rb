@@ -164,7 +164,7 @@ describe WashoutBuilder do
             render soap: { a: params[:a] }
           end
         end
-        expect(savon(:answer, a: '')[:answer_response][:a]).to eq("@xsi:type": 'xsd:string')
+        expect(savon(:answer, a: '')[:answer_response][:a][:'@xsi:type']).to eq('xsd:string')
       end
 
       it 'accept one parameter' do
@@ -301,8 +301,9 @@ describe WashoutBuilder do
           end
         end
 
-        expect(savon(:gogogo)[:gogogo_response]
-              ).to eq(zoo: 'zoo', boo: { moo: 'moo', doo: 'doo', "@xsi:type": 'tns:Boo' })
+        expect(savon(:gogogo)[:gogogo_response].deep_include?(zoo: 'zoo', boo: { moo: 'moo', doo: 'doo' })).to eq true
+
+        expect(savon(:gogogo)[:gogogo_response][:boo][:'@xsi:type']).to eq('tns:Boo')
       end
 
       it 'respond with arrays' do
@@ -334,10 +335,13 @@ describe WashoutBuilder do
           end
         end
 
-        expect(savon(:rumba)[:rumba_response]).to eq(rumbas: [
-          { zombies: 'suck1', puppies: 'rock1', "@xsi:type": 'tns:Rumbas' },
-          { zombies: 'suck2', puppies: 'rock2', "@xsi:type": 'tns:Rumbas' }
-        ])
+        expect(savon(:rumba)[:rumba_response].deep_include?(rumbas: [
+          { zombies: 'suck1', puppies: 'rock1' },
+          { zombies: 'suck2', puppies: 'rock2' }
+        ])).to eq(true)
+
+        expect(savon(:rumba)[:rumba_response][:rumbas][0][:'@xsi:type']).to eq('tns:Rumbas')
+        expect(savon(:rumba)[:rumba_response][:rumbas][1][:'@xsi:type']).to eq('tns:Rumbas')
       end
 
       it 'respond with structs in structs in arrays' do
@@ -351,22 +355,24 @@ describe WashoutBuilder do
           end
         end
 
-        expect(savon(:rumba)[:rumba_response]).to eq(value: [
+        expect(savon(:rumba)[:rumba_response].deep_include?(value: [
           {
             rumbas: {
-              zombies: '100000',
-              "@xsi:type": 'tns:Rumbas'
-            },
-            "@xsi:type": 'tns:Value'
+              zombies: '100000'
+            }
           },
           {
             rumbas: {
-              zombies: '2',
-              "@xsi:type": 'tns:Rumbas'
-            },
-            "@xsi:type": 'tns:Value'
+              zombies: '2'
+            }
           }
-        ])
+        ])).to eq(true)
+
+        expect(savon(:rumba)[:rumba_response][:value][0][:'@xsi:type']).to eq('tns:Value')
+        expect(savon(:rumba)[:rumba_response][:value][1][:'@xsi:type']).to eq('tns:Value')
+
+        expect(savon(:rumba)[:rumba_response][:value][0][:rumbas][:'@xsi:type']).to eq('tns:Rumbas')
+        expect(savon(:rumba)[:rumba_response][:value][1][:rumbas][:'@xsi:type']).to eq('tns:Rumbas')
       end
 
       context 'with arrays missing' do
@@ -403,8 +409,7 @@ describe WashoutBuilder do
             end
           end
 
-          expect(savon(:rocknroll)[:rocknroll_response][:my_value]
-                ).to eq("@xsi:type": 'tns:MyValue')
+          expect(savon(:rocknroll)[:rocknroll_response][:my_value][:'@xsi:type']).to eq('tns:MyValue')
         end
 
         it 'handles incomplete array response' do
