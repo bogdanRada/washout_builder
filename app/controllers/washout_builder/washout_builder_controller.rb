@@ -7,6 +7,10 @@ module WashoutBuilder
     # If a name parameter is present wiill try to use that and find a controller
     # that was that name by camelcasing the name .
     # IF a name is provided will show the documentation page for that controller
+    #
+    # @return [void]
+    #
+    # @api public
     def all
       route = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
       if route.present?
