@@ -133,7 +133,7 @@ describe WashoutBuilder::Document::ComplexType do
     let(:ancestors) { ['something'] }
 
     it 'returns the complex_type_hash' do
-      expect(subject.complex_type_hash(complex_class, subject, ancestors)).to eq('class' => complex_class, :obj => subject, :ancestors => ancestors)
+      expect(subject.complex_type_hash(complex_class, subject, ancestors)).to eq(class: complex_class, obj: subject, ancestors: ancestors)
     end
   end
 
