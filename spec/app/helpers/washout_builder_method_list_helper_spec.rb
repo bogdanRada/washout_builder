@@ -45,7 +45,7 @@ describe WashoutBuilderMethodListHelper, type: :helper do
     it 'returns complex type' do
       expected = 'some expected string'
       WashoutBuilder::Type::BASIC_TYPES.expects(:include?).with(builder_elem.type).returns(false)
-      helper.expects(:create_return_complex_type_html).with(instance_of(Builder::XmlMarkup), complex_class, output).returns(expected)
+      helper.expects(:create_return_complex_type_list_html).with(instance_of(Builder::XmlMarkup), complex_class, output).returns(expected)
       result = helper.create_return_type_list_html(xml, output)
       expect(result).to eq(expected)
     end
