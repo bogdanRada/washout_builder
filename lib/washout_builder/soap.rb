@@ -7,13 +7,19 @@ module WashoutBuilder
     include WashOut::Rails::Controller if defined?(WashOut::Rails::Controller)
 
     module ClassMethods
-      attr_accessor :soap_actions
+      attr_accessor :soap_actions, :washout_builder_action
       # Define a SOAP action +action+. The function has two required +options+:
       # :args and :return. Each is a type +definition+ of format described in
       # WashOut::Param#parse_def.
       #
       # An optional option :to can be passed to allow for names of SOAP actions
       # which are not valid Ruby function names.
+      # @param  [Symbol, Class]  action the action that is requested
+      # @param [Hash] options  the options used for
+      #
+      # @return [void]
+      #
+      # @api public
       def soap_action(action, options = {})
         original_soap_action(action, options)
 

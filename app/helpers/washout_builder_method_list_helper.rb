@@ -1,4 +1,13 @@
 module WashoutBuilderMethodListHelper
+  # this method will create the return type of the method and check if the type is basic or complex type or array of types
+  #
+  # @param [Builder::XmlMarkup] xml the markup builder that is used to insert HTML line breaks or span elements
+  # @param [Array] complex_class  The array that holds the html that will be appended to the xml
+  # @param [Array<WashOut::Param>] builder_out  An array of params ( will contain a single position in the array) this is used to determine if the class is an array or not
+  #
+  # @return [String]
+  #
+  # @api public
   def create_return_complex_type_list_html(xml, complex_class, builder_out)
     return_content = builder_out[0].multiplied == false ? "#{complex_class}" : "Array of #{complex_class}"
     xml.span('class' => 'pre') do
@@ -10,6 +19,17 @@ module WashoutBuilderMethodListHelper
     end
   end
 
+  # this method will go through each of the arguments print them and then check if we need a spacer after it
+  # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
+  # @see WashoutBuilder::Type::BASIC_TYPES
+  # @see #create_return_complex_type_list_html
+  #
+  # @param [Builder::XmlMarkup] xml the markup builder that is used to insert HTML line breaks or span elements
+  # @param [Array<WashOut::Param>] output t  An array of params that need to be displayed, will check the type of each and will display it accordingly if is complex type or not
+  #
+  # @return [String]
+  #
+  # @api public
   def create_return_type_list_html(xml, output)
     if output.nil?
       xml.span('class' => 'pre') { |sp| sp << 'void' }
@@ -22,7 +42,7 @@ module WashoutBuilderMethodListHelper
           end
         end
       else
-        create_return_complex_type_html(xml, complex_class, output) unless complex_class.nil?
+        create_return_complex_type_list_html(xml, complex_class, output) unless complex_class.nil?
       end
     end
   end

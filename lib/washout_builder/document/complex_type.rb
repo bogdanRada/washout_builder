@@ -1,21 +1,50 @@
 require_relative './shared_complex_type'
 module WashoutBuilder
+  # namespace of the class
   module Document
+    #  class that is used for current Washout::Param object to know his complex type name and structure and detect ancestors and descendants
     module ComplexType
       extend ActiveSupport::Concern
       include WashoutBuilder::Document::SharedComplexType
 
+      # finds the complex class name of the current Washout::Param object and checks if is a duplicate
+      # @see #check_duplicate_complex_class
+      #
+      # @param [Array] defined Array that is used for when iterating through descendants and ancestors
+      #
+      # @return [Class] the complex type name of the current object
+      #
+      # @api public
       def find_complex_class_name(defined = [])
         complex_class = struct? ? basic_type.tr('.', '/').camelize : nil
         check_duplicate_complex_class(defined, complex_class) unless complex_class.nil? || defined.blank?
         complex_class
       end
 
+      # checks if the complex class appears in the array of complex types
+      #
+      # @param [Array<Hash>] defined Array that is used for checking if a complex type is already defined
+      # @param [Class] complex_class the complex type name used for searching
+      #
+      # @return [Boolean] returns true or false if the complex type is found inside the array
+      #
+      # @api public
       def check_duplicate_complex_class(defined, complex_class)
         complex_obj_found = defined.find { |hash| hash[:class] == complex_class }
         raise "Duplicate use of `#{basic_type}` type name. Consider using classified types." if !complex_obj_found.nil? && struct? && !classified?
       end
 
+      # finds the complex class ancestors if the current object is classified, otherwise returns nil
+      # @see WashOut::Param#classified?
+      # @see #get_class_ancestors
+      #
+      # @param [WashOut::SoapConfig] config the configuration of the soap service
+      # @param [Clas] complex_class  the complex type name of the object
+      # @param [Array<Hash>] defined An array that holds all the complex types found so far
+      #
+      # @return [Array<Class>, nil] returns nil if object not classified othewise an array of classes that are ancestors to curent object
+      #
+      # @api public
       def complex_type_ancestors(config, complex_class, defined)
         classified? ? get_class_ancestors(config, complex_class, defined) : nil
       end
@@ -30,10 +59,6 @@ module WashoutBuilder
       def remove_type_inheritable_elements(keys)
         self.map = map.delete_if { |element| keys.include?(element.name) }
       end
-
-      #      def get_ancestor_structure
-      #        {self.class.to_s.downcase =>  self.class.columns_hash.inject({}) {|h, (k,v)|  h["#{k}"]="#{v.type}".to_sym; h } }
-      #      end
 
       def fix_descendant_wash_out_type(config, complex_class)
         param_class = begin
@@ -97,7 +122,7 @@ module WashoutBuilder
 
       def complex_type_hash(class_name, object, ancestors)
         {
-          'class' => class_name,
+          class: class_name,
           obj: object,
           ancestors: ancestors
         }
