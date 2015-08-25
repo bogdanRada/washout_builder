@@ -34,7 +34,6 @@ require 'ostruct'
 
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require File.expand_path('../../config/routes.rb', __FILE__)
-require 'rails/test_help'
 require 'rspec/rails'
 require 'savon'
 require 'wash_out'
@@ -48,7 +47,6 @@ Rails.backtrace_cleaner.remove_silencers!
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
-FIxMinitest.disable_autorun
 # Test::Unit.run = true if defined?(Test::Unit) && Test::Unit.respond_to?(:run=)
 RSpec.configure do |config|
   require 'rspec/expectations'

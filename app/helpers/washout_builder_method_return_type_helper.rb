@@ -1,4 +1,16 @@
 module WashoutBuilderMethodReturnTypeHelper
+  # this method will print the return type next to the method name
+  # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
+  # @see WashoutBuilder::Type::BASIC_TYPES
+  # @see #html_public_method_complex_type
+  #
+  # @param [Builder::XmlMarkup] xml the markup builder that is used to insert HTML line breaks or span elements
+  # @param [Array] pre The array that contains the html that will be appended to xml
+  # @param [Array<WashOut::Param>] output   An array of params that need to be displayed, will check the type of each and will display it accordingly if is complex type or not
+  #
+  # @return [String]
+  #
+  # @api public
   def create_html_public_method_return_type(xml, pre, output)
     if !output.nil?
       complex_class = output[0].find_complex_class_name
@@ -12,6 +24,16 @@ module WashoutBuilderMethodReturnTypeHelper
     end
   end
 
+  # this method will go through each of the arguments print them and then check if we need a spacer after it
+  #
+  #
+  # @param [Array] pre The array that contains the html that will be appended to xml
+  # @param [Array<WashOut::Param>] output  An array of params that need to be displayed, will check the type of each and will display it accordingly if is complex type or not
+  # @param [Class] complex_class the name of the complex class
+
+  # @return [String]
+  #
+  # @api public
   def html_public_method_complex_type(pre, output, complex_class)
     return if complex_class.nil?
     if output[0].multiplied == false
