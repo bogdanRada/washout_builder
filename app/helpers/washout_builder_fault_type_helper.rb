@@ -16,6 +16,7 @@ module WashoutBuilderFaultTypeHelper
   end
 
   # if the attribute is an array  this method is used to identify the type of the elements inside the array
+  # @see WashoutBuilder::Type::BASIC_TYPES
   #
   # @param [Hash] attr_details hash that contains the member type and determines if the member typs is complex or not
   # @option attr_details [String] :member_type The member type of the element ( basic or complex type)
@@ -29,6 +30,7 @@ module WashoutBuilderFaultTypeHelper
   end
 
   # checks is the attribute has a primitive value or a complex value
+  # @see WashoutBuilder::Type::BASIC_TYPES
   #
   # @param [Hash] attr_details hash that contains the member type and determines if the member typs is complex or not
   # @option attr_details [String] :member_type The member type of the element ( basic or complex type)
@@ -74,8 +76,8 @@ module WashoutBuilderFaultTypeHelper
   # if is a complex type will use another method for finding out the complex class
   #
   # @see #primitive_type_is_basic?
-  #  @see #create_fault_model_complex_element_type
-  #  @see #get_primitive_type_string
+  # @see #create_fault_model_complex_element_type
+  # @see #get_member_type_string
   #
   # @param [Array] pre Array that contains the content that will be appended to the xml element li
   # @param [String] attribute  The name of the attribute that needs to be printed

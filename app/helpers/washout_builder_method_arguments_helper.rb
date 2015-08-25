@@ -1,7 +1,9 @@
 module WashoutBuilderMethodArgumentsHelper
   # displays the parameter of a method as argument and determines if the parameter is basic type or complex type
   #
+  # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
   # @see #create_method_argument_complex_element
+  # @see WashoutBuilder::Type::BASIC_TYPES
   #
   # @param [Array] pre Array that contains the content that will be appended to the xml
   # @param [WashOut::Param] param the parameter what needs to be displayed
@@ -26,8 +28,8 @@ module WashoutBuilderMethodArgumentsHelper
   # @param [Array] pre Array that contains the content that will be appended to the xml
   # @param [WashOut::Param] param the parameter what needs to be displayed
   # @param [Bololean] use_spacer  Determines if we need a spacer when appending the html or not
-  #  @param [String] spacer  the spacer that needs to be prepended if use_spacer is true
-  #  @param [Class] complex_class  The name of the complex type
+  # @param [String] spacer  the spacer that needs to be prepended if use_spacer is true
+  # @param [Class] complex_class  The name of the complex type
   #
   # @return [void]
   #

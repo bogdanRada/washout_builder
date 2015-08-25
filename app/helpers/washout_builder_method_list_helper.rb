@@ -20,8 +20,9 @@ module WashoutBuilderMethodListHelper
   end
 
   # this method will go through each of the arguments print them and then check if we need a spacer after it
-  #
-  #  @see #create_return_complex_type_list_html
+  # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
+  # @see WashoutBuilder::Type::BASIC_TYPES
+  # @see #create_return_complex_type_list_html
   #
   # @param [Builder::XmlMarkup] xml the markup builder that is used to insert HTML line breaks or span elements
   # @param [Array<WashOut::Param>] output t  An array of params that need to be displayed, will check the type of each and will display it accordingly if is complex type or not

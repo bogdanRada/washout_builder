@@ -1,7 +1,8 @@
 module WashoutBuilderMethodReturnTypeHelper
   # this method will print the return type next to the method name
-  #
-  #  @see #html_public_method_complex_type
+  # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
+  # @see WashoutBuilder::Type::BASIC_TYPES
+  # @see #html_public_method_complex_type
   #
   # @param [Builder::XmlMarkup] xml the markup builder that is used to insert HTML line breaks or span elements
   # @param [Array] pre The array that contains the html that will be appended to xml

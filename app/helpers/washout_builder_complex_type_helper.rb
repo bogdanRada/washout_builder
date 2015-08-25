@@ -2,7 +2,7 @@ module WashoutBuilderComplexTypeHelper
   # this method is for printing the attributes of a complex type
   # if the attributes are primitives this will show the attributes with  blue color
   # otherwise will call another method for printing the complex attribute
-  #
+  # @see WashoutBuilder::Type::BASIC_TYPES
   # @see #create_complex_element_type_html
   #
   # @param [Array] pre Array that contains the content that will be appended to the xml element li
@@ -23,6 +23,8 @@ module WashoutBuilderComplexTypeHelper
 
   # checks if a complex attribute of a complex type is a array or not
   # and retrieves the complex class name of the attribute and prints it
+  # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
+  # @see WashOutParam#multiplied
   #
   # @param [Array] pre Array that contains the content that will be appended to the xml element li
   # @param [WashOut::Param] element  the element that needs to be printed
