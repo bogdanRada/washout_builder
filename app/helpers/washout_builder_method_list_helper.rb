@@ -1,3 +1,4 @@
+# helper that is used to list the method's return tyep as a LI element in HTML documentation
 module WashoutBuilderMethodListHelper
   # this method will create the return type of the method and check if the type is basic or complex type or array of types
   #

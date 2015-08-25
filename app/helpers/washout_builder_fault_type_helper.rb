@@ -1,3 +1,4 @@
+# method that is used to show that a method can raise a exception in HTML documentation
 module WashoutBuilderFaultTypeHelper
   # checks if a complex attribute of a complex type SoapFault is array or not
   # if the attribute is an array will print also the type of the elements contained in the array

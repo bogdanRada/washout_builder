@@ -40,7 +40,7 @@ end
 WashOut::Param.class_eval do
   def self.parse_builder_def(soap_config, definition)
     raise '[] should not be used in your params. Use nil if you want to mark empty set.' if definition == []
-    return [] if definition.nil?
+    return [] if definition.blank?
 
     # the following lines was removed because when generating the documentation
     #  the "source_class" attrtibute of the object was not the name of the class of the complex tyoe

@@ -1,13 +1,24 @@
 require 'active_support/concern'
 
 module WashoutBuilder
+  # the module that is used for soap actions to parse their definition and hold the infoirmation about
+  # their arguments and return types
   module SOAP
     extend ActiveSupport::Concern
     include WashOut::SOAP if defined?(WashOut::SOAP)
     include WashOut::Rails::Controller if defined?(WashOut::Rails::Controller)
 
+    # module that is used to define a soap action for a controller
     module ClassMethods
+      # module that is used to define a soap action for a controller
+      #
+      # @!attribute soap_actions
+      #   @return [Hash] Hash that contains all the actions to which the web service responds to and information about them
+      #
+      # @!attribute washout_builder_action
+      #   @return [String] holds the action of the controller
       attr_accessor :soap_actions, :washout_builder_action
+
       # Define a SOAP action +action+. The function has two required +options+:
       # :args and :return. Each is a type +definition+ of format described in
       # WashOut::Param#parse_def.
