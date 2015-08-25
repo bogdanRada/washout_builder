@@ -1,3 +1,4 @@
+# helper that is used to show the arguments of a method with their types in HTML documentation
 module WashoutBuilderMethodArgumentsHelper
   # displays the parameter of a method as argument and determines if the parameter is basic type or complex type
   #
