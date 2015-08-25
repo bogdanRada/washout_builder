@@ -1,5 +1,6 @@
 require_relative '../../../lib/washout_builder/document/generator'
 module WashoutBuilder
+  # controller that is used to prit all available services or print the documentation for a specific service
   class WashoutBuilderController < ActionController::Base
     protect_from_forgery
 

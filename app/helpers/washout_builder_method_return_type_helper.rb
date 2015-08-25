@@ -27,9 +27,10 @@ module WashoutBuilderMethodReturnTypeHelper
   # this method will go through each of the arguments print them and then check if we need a spacer after it
   #
   #
-  # @param [Builder::XmlMarkup] xml the markup builder that is used to insert HTML line breaks or span elements
-  # @param [Array<WashOut::Param>] output t  An array of params that need to be displayed, will check the type of each and will display it accordingly if is complex type or not
-  #
+  # @param [Array] pre The array that contains the html that will be appended to xml
+  # @param [Array<WashOut::Param>] output  An array of params that need to be displayed, will check the type of each and will display it accordingly if is complex type or not
+  # @param [Class] complex_class the name of the complex class
+
   # @return [String]
   #
   # @api public

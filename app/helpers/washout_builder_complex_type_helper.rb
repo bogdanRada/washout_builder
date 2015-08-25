@@ -1,3 +1,4 @@
+# module that is used for constructing complex types in HTML-Documentation
 module WashoutBuilderComplexTypeHelper
   # this method is for printing the attributes of a complex type
   # if the attributes are primitives this will show the attributes with  blue color
