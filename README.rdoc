@@ -18,7 +18,8 @@ The way WashOut is used is not modified, it just extends its functionality by ge
 * Provides a human-readable HTML documentation generated  for each service that you write
 
 = LIVE DEMO!!!
-  https://washout-builder.herokuapp.com/
+
+  http://washout-builder.herokuapp.com/
 
 = Screenshots (just an example)
 
