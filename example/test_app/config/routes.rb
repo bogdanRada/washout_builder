@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+    mount WashoutBuilder::Engine => '/'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
    namespace :api do
@@ -6,7 +8,6 @@ Rails.application.routes.draw do
    wash_out :project_service
   end
 
-  mount WashoutBuilder::Engine => '/washout'
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
