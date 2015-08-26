@@ -32,7 +32,7 @@ module WashoutBuilderMethodListHelper
   #
   # @api public
   def create_return_type_list_html(xml, output)
-    if output.nil?
+    if output.nil? || output[0].blank?
       xml.span('class' => 'pre') { |sp| sp << 'void' }
     else
       complex_class = output[0].find_complex_class_name

@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rvm-tester','~> 1.1', '>= 1.1'
   s.add_development_dependency 'wwtd','~> 1.0', '>= 1.0'
 
-  s.add_development_dependency 'capybara', '~> 2.4', '>= 2.4'
+  s.add_development_dependency 'capybara', '~> 2.5', '>= 2.5'
   s.add_development_dependency 'selenium-webdriver',  '~> 2.41', '>= 2.41.0'
   s.add_development_dependency 'headless','~> 2.2', '>= 2.2'
 
