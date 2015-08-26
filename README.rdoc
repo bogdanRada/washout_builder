@@ -19,7 +19,7 @@ The way WashOut is used is not modified, it just extends its functionality by ge
 
 = LIVE DEMO!!!
 
-  {Demo Application}[http://washout-builder.herokuapp.com/]
+* {Demo Application}[http://washout-builder.herokuapp.com/]
 
 = Screenshots (just an example)
 
