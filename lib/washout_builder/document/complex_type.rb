@@ -168,7 +168,7 @@ module WashoutBuilder
           defined << complex_type_hash(complex_class, self, complex_type_ancestors(config, complex_class, defined))
         end
         defined = complex_type_descendants(config, defined)
-        defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq unless defined.blank?
+        defined.blank? ? [] : defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq
       end
 
       # method that constructs the a hash with the name of the ancestor ( the class name) and as value its elemen structure

@@ -21,7 +21,7 @@ xml.p "#{description}" unless description.blank?
   xml.p "Return value:"
     xml.ul {
       xml.li {
-    
+
         create_return_type_list_html(xml,output)
       }
     }
