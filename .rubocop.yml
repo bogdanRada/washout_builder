@@ -4,6 +4,7 @@ AllCops:
     - bin/**/*
     - spec/support/fix_minitest.rb
     - Guardfile
+    - vendor/**/*
 
 Documentation:
   Enabled: false
@@ -66,4 +67,3 @@ Style/ExtraSpacing:
 
 Style/FileName:
   Enabled: false
-
