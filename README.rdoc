@@ -1,6 +1,7 @@
 = washout_builder  {<img src="https://badge.fury.io/rb/washout_builder.png" alt="Gem Version" />}[http://badge.fury.io/rb/washout_builder]
 {<img src="https://travis-ci.org/bogdanRada/washout_builder.png?branch=master,develop" />}[https://travis-ci.org/bogdanRada/washout_builder]
 {<img src="https://gemnasium.com/bogdanRada/washout_builder.svg" alt="Dependency Status" />}[https://gemnasium.com/bogdanRada/washout_builder]
+{<img src="http://inch-ci.org/github/bogdanRada/washout_builder.svg?branch=master" alt="Inline docs" />}[http://inch-ci.org/github/bogdanRada/washout_builder]
 {<img src="https://coveralls.io/repos/bogdanRada/washout_builder/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/bogdanRada/washout_builder?branch=master]
 {<img src="https://codeclimate.com/github/bogdanRada/washout_builder.png" />}[https://codeclimate.com/github/bogdanRada/washout_builder]
 {<img src="https://reposs.herokuapp.com/?path=bogdanRada/washout_builder"  alt="Repo Size"/>}[https://github.com/bogdanRada/washout_builder]
