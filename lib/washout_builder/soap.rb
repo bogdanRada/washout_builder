@@ -5,20 +5,7 @@ module WashoutBuilder
   # their arguments and return types
   module SOAP
     extend ActiveSupport::Concern
-    include WashOut::SOAP if defined?(WashOut::SOAP)
-    include WashOut::Rails::Controller if defined?(WashOut::Rails::Controller)
-
-    # module that is used to define a soap action for a controller
-    module ClassMethods
-      # module that is used to define a soap action for a controller
-      #
-      # @!attribute soap_actions
-      #   @return [Hash] Hash that contains all the actions to which the web service responds to and information about them
-      #
-      # @!attribute washout_builder_action
-      #   @return [String] holds the action of the controller
-      attr_accessor :soap_actions, :washout_builder_action
-
+    included do
       # Define a SOAP action +action+. The function has two required +options+:
       # :args and :return. Each is a type +definition+ of format described in
       # WashOut::Param#parse_def.
@@ -46,12 +33,6 @@ module WashoutBuilder
         current_action[:builder_in] = WashOut::Param.parse_builder_def(soap_config, options[:args])
         current_action[:builder_out] = WashOut::Param.parse_builder_def(soap_config, options[:return])
       end
-    end
-
-    included do
-      include WashOut::Configurable if defined?(WashOut::Configurable)
-      include WashOut::Dispatcher if defined?(WashOut::Dispatcher)
-      self.soap_actions = {}
     end
   end
 end
