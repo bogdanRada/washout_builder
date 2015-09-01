@@ -8,11 +8,11 @@ module WashoutBuilder
   # the module that is used to generate the gem version
   module VERSION
     # the major version of the gem
-    MAJOR = 0
+    MAJOR = 1
     # the minor version of the gem
-    MINOR = 16
+    MINOR = 0
     # the tiny version of the gem
-    TINY = 5
+    TINY = 0
     # if the version should be a e
     PRE = nil
 

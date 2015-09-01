@@ -9,11 +9,30 @@ module WashoutBuilder
     # @return [Array<Class>] returns all the exception classes that should be considered to be detected
     # @api public
     def self.all_fault_classes
-      faults = []
-      faults << WashOut::SOAPError if defined?(WashOut::SOAPError)
-      faults << WashOut::Dispatcher::SOAPError if defined?(WashOut::Dispatcher::SOAPError)
-      faults << SOAPError if defined?(SOAPError)
-      faults
+      classes = []
+      classes << WashOut::SOAPError if defined?(WashOut::SOAPError)
+      classes << WashOut::Dispatcher::SOAPError if defined?(WashOut::Dispatcher::SOAPError)
+      classes << SOAPError if defined?(SOAPError)
+      classes
+    end
+
+    def self.all_controller_classes
+      classes = []
+      classes << WashOut::Rails::Controller::ClassMethods if defined?(WashOut::Rails::Controller::ClassMethods)
+      classes << WashOut::SOAP::ClassMethods if defined?(WashOut::SOAP::ClassMethods)
+      classes
+    end
+
+    def self.all_param_classes
+      classes = []
+      classes << WashOut::Param if defined?(WashOut::Param)
+      classes
+    end
+
+    def self.all_soap_config_classes
+      classes = []
+      classes << WashOut::SoapConfig if defined?(WashOut::SoapConfig)
+      classes
     end
 
     # Checks if a exception class inherits from the basic ones
