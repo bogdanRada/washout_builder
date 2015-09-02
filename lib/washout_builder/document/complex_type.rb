@@ -81,15 +81,25 @@ module WashoutBuilder
       # @return [void]
       # @api public
       def fix_descendant_wash_out_type(config, complex_class)
-        param_class = begin
-          complex_class.is_a?(Class) ? complex_class : complex_class.constantize
-        rescue
-          nil
-        end
-        return unless param_class.present? && param_class.ancestors.include?(WashOut::Type) && map[0].present?
-        descendant = WashOut::Param.parse_builder_def(config, param_class.wash_out_param_map)[0]
+        param_class = find_class_from_string(complex_class)
+        base_param_class = WashoutBuilder::Type.base_param_class
+        base_type_class =  WashoutBuilder::Type.base_type_class
+        return if base_param_class.blank? || base_type_class.blank?
+        return unless param_class.present? && param_class.ancestors.include?(base_type_class) && map[0].present?
+        descendant = base_param_class.parse_builder_def(config, param_class.wash_out_param_map)[0]
         self.name = descendant.name
         self.map = descendant.map
+      end
+
+      # Description of method
+      #
+      # @param [String] complex_class A string that contains the name of a class
+      # @return [Class, nil] returns the class if it is defined otherwise nil
+      # @api public
+      def find_class_from_string(complex_class)
+        complex_class.is_a?(Class) ? complex_class : complex_class.constantize
+      rescue
+        nil
       end
 
       # Method that is used to check if the current object has exactly same structure as one of his ancestors
@@ -120,15 +130,14 @@ module WashoutBuilder
       #  'ActiveRecord::Base', 'Object', 'BasicObject', 'WashOut::Type'
       # @api public
       def get_ancestors(class_name)
-        param_class = begin
-          class_name.is_a?(Class) ? class_name : class_name.constantize
-        rescue
-          nil
-        end
+        param_class = find_class_from_string(class_name)
         if param_class.nil?
           return nil
         else
-          get_complex_type_ancestors(param_class, ['ActiveRecord::Base', 'Object', 'BasicObject', 'WashOut::Type'])
+          base_type_class =  WashoutBuilder::Type.base_type_class
+          filtered_classes = ['ActiveRecord::Base', 'Object', 'BasicObject']
+          filtered_classes << base_type_class if base_type_class.present?
+          get_complex_type_ancestors(param_class, filtered_classes)
         end
       end
 
@@ -210,7 +219,9 @@ module WashoutBuilder
       def get_class_ancestors(config, class_name, defined)
         ancestors = get_ancestors(class_name)
         return if ancestors.blank?
-        ancestor_object = WashOut::Param.parse_def(config, ancestor_structure(ancestors))[0]
+        base_param_class = WashoutBuilder::Type.base_param_class
+        return if base_param_class.blank?
+        ancestor_object = base_param_class.parse_def(config, ancestor_structure(ancestors))[0]
         bool_the_same = same_structure_as_ancestor?(ancestor_object)
         unless bool_the_same
           top_ancestors = get_class_ancestors(config, ancestors[0], defined)
