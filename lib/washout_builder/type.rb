@@ -16,6 +16,10 @@ module WashoutBuilder
       classes
     end
 
+    # returns all the controller classes that should override the "soap_action" method
+    #
+    # @return [Array<Class>] returns all the controller classes that should override the "soap_action" method
+    # @api public
     def self.all_controller_classes
       classes = []
       classes << WashOut::Rails::Controller::ClassMethods if defined?(WashOut::Rails::Controller::ClassMethods)
@@ -23,12 +27,18 @@ module WashoutBuilder
       classes
     end
 
-    def self.all_param_classes
-      classes = []
-      classes << WashOut::Param if defined?(WashOut::Param)
-      classes
+    # returns the base class that is used for parsing definitions of soap actions
+    #
+    # @return [Class] returns the base class that is used for parsing definitions of soap actions
+    # @api public
+    def self.base_param_class
+      defined?(WashOut::Param) ? WashOut::Param : nil
     end
 
+    # returns all the soap config classss that should be overriden to allow description of web service also besides namespace and endpoint
+    #
+    # @return [Array<Class>] returns all the soap config classss that should be overriden to allow description of web service also besides namespace and endpoint
+    # @api public
     def self.all_soap_config_classes
       classes = []
       classes << WashOut::SoapConfig if defined?(WashOut::SoapConfig)
