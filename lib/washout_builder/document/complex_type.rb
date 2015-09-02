@@ -136,7 +136,7 @@ module WashoutBuilder
         else
           base_type_class =  WashoutBuilder::Type.base_type_class
           filtered_classes = ['ActiveRecord::Base', 'Object', 'BasicObject']
-          filtered_classes << base_type_class if base_type_class.present?
+          filtered_classes << base_type_class.to_s if base_type_class.present?
           get_complex_type_ancestors(param_class, filtered_classes)
         end
       end
