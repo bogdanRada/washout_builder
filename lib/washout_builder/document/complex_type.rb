@@ -27,7 +27,7 @@ module WashoutBuilder
       # @param [Class] complex_class the complex type name used for searching
       #
       # @return [Boolean] returns true or false if the complex type is found inside the array
-      #
+      # @raise [RuntimeError] Raises a runtime error if is detected a duplicate use of the complex type
       # @api public
       def check_duplicate_complex_class(defined, complex_class)
         complex_obj_found = defined.find { |hash| hash[:class] == complex_class }
