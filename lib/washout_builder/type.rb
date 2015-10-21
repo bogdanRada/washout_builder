@@ -42,6 +42,7 @@ module WashoutBuilder
     def self.base_type_class
       defined?(WashOut::Type) ? WashOut::Type : nil
     end
+
     # returns all the soap config classss that should be overriden to allow description of web service also besides namespace and endpoint
     #
     # @return [Array<Class>] returns all the soap config classss that should be overriden to allow description of web service also besides namespace and endpoint
