@@ -48,5 +48,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'redcarpet', '~> 3.3', '>= 3.3'
   s.add_development_dependency 'github-markup', '~> 1.4', '>= 1.4'
   s.add_development_dependency 'inch', '~> 0.6'
-  s.add_development_dependency 'guard-inch', '~> 0.1.0'
+  s.add_development_dependency 'guard-inch', '~> 0.2.0'
 end

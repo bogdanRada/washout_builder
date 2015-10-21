@@ -111,7 +111,7 @@ module WashoutBuilder
             'string'
           else
             'string'
-          end
+        end
       end
 
       # Description of method
