@@ -82,7 +82,7 @@ The way soap_actions, or reusable types are defined or how the configuration is 
 
 In order to see the documentation you must write something like this in the routes (exactly like you would do when using only WashOut)
 
-In the following file [config/routes](javascript:void) you can put this configuration
+In the following file **config/routes** you can put this configuration
 
 ```ruby
 WashOutSample::Application.routes.draw do
@@ -97,27 +97,41 @@ end
 
 ```
 
-You can access the url +/washout+ and you will see a list with available services ( in our case there are only two : The RumbasController and MyOtherServiceController) with links to their documentation and where you can find the WSDL.
+You can access the url **/washout** and you will see a list with available services ( in our case there are only two : The RumbasController and MyOtherServiceController) with links to their documentation and where you can find the WSDL.
 
 If you want to access directly the hml documentation that was generated for RumbasController you can do that by accessing url like this:
 
-/washout/Rumbas #camelcase name /washout/rumbas #without camelcase
+```ruby
+/washout/Rumbas                  # camelcase name
+/washout/rumbas                  # without camelcase
+/washout/Api::ProjectService     # for namespaced services with camelcase
+/washout/api/project_service     # without camelcase
+```
 
-/washout/Api::ProjectService # for namespaced services with camelcase /washout/api/project_service # without camelcase
+When specifying the **soap_service** you can also pass a **option for description** . Here is an example
 
-When specifying the <b>soap_service</b> you can also pass a <b>option for description</b> . Here is an example
+```ruby
+soap_service
+    namespace: 'http://my.app.com/my_service/wsdl',
+    description: 'here goes some description for your service'
+```
 
-soap_service namespace: "http://my.app.com/my_service/wsdl", :description => "here goes some description for your service"
-
-When specifying the <b>soap_action</b> you can also pass a <b>option for description</b> and a <b>list of exceptions(need to be classes)</b> that the method can raise at a certain moment.
+When specifying the **soap_action** you can also pass a **option for description** and a **list of exceptions(need to be classes)** that the method can raise at a certain moment.
 
 Here is an example :
 
-soap_action "find", :args => {:number => :integer} , :return => :boolean, :raises => [MyCustomSoapError, MyOtherCustomSoapError ] , :description => "some description about this method to show in the documentation"
+```ruby
+soap_action "find",
+    args: { number: :integer },
+    return: :boolean,
+    raises: [MyCustomSoapError, MyOtherCustomSoapError ] ,
+    description: "some description about this method to show in the documentation"
+```
 
-The exception classes used <b>must inherit</b> from <tt>WashOut::Dispatcher::SOAPError</tt>, which has by default a error code and a message as attributes .
+The exception classes used **must inherit** from **WashOut::Dispatcher::SOAPError**, which has by default a error code and a message as attributes .
 
-= Testing
+Testing
+-------
 
 To test, do the following:
 
@@ -125,9 +139,10 @@ To test, do the following:
 2.	bundle install
 3.	bundle exec rake
 
-= Contributions
+Contributions
+-------------
 
-Please log all feedback/issues via {GitHub Issues}[http://github.com/bogdanRada/washout_builder/issues]. Thanks.
+Please log all feedback/issues via [Github Issues](http://github.com/bogdanRada/washout_builder/issues). Thanks.
 
 == Contributing to washout_builder
 
@@ -139,6 +154,7 @@ Please log all feedback/issues via {GitHub Issues}[http://github.com/bogdanRada/
 -	Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 -	Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
-== Copyright
+Copyright
+---------
 
 Copyright (c) 2013 bogdanRada. See LICENSE.txt for further details.
