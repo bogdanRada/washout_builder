@@ -17,7 +17,7 @@ Features
 -	Provides a human-readable HTML documentation generated for each service that you write
 
 Live DEMO
----------
+=========
 
 -	[Demo Application](http://washout-builder.herokuapp.com)
 
@@ -144,7 +144,8 @@ Contributions
 
 Please log all feedback/issues via [Github Issues](http://github.com/bogdanRada/washout_builder/issues). Thanks.
 
-== Contributing to washout_builder
+Contributing to washout_builder
+-------------------------------
 
 -	Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 -	Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
