@@ -29,7 +29,7 @@ Demo Application Source Code
 Requirements
 ------------
 
-1.	[Ruby 1.9.x or Ruby 2.0.x](http://www.ruby-lang.org)
+1.	[Ruby 1.9.x or Ruby 2.x](http://www.ruby-lang.org)
 2.	[Ruby On Rails](http://rubyonrails.org)
 3.	[WashOut gem version >= 0.9.1](https://github.com/inossidabile/wash_out)
 
