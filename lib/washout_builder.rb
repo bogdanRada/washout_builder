@@ -44,7 +44,9 @@ WashoutBuilder::Type.all_soap_config_classes.each do |controller|
 
     def self.config
       original_config.merge(description: nil)
+      original_config.merge(args_description: nil)
     end
   end
   controller.soap_accessor(:description)
+  controller.soap_accessor(:args_description)
 end
