@@ -14,14 +14,14 @@ describe WashoutBuilderComplexTypeHelper, type: :helper do
 
     def expect_included_type_result(pre, element)
       WashoutBuilder::Type::BASIC_TYPES.expects(:include?).with(element.type).returns(true)
-      result = helper.create_element_type_html(pre, element)
+      result = helper.create_element_type_html(pre, element, nil)
       expect(result).to eq(["<span class='blue'>#{element.type}</span>&nbsp;<span class='bold'>#{element.name}</span>"])
     end
 
     def expect_excluded_type_result(pre, element)
       WashoutBuilder::Type::BASIC_TYPES.expects(:include?).with(element.type).returns(false)
       helper.expects(:create_complex_element_type_html).with(pre, element)
-      helper.create_element_type_html(pre, element)
+      helper.create_element_type_html(pre, element, nil)
     end
 
     it 'returns the element of type text' do

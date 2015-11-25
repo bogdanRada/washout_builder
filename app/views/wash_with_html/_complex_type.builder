@@ -8,7 +8,7 @@ unless object.blank?
     xml.ul("class" => "pre") {
       object.map.each do |element|
         xml.li { |pre|
-          create_element_type_html(pre, element)
+          create_element_type_html(pre, element, nil)
         }
       end
     }
