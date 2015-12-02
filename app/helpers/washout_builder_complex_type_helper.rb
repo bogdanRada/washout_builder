@@ -18,6 +18,7 @@ module WashoutBuilderComplexTypeHelper
     if WashoutBuilder::Type::BASIC_TYPES.include?(element.type)
       pre << "<span class='blue'>#{element.type}</span>&nbsp;<span class='bold'>#{element.name}</span>"
       pre << "&#8194;<span>#{element_description}</span>" unless element_description.nil?
+      pre
     else
       create_complex_element_type_html(pre, element)
     end
