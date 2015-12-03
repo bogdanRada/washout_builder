@@ -104,8 +104,8 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
         @map.each {  |operation, formats|
           xml <<    render(:partial => "wash_with_html/public_method", :locals => {
               :operation => operation,
-              :input =>  formats[:builder_in],
-              :output => formats[:builder_out] ,
+              :input =>  formats[:in],
+              :output => formats[:out] ,
               :exceptions => formats[:raises],
               :description => formats[:description],
               :args_description => formats[:args_description]
