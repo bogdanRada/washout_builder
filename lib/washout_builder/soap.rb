@@ -28,12 +28,19 @@ module WashoutBuilder
             action = action.to_s.camelize
           end
         end
+        builder_soap_action(action, options)
+      end
 
+      private
+
+      def builder_soap_action(action, options = {})
         current_action = soap_actions[action]
         base_param_class = WashoutBuilder::Type.base_param_class
         return if base_param_class.blank?
         current_action[:builder_in] = base_param_class.parse_builder_def(soap_config, options[:args])
         current_action[:builder_out] = base_param_class.parse_builder_def(soap_config, options[:return])
+        current_action[:args_description] = options[:args_description].present? && options[:args_description].is_a?(Hash) ? options[:args_description].stringify_keys : {}
+        current_action
       end
     end
   end

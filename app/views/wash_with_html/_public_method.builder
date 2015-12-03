@@ -13,7 +13,7 @@ xml.p "#{description}" unless description.blank?
     xml.ul {
       input.each do |element|
         xml.li("class" => "pre") { |pre|
-          create_element_type_html(pre, element, args_description.nil? ? nil : args_description[element.name.to_sym])
+          create_element_type_html(pre, element, args_description)
         }
       end
     }

@@ -20,7 +20,7 @@ describe WashoutBuilderComplexTypeHelper, type: :helper do
 
     def expect_excluded_type_result(pre, element)
       WashoutBuilder::Type::BASIC_TYPES.expects(:include?).with(element.type).returns(false)
-      helper.expects(:create_complex_element_type_html).with(pre, element)
+      helper.expects(:create_complex_element_type_html).with(pre, element, nil)
       helper.create_element_type_html(pre, element, nil)
     end
 
@@ -59,19 +59,19 @@ describe WashoutBuilderComplexTypeHelper, type: :helper do
     end
 
     it 'returna simple type element description' do
-      result = helper.create_complex_element_type_html(pre, element)
+      result = helper.create_complex_element_type_html(pre, element, nil)
       expect(result).to eq(["<a href='##{complex_class}'><span class='lightBlue'>#{complex_class}</span></a>&nbsp;<span class='bold'>#{element.name}</span>"])
     end
 
     it 'returns an array type element description' do
       element.stubs(:multiplied).returns(true)
-      result = helper.create_complex_element_type_html(pre, element)
+      result = helper.create_complex_element_type_html(pre, element, nil)
       expect(result).to eq(["<a href='##{complex_class}'><span class='lightBlue'>Array of #{complex_class}</span></a>&nbsp;<span class='bold'>#{element.name}</span>"])
     end
 
     it 'returns empty if no complex class' do
       element.stubs(:find_complex_class_name).returns(nil)
-      result = helper.create_complex_element_type_html(pre, element)
+      result = helper.create_complex_element_type_html(pre, element, nil)
       expect(result).to eq(nil)
     end
   end
