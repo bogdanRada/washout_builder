@@ -12,11 +12,13 @@ module WashoutBuilderComplexTypeHelper
   # @return [void]
   #
   # @api public
-  def create_element_type_html(pre, element)
+  def create_element_type_html(pre, element, element_description)
     element.type = 'string' if element.type == 'text'
     element.type = 'integer' if element.type == 'int'
     if WashoutBuilder::Type::BASIC_TYPES.include?(element.type)
       pre << "<span class='blue'>#{element.type}</span>&nbsp;<span class='bold'>#{element.name}</span>"
+      pre << "&#8194;<span>#{element_description}</span>" unless element_description.nil?
+      pre
     else
       create_complex_element_type_html(pre, element)
     end

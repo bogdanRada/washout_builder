@@ -116,13 +116,14 @@ soap_service
     description: 'here goes some description for your service'
 ```
 
-When specifying the **soap_action** you can also pass a **option for description** and a **list of exceptions(need to be classes)** that the method can raise at a certain moment.
+When specifying the **soap_action** you can also pass a **option for description**, **option for arguments description** and a **list of exceptions(need to be classes)** that the method can raise at a certain moment.
 
 Here is an example :
 
 ```ruby
 soap_action "find",
     args: { number: :integer },
+    args_description: { number: 'some description about this argument' },
     return: :boolean,
     raises: [MyCustomSoapError, MyOtherCustomSoapError ] ,
     description: "some description about this method to show in the documentation"

@@ -102,7 +102,14 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
       @map =  @document.sorted_operations
       unless @map.blank?
         @map.each {  |operation, formats| 
-          xml <<    render(:partial => "wash_with_html/public_method", :locals => { :operation=> operation, :input =>  formats[:in], :output => formats[:out] , :exceptions => formats[:raises], :description => formats[:description]})
+          xml <<    render(:partial => "wash_with_html/public_method", :locals => {
+              :operation => operation,
+              :input =>  formats[:in],
+              :output => formats[:out] ,
+              :exceptions => formats[:raises],
+              :description => formats[:description],
+              :args_description => formats[:args_description]
+          })
         }
       end
       
