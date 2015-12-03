@@ -70,14 +70,6 @@ module WashoutBuilder
         config.respond_to?(:description) ? config.description : nil
       end
 
-      # Returns the service arguments description if the service can respond to args_description method
-      #
-      # @return [String] Returns the service arguments description if the service can respond to args_description method
-      # @api public
-      def service_args_description
-        config.respond_to?(:args_description) ? config.args_description : nil
-      end
-
       #  returns a collection of all operation that the service responds to
       #
       # @return [Array<String>]  returns a collection of all operation that the service responds to
