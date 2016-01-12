@@ -36,6 +36,7 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
   end
 
   it 'checks it controller is a service' do
+    controller.send(:find_all_routes)
     expect(controller.send(:controller_is_a_service?, 'api')).not_to eq nil
   end
 

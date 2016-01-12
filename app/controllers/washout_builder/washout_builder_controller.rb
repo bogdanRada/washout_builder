@@ -15,7 +15,7 @@ module WashoutBuilder
     #
     # @api public
     def all
-      @routes = find_all_routes
+      find_all_routes
       route = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
       if route.present?
         @document = WashoutBuilder::Document::Generator.new(route.defaults[:controller])
@@ -83,7 +83,8 @@ module WashoutBuilder
           engine_routes << route
         end
       end
-      rails_routes.concat(engine_routes).uniq.compact
+      @routes = rails_routes.concat(engine_routes).uniq.compact
+      @routes
     end
 
     # method for getting all controllers that have the generate wsdl action or finding out
