@@ -18,11 +18,21 @@ module WashoutBuilderComplexTypeHelper
     element.type = 'integer' if element.type == 'int'
     if WashoutBuilder::Type::BASIC_TYPES.include?(element.type)
       pre << "<span class='blue'>#{element.type}</span>&nbsp;<span class='bold'>#{element.name}</span>"
-      pre << "&#8194;<span>#{element_description}</span>" unless element_description.blank?
+      pre << "&#8194;<span>#{html_safe(element_description)}</span>" unless element_description.blank?
       pre
     else
       create_complex_element_type_html(pre, element, element_description)
     end
+  end
+
+  # used for escaping strings
+  # @param [String] string The string that needs to be escaped
+  #
+  # @return [String]
+  #
+  # @api public
+  def html_safe(string)
+    string.present? ? ActiveSupport::SafeBuffer.new(string) : string
   end
 
   # checks if a complex attribute of a complex type is a array or not
@@ -41,7 +51,7 @@ module WashoutBuilderComplexTypeHelper
     return if complex_class.nil?
     complex_class_content = element.multiplied == false ? "#{complex_class}" : "Array of #{complex_class}"
     pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_class_content}</span></a>&nbsp;<span class='bold'>#{element.name}</span>"
-    pre << "&#8194;<span>#{element_description}</span>" unless element_description.blank?
+    pre << "&#8194;<span>#{html_safe(element_description)}</span>" unless element_description.blank?
     pre
   end
 end

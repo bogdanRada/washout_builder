@@ -2,6 +2,8 @@ require 'wash_out'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash/keys'
 require 'active_support/concern'
+require 'active_support/core_ext/string/output_safety.rb'
+
 Gem.find_files('washout_builder/**/*.rb').each { |path| require path }
 
 # finds all the exception class and extends them by including the ExceptionModel module in order to be

@@ -12,7 +12,7 @@ module WashoutBuilder
     # the minor version of the gem
     MINOR = 0
     # the tiny version of the gem
-    TINY = 9
+    TINY = 10
     # if the version should be a e
     PRE = nil
 

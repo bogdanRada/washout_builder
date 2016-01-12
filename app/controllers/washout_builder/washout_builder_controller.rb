@@ -15,19 +15,20 @@ module WashoutBuilder
     #
     # @api public
     def all
+      @routes = find_all_routes
       route = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
       if route.present?
         @document = WashoutBuilder::Document::Generator.new(route.defaults[:controller])
         render template: 'wash_with_html/doc', layout: false,
-               content_type: 'text/html'
+        content_type: 'text/html'
       else
         @services = all_services
         render template: 'wash_with_html/all_services', layout: false,
-               content_type: 'text/html'
+        content_type: 'text/html'
       end
     end
 
-  private
+    private
 
     # tries to find all services by searching through the rails controller
     # and returns their namespace, endpoint and a documentation url
@@ -74,6 +75,17 @@ module WashoutBuilder
       route.defaults[:action] == '_generate_wsdl'
     end
 
+    def find_all_routes
+      rails_routes = Rails.application.routes.routes.map {|route| route }
+      engine_routes = []
+      ::Rails::Engine.subclasses.each do |engine|
+        engine.routes.routes.each do |route|
+          engine_routes << route
+        end
+      end
+      rails_routes.concat(engine_routes).uniq.compact
+    end
+
     # method for getting all controllers that have the generate wsdl action or finding out
     # if a single controller is a soap service
     # @see #route_can_generate_wsdl?
@@ -86,7 +98,7 @@ module WashoutBuilder
     #
     # @api private
     def map_controllers(action = 'map')
-      res = Rails.application.routes.routes.send(action) do |route|
+      res = @routes.send(action) do |route|
         if route_can_generate_wsdl?(route)
           yield route if block_given?
         end
