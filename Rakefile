@@ -11,7 +11,6 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.rspec_opts = ['--backtrace '] if ENV['DEBUG']
 end
 
-
 desc 'Default: run the unit tests.'
 task default: [:all]
 

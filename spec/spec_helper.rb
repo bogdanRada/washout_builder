@@ -38,7 +38,6 @@ require 'rspec/rails'
 require 'savon'
 require 'wash_out'
 
-
 Rails.backtrace_cleaner.remove_silencers!
 
 # Load support files
@@ -49,13 +48,6 @@ RSpec.configure do |config|
   require 'rspec/expectations'
   config.include RSpec::Matchers
   config.infer_spec_type_from_file_location!
-
-  config.before(:suite) do
-    # Blocks all remote HTTP requests by default, they need to be stubbed.
-    if !RUBY_PLATFORM.downcase.include?('darwin') && !ENV['NO_HEADLESS']
-      Headless.new(reuse: false, destroy_on_exit: false).start
-    end
-  end
 
   config.mock_with :mocha
   config.before(:all) do
