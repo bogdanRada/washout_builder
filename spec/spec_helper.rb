@@ -11,7 +11,7 @@ formatters = [SimpleCov::Formatter::HTMLFormatter]
 formatters << Coveralls::SimpleCov::Formatter # if ENV['TRAVIS']
 # formatters << CodeClimate::TestReporter::Formatter # if ENV['CODECLIMATE_REPO_TOKEN'] && ENV['TRAVIS']
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
 
 Coveralls.wear!
 SimpleCov.start 'rails' do
@@ -38,9 +38,6 @@ require 'rspec/rails'
 require 'savon'
 require 'wash_out'
 
-require 'capybara/rspec'
-require 'capybara/rails'
-require 'headless'
 
 Rails.backtrace_cleaner.remove_silencers!
 
