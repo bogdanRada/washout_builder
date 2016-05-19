@@ -21,6 +21,10 @@ Live DEMO
 
 -	[Demo Application](http://washout-builder.herokuapp.com)
 
+Click on the **Documentation** links on that page to see the demo application.
+
+Hope you enjoy it :)
+
 Demo Application Source Code
 ----------------------------
 
