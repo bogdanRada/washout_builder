@@ -165,6 +165,7 @@ module WashoutBuilder
     # @return [String] The documentation url for the web service ( relative to base url)
     # @api private
     def service_documentation_url(controller_name)
+      #service_namespace(controller_name).gsub('/wsdl', '/soap_doc')
       "#{washout_builder.root_url}#{controller_naming(controller_name)}"
     end
   end
