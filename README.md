@@ -14,7 +14,7 @@ NEW Improvements in version 1.3.0
 ---------------------------------
 
 -	link to accessing documentation for a single controller is now easier. You can use the same route as for seeing WSLD, but replacing **/wsdl** with **/soap_doc**
--	The old way of acessing documentation is still kept, so if you mounted the engine at **/washout_builder**, you can still acess the documentation by appending to this url the full name of the controller including the namespace and the engine name(in case the controller is from a engine) as described below.
+-	The old way of acessing documentation is still kept, so if you mounted the engine at **/washout**, you can still acess the documentation by appending to this url the full name of the controller including the namespace and the engine name(in case the controller is from a engine) as described below.
 
 Features
 --------
