@@ -130,6 +130,7 @@ module WashoutBuilder
     # @return [Class] the original controller class name
     # @api private
     def controller_class(controller)
+      controller = controller.gsub(/\/+/, '/')
       controller_naming("#{controller}_controller").constantize
     end
 
