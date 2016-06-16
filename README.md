@@ -13,8 +13,8 @@ The way [WashOut](https://github.com/inossidabile/wash_out) is used is not modif
 NEW Improvements in version 1.3.0
 ---------------------------------
 
--	links to accessing documentation are now easier. You can use the same route as for seeing WSLD, but replacing **/wsdl** with **/soap_doc**
--	The old way of acessing documentation is still kept, so if you mounted the engine at **/washout_builder**, you can still acess the documentation by appending to this url the including the namespace and the engine name.
+-	link to accessing documentation for a single controller is now easier. You can use the same route as for seeing WSLD, but replacing **/wsdl** with **/soap_doc**
+-	The old way of acessing documentation is still kept, so if you mounted the engine at **/washout_builder**, you can still acess the documentation by appending to this url the full name of the controller including the namespace and the engine name as described below.
 
 Features
 --------
