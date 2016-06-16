@@ -18,10 +18,10 @@ ActionDispatch::Routing::Mapper.class_eval do
 
       controller_class_name = [options[:module], controller_name].compact.join("/").underscore
 
-      match "#{controller_name}/doc"   =>  WashoutBuilder::Engine, via: :get,
+      match "#{controller_name}/soap_doc"   =>  WashoutBuilder::Engine, via: :get,
         defaults: { name: "#{controller_class_name}" },
         format: false,
-        as: "#{controller_class_name}_doc"
+        as: "#{controller_class_name}_soap_doc"
 
         original_wash_out(controller_name, options)
     end
