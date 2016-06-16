@@ -41,7 +41,8 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
   end
 
   it 'render a service documentation' do
-    controller.expects(:controller_is_a_service?).with(params[:name]).returns(route)
+    controller.stubs(:controller_class).returns(ApiController)
+    controller.stubs(:controller_is_a_service?).with(params[:name]).returns(route)
     WashoutBuilder::Document::Generator.expects(:new).with(route.defaults[:controller])
     get :all, params
     expect(response).to render_template 'wash_with_html/doc'
