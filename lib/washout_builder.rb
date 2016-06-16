@@ -18,8 +18,11 @@ ActionDispatch::Routing::Mapper.class_eval do
 
       controller_class_name = [options[:module], controller_name].compact.join("/").underscore
 
-      match "#{controller_name}/doc"   => "#{controller_name}#_generate_doc", :via => :get, :format => false,
-        :as => "#{controller_class_name}_doc"
+      match "#{controller_name}/doc"   =>  WashoutBuilder::Engine, via: :get,
+        defaults: { name: "#{controller_class_name}" },
+        format: false,
+        as: "#{controller_class_name}_doc"
+
         original_wash_out(controller_name, options)
     end
 end
@@ -29,14 +32,6 @@ end
 WashoutBuilder::Type.all_fault_classes.each do |exception_class|
   exception_class.class_eval do
     extend WashoutBuilder::Document::ExceptionModel
-  end
-end
-
-WashoutBuilder::Type.all_soap_handlers.each do |soap_handler|
-  soap_handler.class_eval do
-    def self.included(base)
-      base.send :include, WashoutBuilder::SOAP::DocHandler
-    end
   end
 end
 
