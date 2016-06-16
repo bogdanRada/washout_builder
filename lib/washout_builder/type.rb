@@ -26,7 +26,7 @@ module WashoutBuilder
       classes << WashOut::SOAP::ClassMethods if defined?(WashOut::SOAP::ClassMethods)
       classes
     end
-
+    
     # returns the base class that is used for parsing definitions of soap actions
     #
     # @return [Class] returns the base class that is used for parsing definitions of soap actions
