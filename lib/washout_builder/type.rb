@@ -27,6 +27,11 @@ module WashoutBuilder
       classes
     end
 
+    def self.all_soap_handlers
+      classes = []
+      classes << WashOut::SOAP if defined?(WashOut::SOAP)
+      classes
+    end
     # returns the base class that is used for parsing definitions of soap actions
     #
     # @return [Class] returns the base class that is used for parsing definitions of soap actions

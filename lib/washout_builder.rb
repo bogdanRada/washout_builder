@@ -6,11 +6,37 @@ require 'active_support/core_ext/string/output_safety.rb'
 
 Gem.find_files('washout_builder/**/*.rb').each { |path| require path }
 
+
+ActionDispatch::Routing::Mapper.class_eval do
+  alias_method :original_wash_out, :wash_out
+    # Adds the routes for a SOAP endpoint at +controller+.
+    def wash_out(controller_name, options={})
+      if @scope
+        scope_frame = @scope.respond_to?(:frame) ? @scope.frame : @scope
+        options.each_with_index { |key, value|  scope_frame[key] = value }
+      end
+
+      controller_class_name = [options[:module], controller_name].compact.join("/").underscore
+
+      match "#{controller_name}/doc"   => "#{controller_name}#_generate_doc", :via => :get, :format => false,
+        :as => "#{controller_class_name}_doc"
+        original_wash_out(controller_name, options)
+    end
+end
+
 # finds all the exception class and extends them by including the ExceptionModel module in order to be
 # able to generate documentation for exceptions
 WashoutBuilder::Type.all_fault_classes.each do |exception_class|
   exception_class.class_eval do
     extend WashoutBuilder::Document::ExceptionModel
+  end
+end
+
+WashoutBuilder::Type.all_soap_handlers.each do |soap_handler|
+  soap_handler.class_eval do
+    def self.included(base)
+      base.send :include, WashoutBuilder::SOAP::DocHandler
+    end
   end
 end
 
