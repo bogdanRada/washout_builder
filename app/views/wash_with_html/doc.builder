@@ -34,13 +34,16 @@ xml.html( "xmlns" => "http://www.w3.org/1999/xhtml" ) {
     xml.h1 "#{ @document.service} Soap WebService interface description"
 
     xml.p{ |y| y << "Endpoint URI:";
-      xml.span( "class" => "pre") { |y| y << "#{@document.endpoint}"};
+      xml.span( "class" => "pre") {
+        xml.a( "href" => "#{@document.endpoint}") { |y| y << "#{@document.endpoint}" }
+      };
     }
 
     xml.p{ |y| y << "WSDL URI:";
       xml.span( "class" => "pre") {
         xml.a( "href" => "#{@document.namespace}") { |y| y << "#{@document.namespace}" }
-      };}
+      };
+    }
     xml.p ""
     unless @document.service_description.blank?
       xml.p "#{@document.service_description}"

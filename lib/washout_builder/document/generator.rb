@@ -13,7 +13,7 @@ module WashoutBuilder
       #
       # @!attribute controller_name
       #   @return [String] The name of the controller that acts like a soap service
-      attr_accessor :soap_actions, :config, :controller_name
+      attr_accessor :soap_actions, :config, :controller_name, :route_details
 
       # Method used to initialize the instance of object
       # @see #controller_class
@@ -21,11 +21,16 @@ module WashoutBuilder
       # @param [String] controller The name of the controller that acts like a soap service
       # @return [void]
       # @api public
-      def initialize(controller)
+      def initialize(route_details, controller)
+        self.route_details = route_details
         controller_class_name = controller_class(controller)
         self.config = controller_class_name.soap_config
         self.soap_actions = controller_class_name.soap_actions
         self.controller_name = controller
+      end
+
+      def controller_route_helpers
+        route_details[:route_set].url_helpers
       end
 
       # Returns the namespace used for the controller by using the soap configuration of the controller
@@ -33,7 +38,7 @@ module WashoutBuilder
       # @return [String] description of returned object
       # @api public
       def namespace
-        config.respond_to?(:namespace) ? config.namespace : nil
+        controller_route_helpers.url_for(controller: controller_name, action: "_generate_wsdl", only_path: true)
       end
 
       # Retrives the class of the controller by using its name
