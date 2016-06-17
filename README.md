@@ -14,7 +14,7 @@ NEW Improvements in version 1.4.0
 ---------------------------------
 
 -	when displaying all services , the link to documentation is now using the new format **/soap_doc** for better readability
--	Fixed an issue when generating documentation for a controller that didn't had the namespace set, the WSDL url and endpoint was missing from the generated source because of that. However if you don't set the namespace in controller the links to WSDL and endpoint would throw an error.
+-	Fixed an issue when generating documentation for a controller that didn't had the namespace set, the WSDL url and endpoint was missing from the generated source because of that. However if you don't set the namespace in controller the links to WSDL and endpoint would throw an error when trying to access them.
 
 NEW Improvements in version 1.3.0
 ---------------------------------
