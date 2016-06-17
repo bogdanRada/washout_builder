@@ -15,18 +15,18 @@ module WashoutBuilder
     #
     # @api public
     def all
-       params[:name] = params[:defaults][:name] if params[:defaults].present?
-       find_all_routes
-       route = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
-       if route.present? && defined?(controller_class(params[:name]))
-         @document = WashoutBuilder::Document::Generator.new(controller_class(params[:name]).controller_path)
-         render template: 'wash_with_html/doc', layout: false,
-         content_type: 'text/html'
-       elsif
-         @services = all_services
-         render template: 'wash_with_html/all_services', layout: false,
-         content_type: 'text/html'
-       end
+      params[:name] = params[:defaults][:name] if params[:defaults].present?
+      find_all_routes
+      route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
+      if route_details.present? && defined?(controller_class(params[:name]))
+        @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
+        render template: 'wash_with_html/doc', layout: false,
+        content_type: 'text/html'
+      elsif
+        @services = all_services
+        render template: 'wash_with_html/all_services', layout: false,
+        content_type: 'text/html'
+      end
     end
 
     private
@@ -45,15 +45,22 @@ module WashoutBuilder
     #
     # @api private
     def all_services
-      @map_controllers = map_controllers { |route| route.defaults[:controller] }
-      @map_controllers.blank? ? [] : @map_controllers.map do |controller_name|
-        {
-          'service_name' => controller_naming(controller_name),
-          'namespace' => service_namespace(controller_name),
-          'endpoint' => service_endpoint(controller_name),
-          'documentation_url' => service_documentation_url(controller_name)
-        }
+      @map_controllers = map_controllers { |hash| hash }
+      @map_controllers.blank? ? [] : @map_controllers.map do |hash|
+        controller_name = hash[:route].present? && hash[:route].respond_to?(:defaults) ? hash[:route].defaults[:controller] : nil
+        if controller_name.present?
+          {
+            'service_name' => controller_naming(controller_name),
+            'namespace' => service_namespace(hash, controller_name),
+            'endpoint' => service_endpoint(hash, controller_name),
+            'documentation_url' => service_documentation_url(hash, controller_name)
+          }
+        end
       end
+    end
+
+    def generate_wsdl_action
+      '_generate_wsdl'
     end
 
     # the way of converting from controller string in downcase in camelcase
@@ -73,18 +80,30 @@ module WashoutBuilder
     #
     # @api private
     def route_can_generate_wsdl?(route)
-      route.defaults[:action] == '_generate_wsdl'
+      route.defaults[:action] == generate_wsdl_action
     end
 
     def find_all_routes
-      rails_routes = Rails.application.routes.routes.map { |route| route }
-      engine_routes = []
-      ::Rails::Engine.subclasses.each do |engine|
-        engine.routes.routes.each do |route|
-          engine_routes << route
-        end
+      # get the controller and set the action for redirection
+      engines = [Rails.application]
+      engines.concat(::Rails::Engine.subclasses)
+
+      routes = engines.each_with_object([]) do |engine, routes_array|
+        engine_route = Rails.application.routes.named_routes[engine.engine_name]
+        routes_hash_array = engine.routes.routes.map { |route|
+          {
+            engine: engine,
+            route_set: engine.routes,
+            route: route,
+            mounted_at: engine_route.blank? ? nil : engine_route.path.spec.to_s
+          }
+        }
+
+        routes_array.concat(routes_hash_array)
       end
-      @routes = rails_routes.concat(engine_routes).uniq.compact
+
+      #routes = routes.sort_by { |hash| hash[:route].precedence }
+      @routes = routes
       @routes
     end
 
@@ -99,13 +118,13 @@ module WashoutBuilder
     # @return [ActionDispatch::Journey::Route, Array<ActionDispatch::Journey::Route>] Can return either a collection of routes or a single route depending on the action
     #
     # @api private
-    def map_controllers(action = 'map')
-      res = @routes.send(action) do |route|
-        if route_can_generate_wsdl?(route)
-          yield route if block_given?
+    def map_controllers(action = 'select')
+      res = @routes.send(action) do |hash|
+        if hash[:route].present? && route_can_generate_wsdl?(hash[:route])
+          yield hash if hash.present? && block_given?
         end
       end
-      res = res.uniq.compact if action == 'map'
+      res = res.compact.uniq{|hash| hash[:route] } if action == 'select'
       res
     end
 
@@ -119,8 +138,10 @@ module WashoutBuilder
     #
     # @api private
     def controller_is_a_service?(controller)
-      map_controllers('detect') do |route|
-        controller_naming(route.defaults[:controller]) == controller_naming(controller)
+      map_controllers('detect') do |hash|
+        if hash[:route].present? && hash[:route].respond_to?(:defaults)
+          controller_naming(hash[:route].defaults[:controller]) == controller_naming(controller)
+        end
       end
     end
 
@@ -135,6 +156,10 @@ module WashoutBuilder
       controller_naming("#{controller}_controller").constantize
     end
 
+    def route_helpers(hash)
+      hash[:route_set].url_helpers
+    end
+
     # retrieves the service namespace
     # @see #controller_class
     #
@@ -146,8 +171,9 @@ module WashoutBuilder
     # @return [String] The namespace of the soap service that is used in that controller
     #
     # @api private
-    def service_namespace(controller_name)
-      controller_class(controller_name).soap_config.namespace
+    def service_namespace(hash, controller_name)
+      #controller_class(controller_name).soap_config.namespace
+      route_helpers(hash).url_for(controller: controller_name, action: generate_wsdl_action, only_path: true)
     end
 
     # the endpoint is based on the namespace followed by /action suffix
@@ -156,8 +182,8 @@ module WashoutBuilder
     # @param [String] controller_name The name of the controller
     # @return [String] The endpoint of the web service
     # @api private
-    def service_endpoint(controller_name)
-      service_namespace(controller_name).gsub('/wsdl', '/action')
+    def service_endpoint(hash, controller_name)
+      service_namespace(hash, controller_name).gsub('/wsdl', '/action')
     end
 
     # constructs the documentation url for a specific web service
@@ -165,9 +191,9 @@ module WashoutBuilder
     # @param [String] controller_name The name of the controller
     # @return [String] The documentation url for the web service ( relative to base url)
     # @api private
-    def service_documentation_url(controller_name)
-      #service_namespace(controller_name).gsub('/wsdl', '/soap_doc')
-      "#{washout_builder.root_url}#{controller_naming(controller_name)}"
+    def service_documentation_url(hash, controller_name)
+      service_namespace(hash, controller_name).gsub('/wsdl', '/soap_doc')
+      #"#{washout_builder.root_path}#{controller_naming(controller_name)}"
     end
   end
 end
