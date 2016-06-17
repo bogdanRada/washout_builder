@@ -29,8 +29,17 @@ describe WashoutBuilder::Document::Generator do
   end
 
   let(:service_class) { ApiController }
+  let(:route_details) { mock }
+  let(:route_set) { mock }
+  let(:route_url_helpers) { mock }
+
   before(:each) do
-    @document = WashoutBuilder::Document::Generator.new('api')
+    route_details.stubs(:[]).with(:route_set).returns(route_set)
+    route_set.stubs(:url_helpers).returns(route_url_helpers)
+    route_url_helpers.stubs(:url_for).returns(soap_config.namespace)
+  end
+  before(:each) do
+    @document = WashoutBuilder::Document::Generator.new(route_details, 'api')
     @document.stubs(:controller_class).returns(service_class)
   end
 

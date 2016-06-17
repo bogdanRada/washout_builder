@@ -27,7 +27,7 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
 
   it 'gets the services' do
     get :all
-    expect(assigns(:services)).to eq([{ 'service_name' => 'Api', 'namespace' => '/api/wsdl', 'endpoint' => '/api/action', 'documentation_url' => 'http://test.host/Api' }])
+    expect(assigns(:services)).to eq([{ 'service_name' => 'Api', 'namespace' => '/api/wsdl', 'endpoint' => '/api/action', 'documentation_url' => '/api/soap_doc' }])
   end
 
   it 'renders the template' do
@@ -43,7 +43,7 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
   it 'render a service documentation' do
     controller.stubs(:controller_class).returns(ApiController)
     controller.stubs(:controller_is_a_service?).with(params[:name]).returns(route)
-    WashoutBuilder::Document::Generator.expects(:new).with(route.defaults[:controller])
+    WashoutBuilder::Document::Generator.expects(:new).with(route, route.defaults[:controller])
     get :all, params
     expect(response).to render_template 'wash_with_html/doc'
   end
