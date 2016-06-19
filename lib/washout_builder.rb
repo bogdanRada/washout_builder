@@ -13,10 +13,11 @@ ActionDispatch::Routing::Mapper.class_eval do
     def wash_out(controller_name, options={})
       if @scope
         scope_frame = @scope.respond_to?(:frame) ? @scope.frame : @scope
-        options.each_with_index { |key, value|  scope_frame[key] = value }
+        options.each { |key, value|  scope_frame[key] = value }
+        controller_class_name = [scope_frame[:module], controller_name].compact.join("/").underscore
+      else
+        controller_class_name = controller_name.to_s.underscore
       end
-
-      controller_class_name = [options[:module], controller_name].compact.join("/").underscore
 
       match "#{controller_name}/soap_doc"   =>  WashoutBuilder::Engine, via: :get,
         defaults: { name: "#{controller_class_name}" },
