@@ -15,11 +15,9 @@ ActionDispatch::Routing::Mapper.class_eval do
       options = options.symbolize_keys if options.is_a?(Hash)
       if @scope
         scope_frame = @scope.respond_to?(:frame) ? @scope.frame : @scope
+        # needed for backward compatibility with old version when this module name was camelized
+        options[:module] = options[:module].to_s.underscore if options[:module].present?
         options.each { |key, value|  scope_frame[key] = value }
-        scope_frame[:module] = scope_frame[:module].blank? ? nil : scope_frame[:module].to_s.underscore
-        if self.class.instance_method(:original_wash_out).source.to_s.include?("scope_frame[:module]")
-          options.delete(:module) if options.has_key?(:module) # prevent setting the module again in original_wash_out since scope already has it
-        end
         controller_class_name = [scope_frame[:module], controller_name].compact.join("/").underscore
       else
         controller_class_name = controller_name.to_s.underscore
