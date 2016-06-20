@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_runtime_dependency 'wash_out', '>= 0.9.1', '>= 0.9.1'
   s.add_runtime_dependency 'activesupport', '>= 4.0', '>= 4.0'
+  s.add_runtime_dependency 'method_source', '~> 0.8', '>= 0.8.2'
 
   s.add_development_dependency 'wasabi', '~> 3.5', '>= 3.5'
   s.add_development_dependency 'savon', '~> 2.11', '>= 2.11'

@@ -2,6 +2,7 @@ require 'wash_out'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash/keys'
 require 'active_support/concern'
+require 'method_source'
 require 'active_support/core_ext/string/output_safety.rb'
 
 Gem.find_files('washout_builder/**/*.rb').each { |path| require path }
@@ -11,9 +12,14 @@ ActionDispatch::Routing::Mapper.class_eval do
   alias_method :original_wash_out, :wash_out
     # Adds the routes for a SOAP endpoint at +controller+.
     def wash_out(controller_name, options={})
+      options = options.symbolize_keys if options.is_a?(Hash)
       if @scope
         scope_frame = @scope.respond_to?(:frame) ? @scope.frame : @scope
         options.each { |key, value|  scope_frame[key] = value }
+        scope_frame[:module] = scope_frame[:module].blank? ? nil : scope_frame[:module].to_s.underscore
+        if self.class.instance_method(:original_wash_out).source.to_s.include?("scope_frame[:module]")
+          options.delete(:module) if options.has_key?(:module) # prevent setting the module again in original_wash_out since scope already has it
+        end
         controller_class_name = [scope_frame[:module], controller_name].compact.join("/").underscore
       else
         controller_class_name = controller_name.to_s.underscore
@@ -24,10 +30,9 @@ ActionDispatch::Routing::Mapper.class_eval do
         format: false,
         as: "#{controller_class_name}_soap_doc"
 
-        original_wash_out(controller_name, options)
+      original_wash_out(controller_name, options)
     end
 end
-
 # finds all the exception class and extends them by including the ExceptionModel module in order to be
 # able to generate documentation for exceptions
 WashoutBuilder::Type.all_fault_classes.each do |exception_class|
