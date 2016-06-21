@@ -22,7 +22,7 @@ E.g.
 # needed in case the gem is not in the default group
 if config.respond_to?(:washout_builder)
   # the path where the engine should be mounted on
-  config.washout_builder.mounted_path = "/washout"  # the path where the engine should be mounted on
+  config.washout_builder.mounted_path = "/washout" 
   # this can either be an array of strings or array of regular expressions or a string.
   # If you specify "*" ,will mean all environments
   # otherwise you can specify "development" or ['development', 'staging'] or nil
