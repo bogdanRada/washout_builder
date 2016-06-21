@@ -15,17 +15,22 @@ module WashoutBuilder
     #
     # @api public
     def all
-      params[:name] = params[:defaults][:name] if params[:defaults].present?
-      find_all_routes
-      route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
-      if route_details.present? && defined?(controller_class(params[:name]))
-        @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
-        render template: 'wash_with_html/doc', layout: false,
-        content_type: 'text/html'
-      elsif
-        @services = all_services
-        render template: 'wash_with_html/all_services', layout: false,
-        content_type: 'text/html'
+      env_checker = WashoutBuilder::EnvChecker.new(Rails.application)
+      if env_checker.available_for_env?(Rails.env)
+        params[:name] = params[:defaults][:name] if params[:defaults].present?
+        find_all_routes
+        route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
+        if route_details.present? && defined?(controller_class(params[:name]))
+          @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
+          render template: 'wash_with_html/doc', layout: false,
+          content_type: 'text/html'
+        elsif
+          @services = all_services
+          render template: 'wash_with_html/all_services', layout: false,
+          content_type: 'text/html'
+        end
+      else
+        render :nothing => true, content_type: 'text/html'
       end
     end
 
