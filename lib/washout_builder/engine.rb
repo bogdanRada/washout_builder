@@ -10,7 +10,7 @@ module WashoutBuilder
         app.config.washout_builder[:blacklisted_envs]
       )
       mounted_path = app.config.washout_builder[:mounted_path]
-      if env_checker.enabled_for_env?(Rails.env)
+      if env_checker.available_for_env?(Rails.env)
         app.routes.append do
           mount WashoutBuilder::Engine => mounted_path if mounted_path.is_a?(String) && mounted_path.starts_with?('/')
         end

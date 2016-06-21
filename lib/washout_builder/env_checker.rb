@@ -8,7 +8,7 @@ module WashoutBuilder
       self.blacklist = get_valid_data(blacklist)
     end
 
-    def enabled_for_env?(env_name)
+    def available_for_env?(env_name)
       if (whitelist.present? || blacklist.present?) && whitelist.find{|a| blacklist.include?(a) }.blank?
         if whitelist.include?('*') || (!valid_for_env?(blacklist, env_name) || valid_for_env?(whitelist, env_name))
           return true
