@@ -126,7 +126,8 @@ WashOutSample::Application.routes.draw do
         wash_out :project_service
     end
 
-    mount WashoutBuilder::Engine => "/washout"
+    # The verfication "if defined?(WashoutBuilder::Engine)" is needed in case the "washout_builder" gem is not in the default group
+    mount WashoutBuilder::Engine => "/washout" if defined?(WashoutBuilder::Engine)
 end
 
 ```
