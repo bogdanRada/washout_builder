@@ -3,6 +3,8 @@ module WashoutBuilder
   # controller that is used to prit all available services or print the documentation for a specific service
   class WashoutBuilderController < ActionController::Base
     protect_from_forgery
+    around_action :check_env_available
+
 
     # Will show all api services if no name parameter is receiverd
     # If a name parameter is present will try to use that and find a controller
@@ -15,22 +17,17 @@ module WashoutBuilder
     #
     # @api public
     def all
-      env_checker = WashoutBuilder::EnvChecker.new(Rails.application)
-      if env_checker.available_for_env?(Rails.env)
-        params[:name] = params[:defaults][:name] if params[:defaults].present?
-        find_all_routes
-        route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
-        if route_details.present? && defined?(controller_class(params[:name]))
-          @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
-          render template: 'wash_with_html/doc', layout: false,
-          content_type: 'text/html'
-        elsif
-          @services = all_services
-          render template: 'wash_with_html/all_services', layout: false,
-          content_type: 'text/html'
-        end
-      else
-        render :nothing => true, content_type: 'text/html'
+      params[:name] = params[:defaults][:name] if params[:defaults].present?
+      find_all_routes
+      route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
+      if route_details.present? && defined?(controller_class(params[:name]))
+        @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
+        render template: 'wash_with_html/doc', layout: false,
+        content_type: 'text/html'
+      elsif
+        @services = all_services
+        render template: 'wash_with_html/all_services', layout: false,
+        content_type: 'text/html'
       end
     end
 
@@ -200,5 +197,15 @@ module WashoutBuilder
       service_namespace(hash, controller_name).gsub('/wsdl', '/soap_doc')
       #"#{washout_builder.root_path}#{controller_naming(controller_name)}"
     end
+
+    def check_env_available
+      env_checker = WashoutBuilder::EnvChecker.new(Rails.application)
+      if env_checker.available_for_env?(Rails.env)
+        yield
+      else
+        render :nothing => true, content_type: 'text/html'
+      end
+    end
+
   end
 end
