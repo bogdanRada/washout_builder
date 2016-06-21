@@ -203,7 +203,7 @@ module WashoutBuilder
       if env_checker.available_for_env?(Rails.env)
         yield
       else
-        render :nothing => true, content_type: 'text/html'
+        raise ActionController::RoutingError
       end
     end
 
