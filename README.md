@@ -29,8 +29,7 @@ if config.respond_to?(:washout_builder)
   # or you can use regular expressions like /development/ or array of regular expressions
   config.washout_builder.whitelisted_envs = "*"
   # this can either be an array of strings or array of regular expressions or a string.
-  # If you specify "*" ,will mean all environments
-  # otherwise you can specify "production" or ['production', 'test'] or nil
+  # you can specify "production" or ['production', 'test'] or nil
   # or you can use regular expressions like /production/ or array of regular expressions
   config.washout_builder.blacklisted_envs = nil
 end
