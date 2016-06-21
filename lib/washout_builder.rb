@@ -2,8 +2,8 @@ require 'wash_out'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash/keys'
 require 'active_support/concern'
-require 'method_source'
 require 'active_support/core_ext/string/output_safety.rb'
+require 'active_support/ordered_options'
 
 Gem.find_files('washout_builder/**/*.rb').each { |path| require path }
 

@@ -10,6 +10,24 @@ WashOutBuilder is a Soap Service Documentation generator (extends [WashOut](http
 
 The way [WashOut](https://github.com/inossidabile/wash_out) is used is not modified, it just extends its functionality by generating html documentation to your services that you write
 
+NEW Improvements in version 1.5.0
+---------------------------------
+
+-	The WashoutBuilder::Engine can now be automatically be mounted in Rails application by using a simple configuration in **config/application.rb** which allows you to whitelist or blacklist the environment where WashoutBuilder::Engine can be mounted .
+-	By default all the options are set to **nil**, so the engine does not get mounted automatically by default. You need to set them if you want this to work.
+
+E.g.
+
+```ruby
+if config.respond_to?(:washout_builder) # needed in case the gem is not in the default group
+  config.washout_builder.mounted_path = "/washout"  # the path where the engine should be mounted on
+  config.washout_builder.whitelisted_envs = "*" # this can either be an array of strings or a string. If you specify "*" ,will mean all environments , otherwise you can specify "development" or ['development', 'staging'] or nil
+  config.washout_builder.blacklisted_envs = nil # this can either be an array of strings or a string. You can specify for example "production" or ['production', 'test'], or nil
+end
+```
+
+If you don't set them and they are left with default nil values, you will have to use the old way, by manually mount the engine in the Rails routes configuration file (**config/routes.rb**) by following examples below.
+
 NEW Improvements in version 1.4.0
 ---------------------------------
 
@@ -108,7 +126,8 @@ WashOutSample::Application.routes.draw do
         wash_out :project_service
     end
 
-    mount WashoutBuilder::Engine => "/washout"
+    # The verfication "if defined?(WashoutBuilder::Engine)" is needed in case the "washout_builder" gem is not in the default group
+    mount WashoutBuilder::Engine => "/washout" if defined?(WashoutBuilder::Engine)
 end
 
 ```
