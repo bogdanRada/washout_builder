@@ -10,7 +10,7 @@ WashOutBuilder is a Soap Service Documentation generator (extends [WashOut](http
 
 The way [WashOut](https://github.com/inossidabile/wash_out) is used is not modified, it just extends its functionality by generating html documentation to your services that you write
 
-NEW Improvements in version 1.5.0
+NEW Improvements in version 1.5.1
 ---------------------------------
 
 -	The WashoutBuilder::Engine can now be automatically be mounted in Rails application by using a simple configuration in **config/application.rb** which allows you to whitelist or blacklist the environment where WashoutBuilder::Engine can be mounted .
@@ -19,10 +19,20 @@ NEW Improvements in version 1.5.0
 E.g.
 
 ```ruby
-if config.respond_to?(:washout_builder) # needed in case the gem is not in the default group
+# needed in case the gem is not in the default group
+if config.respond_to?(:washout_builder)
+  # the path where the engine should be mounted on
   config.washout_builder.mounted_path = "/washout"  # the path where the engine should be mounted on
-  config.washout_builder.whitelisted_envs = "*" # this can either be an array of strings or a string. If you specify "*" ,will mean all environments , otherwise you can specify "development" or ['development', 'staging'] or nil
-  config.washout_builder.blacklisted_envs = nil # this can either be an array of strings or a string. You can specify for example "production" or ['production', 'test'], or nil
+  # this can either be an array of strings or array of regular expressions or a string.
+  # If you specify "*" ,will mean all environments
+  # otherwise you can specify "development" or ['development', 'staging'] or nil
+  # or you can use regular expressions like /development/ or array of regular expressions
+  config.washout_builder.whitelisted_envs = "*"
+  # this can either be an array of strings or array of regular expressions or a string.
+  # If you specify "*" ,will mean all environments
+  # otherwise you can specify "production" or ['production', 'test'] or nil
+  # or you can use regular expressions like /development/ or array of regular expressions
+  config.washout_builder.blacklisted_envs = nil
 end
 ```
 
