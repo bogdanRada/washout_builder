@@ -164,7 +164,8 @@ describe WashoutBuilder do
             render soap: { a: params[:a] }
           end
         end
-        expect(savon(:answer, a: '')[:answer_response][:a][:'@xsi:type']).to eq('xsd:string')
+        expect(savon(:answer, a: '')[:answer_response][:a]).to be_nil
+        #[:'@xsi:type']).to eq('xsd:string') -- not returning type as per https://github.com/inossidabile/wash_out/issues/212
       end
 
       it 'accept one parameter' do
@@ -409,7 +410,8 @@ describe WashoutBuilder do
             end
           end
 
-          expect(savon(:rocknroll)[:rocknroll_response][:my_value][:'@xsi:type']).to eq('tns:MyValue')
+          expect(savon(:rocknroll)[:rocknroll_response][:my_value]).to be_nil
+          #[:'@xsi:type']).to eq('tns:MyValue') # not returning type as per https://github.com/inossidabile/wash_out/issues/212
         end
 
         it 'handles incomplete array response' do

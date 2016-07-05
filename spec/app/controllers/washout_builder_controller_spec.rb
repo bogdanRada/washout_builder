@@ -11,8 +11,8 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
 
   let(:soap_config) do
     OpenStruct.new(
-      camelize_wsdl: false,
-      namespace: '/api/wsdl'
+    camelize_wsdl: false,
+    namespace: '/api/wsdl'
     )
   end
 
@@ -44,7 +44,11 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
     controller.stubs(:controller_class).returns(ApiController)
     controller.stubs(:controller_is_a_service?).with(params[:name]).returns(route)
     WashoutBuilder::Document::Generator.expects(:new).with(route, route.defaults[:controller])
-    get :all, params
+    if Rails::VERSION::MAJOR >= 5
+      get :all, params: params
+    else
+      get :all, params
+    end
     expect(response).to render_template 'wash_with_html/doc'
   end
 end
