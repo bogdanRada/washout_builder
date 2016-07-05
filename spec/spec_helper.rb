@@ -36,7 +36,9 @@ require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require File.expand_path('../../config/routes.rb', __FILE__)
 require 'rspec/rails'
 require 'savon'
+require "pry"
 require 'wash_out'
+
 
 Rails.backtrace_cleaner.remove_silencers!
 
