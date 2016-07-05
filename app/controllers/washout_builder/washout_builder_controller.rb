@@ -3,7 +3,7 @@ module WashoutBuilder
   # controller that is used to prit all available services or print the documentation for a specific service
   class WashoutBuilderController < ActionController::Base
     protect_from_forgery
-    around_action :check_env_available
+    before_action :check_env_available
 
 
     # Will show all api services if no name parameter is receiverd
@@ -200,11 +200,7 @@ module WashoutBuilder
 
     def check_env_available
       env_checker = WashoutBuilder::EnvChecker.new(Rails.application)
-      if env_checker.available_for_env?(Rails.env)
-        yield
-      else
-        raise ActionController::RoutingError
-      end
+      raise ActionController::RoutingError unless env_checker.available_for_env?(Rails.env)
     end
 
   end

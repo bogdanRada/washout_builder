@@ -1,12 +1,11 @@
 module WashoutBuilder
   class EnvChecker
 
-    attr_reader :whitelist, :blacklist
-    attr_writer :whitelist, :blacklist
+    attr_reader :app
+    attr_writer :app
 
     def initialize(app)
-      self.whitelist = get_valid_data(app.config.washout_builder[:whitelisted_envs])
-      self.blacklist = get_valid_data(app.config.washout_builder[:blacklisted_envs])
+      self.app = app
     end
 
     def available_for_env?(env_name)
@@ -25,12 +24,24 @@ module WashoutBuilder
 
     private
 
+    def whitelist
+      get_valid_data(app_config[:whitelisted_envs])
+    end
+
+    def blacklist
+      get_valid_data(app_config[:blacklisted_envs])
+    end
+
+    def app_config
+      app.config.washout_builder
+    end
+
     def valid_for_env?(list, env_name)
       try_find_suitable_env(list, env_name).present?
     end
 
     def get_valid_data(list)
-      list.is_a?(Array) ? list : [list].compact
+      (list.is_a?(Array) ? list : [list]).compact
     end
 
     def try_find_suitable_env(list, env_name)
