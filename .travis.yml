@@ -1,11 +1,11 @@
 language: ruby
 sudo: false
-cache: bundler
+install: true
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
   - gem install bundler
-  - bundle install
 script:
+   - echo $BUNDLE_GEMFILE
    - ruby spec/ci-travis.rb $BUNDLE_GEMFILE
 gemfile:
   - gemfiles/rails_4.0.0.gemfile

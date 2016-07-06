@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-puts ENV.inspect
+puts JSON.pretty_generate(ENV.to_hash)
 puts ARGV.inspect
 
 appraisal_name = ENV['BUNDLE_GEMFILE'].scan(/rails\_(.*)\.gemfile/).flatten.first
