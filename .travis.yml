@@ -4,13 +4,9 @@ cache: bundler
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
   - gem install bundler
+  - bundle install
 script:
-   - echo $BUNDLE_GEMFILE
-   - export JOB_RAILS_VERSION=`echo $BUNDLE_GEMFILE | grep  -Po  'rails\_([0-9.]+)\.gemfile'| sed -e 's/rails\_//' | sed -e 's/\.gemfile//'   | sed -e 's/^[ \t]*//' `
-   - echo $JOB_RAILS_VERSION
-   - export JOB_APPRAISAL_COMMAND="appraisal rails-$JOB_RAILS_VERSION"
-   - echo $JOB_APPRAISAL_COMMAND
-   - $JOB_APPRAISAL_COMMAND bundle install && JOB_APPRAISAL_COMMAND bundle exec rspec && bundle exec rake coveralls:push
+   - ruby spec/ci-travis.rb $BUNDLE_GEMFILE
 gemfile:
   - gemfiles/rails_4.0.0.gemfile
   - gemfiles/rails_4.0.2.gemfile
