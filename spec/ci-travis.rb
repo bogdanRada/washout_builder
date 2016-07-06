@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require 'json'
 puts JSON.pretty_generate(ENV.to_hash)
 puts ARGV.inspect
 
