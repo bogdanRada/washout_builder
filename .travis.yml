@@ -1,9 +1,32 @@
+language: ruby
 sudo: false
 cache: bundler
-language: ruby
+install:
+  - true
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
   - gem install bundler
+script:
+   - export JOB_RAILS_VERSION=`echo $BUNDLE_GEMFILE | grep  -Po  'rails\_([0-9.]+)\.gemfile'| sed -e 's/rails\_//' | sed -e 's/\.gemfile//'   | sed -e 's/^[ \t]*//' `
+   - echo $JOB_RAILS_VERSION
+   - export JOB_APPRAISAL_COMMAND="appraisal rails-$JOB_RAILS_VERSION"
+   - echo $JOB_APPRAISAL_COMMAND
+   - $JOB_APPRAISAL_COMMAND bundle install && JOB_APPRAISAL_COMMAND bundle exec rspec && bundle exec rake coveralls:push
+gemfile:
+  - gemfiles/rails_4.0.0.gemfile
+  - gemfiles/rails_4.0.2.gemfile
+  - gemfiles/rails_4.1.1.gemfile
+  - gemfiles/rails_4.1.4.gemfile
+  - gemfiles/rails_4.1.9.gemfile
+  - gemfiles/rails_4.2.0.gemfile
+  - gemfiles/rails_4.2.1.gemfile
+  - gemfiles/rails_4.2.2.gemfile
+  - gemfiles/rails_4.2.3.gemfile
+  - gemfiles/rails_4.2.4.gemfile
+  - gemfiles/rails_4.2.4.gemfile
+  - gemfiles/rails_4.2.5.gemfile
+  - gemfiles/rails_4.2.6.gemfile
+  - gemfiles/rails_5.0.0.gemfile
 rvm:
   - 2.0.0
   - 2.1.5
@@ -12,6 +35,12 @@ rvm:
   - 2.2.3
   - 2.3.0
   - 2.3.1
+matrix:
+  exclude:
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails_5.0.0.gemfile
+    - rvm: 2.1.5
+      gemfile: gemfiles/rails_5.0.0.gemfile
 env:
  - RAILS_ENV=test RACK_ENV=test
 notifications:
