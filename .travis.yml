@@ -1,9 +1,9 @@
 language: ruby
 sudo: false
-install: true
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
   - gem install bundler
+bundler_args: "--no-deployment"
 script:
    - echo $BUNDLE_GEMFILE
    - ruby spec/ci-travis.rb $BUNDLE_GEMFILE
