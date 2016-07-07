@@ -50,9 +50,7 @@ appraise "rails-4.2.6" do
   gem "rails", "4.2.6"
 end
 
-if RUBY_VERSION >= "2.2.0"
-  appraise "rails-5.0.0" do
-    gem "rails", "5.0.0"
-    gem 'rails-controller-testing'
-  end
+appraise "rails-5.0.0" do
+  gem "rails", "5.0.0"
+  gem 'rails-controller-testing'
 end
