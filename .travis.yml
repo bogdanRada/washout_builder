@@ -6,7 +6,7 @@ before_install:
 bundler_args: "--no-deployment"
 script:
    - echo $BUNDLE_GEMFILE
-   - ruby spec/ci-travis.rb $BUNDLE_GEMFILE
+   - bundle exec rake
 gemfile:
   - gemfiles/rails_4.0.0.gemfile
   - gemfiles/rails_4.0.2.gemfile
