@@ -17,7 +17,7 @@ module WashoutBuilder
     #
     # @api public
     def all
-      params[:name] = params[:defaults][:name] if params[:defaults].present?
+      params[:name] = env_controller_path if env_controller_path.present?
       find_all_routes
       route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
       if route_details.present? && defined?(controller_class(params[:name]))
@@ -31,12 +31,11 @@ module WashoutBuilder
       end
     end
 
-    def proxy
-      params[:name] = request.env['washout_builder.controller_path']
-      all
-    end
-
     private
+
+    def env_controller_path
+     request.env['washout_builder.controller_path']
+    end
 
     # tries to find all services by searching through the rails controller
     # and returns their namespace, endpoint and a documentation url
