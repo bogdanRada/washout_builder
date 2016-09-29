@@ -31,6 +31,11 @@ module WashoutBuilder
       end
     end
 
+    def proxy
+      params[:name] = request.env['washout_builder.controller_path']
+      all
+    end
+
     private
 
     # tries to find all services by searching through the rails controller
@@ -58,7 +63,7 @@ module WashoutBuilder
             'documentation_url' => service_documentation_url(hash, controller_name)
           }
         end
-      end
+      end.uniq{|hash| hash['service_name'] }
     end
 
     def generate_wsdl_action

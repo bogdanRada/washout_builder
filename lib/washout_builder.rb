@@ -8,7 +8,6 @@ require 'active_support/core_ext/string/starts_ends_with'
 
 Gem.find_files('washout_builder/**/*.rb').each { |path| require path }
 
-
 ActionDispatch::Routing::Mapper.class_eval do
   alias_method :original_wash_out, :wash_out
   # Adds the routes for a SOAP endpoint at +controller+.
@@ -25,9 +24,7 @@ ActionDispatch::Routing::Mapper.class_eval do
       else
         controller_class_name = controller_name.to_s.underscore
       end
-
-      match "#{controller_name}/soap_doc"   =>  WashoutBuilder::Engine, via: :get,
-      defaults: { name: "#{controller_class_name}" },
+      match "#{controller_name}/soap_doc" => WashoutBuilder::Router.new(controller_class_name), via: :get,
       format: false,
       as: "#{controller_class_name}_soap_doc"
     end
