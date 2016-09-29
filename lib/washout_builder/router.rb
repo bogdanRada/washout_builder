@@ -9,7 +9,7 @@ module WashoutBuilder
 
     def call(env)
       env['washout_builder.controller_path'] = @controller_path
-      WashoutBuilderController.action(:all).call(env)
+      ::WashoutBuilder::WashoutBuilderController.action(:all).call(env)
     end
 
   end
