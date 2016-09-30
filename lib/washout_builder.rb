@@ -25,7 +25,6 @@ ActionDispatch::Routing::Mapper.class_eval do
         controller_class_name = controller_name.to_s.underscore
       end
       match "#{controller_name}/soap_doc" => WashoutBuilder::Router.new(controller_class_name), via: :get,
-      format: false,
       as: "#{controller_class_name}_soap_doc"
     end
     original_wash_out(controller_name, options)

@@ -22,19 +22,33 @@ module WashoutBuilder
       route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
       if route_details.present? && defined?(controller_class(params[:name]))
         @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
-        render template: 'wash_with_html/doc', layout: false,
-        content_type: 'text/html'
+        render_html('wash_with_html/doc')
       elsif
         @services = all_services
-        render template: 'wash_with_html/all_services', layout: false,
-        content_type: 'text/html'
+        render_html('wash_with_html/all_services')
       end
     end
 
     private
 
     def env_controller_path
-     request.env['washout_builder.controller_path']
+      request.env['washout_builder.controller_path']
+    end
+
+
+    def render_html(path, options= { layout: false, content_type: 'text/html' })
+      options = options.merge(template: path)
+      respond_to do |format|
+        format.json { render options  }
+        render_html_format_all(format, options)
+      end
+    end
+
+    def render_html_format_all(format, options)
+      format.all do
+        response.content_type = 'text/html; charset=utf-8'
+        render options.merge(formats: [:html])
+      end
     end
 
     # tries to find all services by searching through the rails controller

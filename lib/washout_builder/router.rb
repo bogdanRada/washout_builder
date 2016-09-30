@@ -9,6 +9,7 @@ module WashoutBuilder
 
     def call(env)
       env['washout_builder.controller_path'] = @controller_path
+      env["action_dispatch.request.content_type"] = Mime[:html]
       ::WashoutBuilder::WashoutBuilderController.action(:all).call(env)
     end
 
