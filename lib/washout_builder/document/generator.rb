@@ -126,7 +126,7 @@ module WashoutBuilder
         types = []
         unless soap_actions.blank?
           soap_actions.each do |_operation, formats|
-            (formats[format_type.to_sym]).each do |p|
+            (formats[format_type.to_sym] || []).each do |p|
               types << p
             end
           end
