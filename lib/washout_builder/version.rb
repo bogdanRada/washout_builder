@@ -10,12 +10,12 @@ module WashoutBuilder
     # the major version of the gem
     MAJOR = 1
     # the minor version of the gem
-    MINOR = 6
+    MINOR = 7
     # the tiny version of the gem
-    TINY = 5
+    TINY = 0
     # if the version should be a prerelease
     PRE = nil
-
+    
     # the full version of the gem composed from major minor tiny and prerelease versions
     STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
   end

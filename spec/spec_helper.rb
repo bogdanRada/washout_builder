@@ -4,7 +4,7 @@ ENV['RAILS_ENV'] = 'test'
 require 'simplecov'
 require 'simplecov-summary'
 require 'coveralls'
-
+require 'hashdiff'
 # require "codeclimate-test-reporter"
 formatters = [SimpleCov::Formatter::HTMLFormatter]
 

@@ -23,11 +23,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'httpi', '~> 2.4', '>= 2.4'
   s.add_development_dependency 'nokogiri', '~> 1.6', '>= 1.6'
 
-  s.add_development_dependency 'rspec-rails', '~> 3.4', '>= 3.4'
+  s.add_development_dependency 'hashdiff', '~> 0.3', '>= 0.3'
+  s.add_development_dependency 'rspec-rails', '~> 3.5', '>= 3.5'
   s.add_development_dependency 'appraisal', '~> 2.1', '>= 2.1'
-  s.add_development_dependency 'simplecov', '~> 0.11', '>= 0.11'
-  s.add_development_dependency 'simplecov-summary', '~> 0.0.4', '>= 0.0.4'
-  s.add_development_dependency 'mocha','~> 1.1', '>= 1.1'
+  s.add_development_dependency 'simplecov', '~> 0.12', '>= 0.12'
+  s.add_development_dependency 'simplecov-summary', '~> 0.0.5', '>= 0.0.5'
+  s.add_development_dependency 'mocha','~> 1.2', '>= 1.2'
   s.add_development_dependency 'coveralls','~> 0.8', '>= 0.8'
 
   s.add_development_dependency 'yard', '>= 0.8', '~> 0.8'
