@@ -34,6 +34,12 @@ matrix:
     gemfile: gemfiles/rails_4.1.1.gemfile
   - rvm: 2.4.0
     gemfile: gemfiles/rails_4.2.0.gemfile
+  - rvm: 2.4.1
+    gemfile: gemfiles/rails_4.0.0.gemfile
+  - rvm: 2.4.1
+    gemfile: gemfiles/rails_4.1.1.gemfile
+  - rvm: 2.4.1
+    gemfile: gemfiles/rails_4.2.0.gemfile
 rvm:
   - 2.2.5
   - 2.3.1
