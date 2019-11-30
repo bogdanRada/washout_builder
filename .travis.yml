@@ -6,12 +6,21 @@ cache: bundler
 bundler_args: --no-deployment --binstubs=./bin
 
 before_install:
-  - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
-  - gem install bundler
-  - gem update bundler
+  -"echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
+  - gem update --system
+  - gem --version
+  - bash ./install-travis-bundler.sh
+  - bundle --version
 
 install:
-  - bundle install --path vendor/bundle
+  - bundle config --local path vendor/bundle
+  - bundle config --local jobs 3
+  - bundle config --local retry 3
+  - bundle config --local binstubs ./bin
+  - bundle config --local bin ./bin
+  - bundle install
+  - gem env
+  - bundle env
 
 script:
    - echo $BUNDLE_GEMFILE
@@ -25,27 +34,39 @@ gemfile:
   - gemfiles/rails_5.0.0.1.gemfile
   - gemfiles/rails_5.0.1.gemfile
   - gemfiles/rails_5.0.2.gemfile
-  - gemfiles/rails_5.1.0.rc1.gemfile
+  - gemfiles/rails_5.1.0.gemfile
+  - gemfiles/rails_5.2.0.gemfile
+  - gemfiles/rails_5.2.4.gemfile
+  - gemfiles/rails_6.0.0.gemfile
+  - gemfiles/rails_6.0.1.gemfile
 matrix:
+  fast_finish: true
   exclude:
-  - rvm: 2.4.0
+  - rvm: 2.4.7
     gemfile: gemfiles/rails_4.0.0.gemfile
-  - rvm: 2.4.0
+  - rvm: 2.4.7
     gemfile: gemfiles/rails_4.1.1.gemfile
-  - rvm: 2.4.0
+  - rvm: 2.4.7
     gemfile: gemfiles/rails_4.2.0.gemfile
-  - rvm: 2.4.1
+  - rvm: 2.5.6
     gemfile: gemfiles/rails_4.0.0.gemfile
-  - rvm: 2.4.1
+  - rvm: 2.5.6
     gemfile: gemfiles/rails_4.1.1.gemfile
-  - rvm: 2.4.1
+  - rvm: 2.5.6
     gemfile: gemfiles/rails_4.2.0.gemfile
+  - rvm: 2.6.5
+    gemfile: gemfiles/rails_4.0.0.gemfile
+  - rvm: 2.6.5
+    gemfile: gemfiles/rails_4.1.1.gemfile
+  - rvm: 2.6.5
+   gemfile: gemfiles/rails_4.2.0.gemfile
 rvm:
   - 2.2.5
   - 2.3.1
   - 2.3.2
   - 2.3.3
-  - 2.4.0
-  - 2.4.1
+  - 2.4.7
+  - 2.5.6
+  - 2.6.5
 notifications:
   email: false

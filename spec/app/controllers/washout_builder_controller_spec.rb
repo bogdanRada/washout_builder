@@ -27,12 +27,14 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
 
   it 'gets the services' do
     get :all
-    expect(assigns(:services)).to eq([{ 'service_name' => 'Api', 'namespace' => '/api/wsdl', 'endpoint' => '/api/action', 'documentation_url' => '/api/soap_doc' }])
+    expect(subject.instance_variable_get(:@services)).to eq([{ 'service_name' => 'Api', 'namespace' => '/api/wsdl', 'endpoint' => '/api/action', 'documentation_url' => '/api/soap_doc' }])
   end
 
   it 'renders the template' do
     get :all
-    expect(response).to render_template('wash_with_html/all_services')
+    expect(subject.instance_variable_get(:@file_to_serve)).to eq('wash_with_html/all_services')
+    expect(response.content_type).to eq("text/html")
+    expect(response).to have_http_status(:ok)
   end
 
   it 'checks it controller is a service' do
@@ -49,6 +51,8 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
     else
       get :all, params
     end
-    expect(response).to render_template 'wash_with_html/doc'
+    expect(subject.instance_variable_get(:@file_to_serve)).to eq('wash_with_html/doc')
+    expect(response.content_type).to eq("text/html")
+    expect(response).to have_http_status(:ok)
   end
 end

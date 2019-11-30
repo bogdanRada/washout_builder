@@ -5,7 +5,6 @@ module WashoutBuilder
     protect_from_forgery
     before_action :check_env_available
 
-
     # Will show all api services if no name parameter is receiverd
     # If a name parameter is present will try to use that and find a controller
     # that was that name by camelcasing the name .
@@ -22,10 +21,12 @@ module WashoutBuilder
       route_details = params[:name].present? ? controller_is_a_service?(params[:name]) : nil
       if route_details.present? && defined?(controller_class(params[:name]))
         @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
-        render_html('wash_with_html/doc')
+        @file_to_serve = 'wash_with_html/doc'
+        render_html(@file_to_serve)
       elsif
         @services = all_services
-        render_html('wash_with_html/all_services')
+        @file_to_serve = 'wash_with_html/all_services'
+        render_html(@file_to_serve)
       end
     end
 
@@ -39,7 +40,7 @@ module WashoutBuilder
     def render_html(path, options= { layout: false, content_type: 'text/html' })
       options = options.merge(template: path)
       respond_to do |format|
-        format.json { render options  }
+        format.json { render(options)  }
         render_html_format_all(format, options)
       end
     end
@@ -47,7 +48,7 @@ module WashoutBuilder
     def render_html_format_all(format, options)
       format.all do
         response.content_type = 'text/html; charset=utf-8'
-        render options.merge(formats: [:html])
+        render(*[options.merge(formats: [:html])])
       end
     end
 

@@ -3,6 +3,6 @@
 source "http://rubygems.org"
 
 gem "wash_out", git: "https://github.com/inossidabile/wash_out.git"
-gem "rails", "5.0.0"
+gem "rails", "6.0.0"
 
 gemspec path: "../"

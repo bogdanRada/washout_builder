@@ -224,7 +224,7 @@ describe WashoutBuilder do
                       return: nil
           def rumba
             parameters = params.respond_to?(:to_unsafe_h) ? params.to_unsafe_h : params
-            difference =  HashDiff.diff(parameters, { 'rumbas' => [1, 2, 3] })
+            difference = parameters.to_a - { 'rumbas' => [1, 2, 3] }.to_a
             raise 'not ok' unless difference.size == 0
             render soap: nil
           end
@@ -242,7 +242,7 @@ describe WashoutBuilder do
                       return: nil
           def rumba
             parameters = params.respond_to?(:to_unsafe_h) ? params.to_unsafe_h : params
-            difference =  HashDiff.diff(parameters, {})
+            difference = parameters.to_a - {}.to_a
             raise 'not ok' unless difference.size == 0
             render soap: nil
           end
@@ -259,7 +259,7 @@ describe WashoutBuilder do
                       return: nil
           def rumba
             parameters = params.respond_to?(:to_unsafe_h) ? params.to_unsafe_h : params
-            difference =  HashDiff.diff(parameters, {'nested' => {}})
+            difference = parameters.to_a - {'nested' => {}}.to_a
             raise 'not ok' unless difference.size == 0
             render soap: nil
           end
@@ -279,10 +279,10 @@ describe WashoutBuilder do
                       return: nil
           def rumba
             parameters = params.respond_to?(:to_unsafe_h) ? params.to_unsafe_h : params
-            difference =  HashDiff.diff(parameters,  { 'rumbas' => [
+            difference =  parameters.to_a - { 'rumbas' => [
               { 'zombies' => 'suck', 'puppies' => 'rock' },
               { 'zombies' => 'slow', 'puppies' => 'fast' }
-            ] })
+            ] }.to_a
             raise 'not ok' unless difference.size == 0
             render soap: nil
           end

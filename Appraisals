@@ -1,4 +1,4 @@
-if RUBY_VERSION < "2.4.0"
+if RUBY_VERSION <= "2.4.0"
   appraise "rails-4.0.0" do
     gem "rails", "4.0.0"
   end
@@ -17,34 +17,43 @@ if RUBY_VERSION < "2.4.0"
     gem 'actionpack' , '4.2.7.1'
   end
 end
+if  RUBY_VERSION >= '2.2.0' && ENV['BUNDLER_VERSION'].to_s <= '2.0'
+  appraise "rails-5.0.0" do
+    gem "rails", "5.0.0"
+  end
 
-appraise "rails-5.0.0" do
-  gem "rails", "5.0.0"
-  gem 'rails-controller-testing'
+  appraise "rails-5.0.0.1" do
+    gem "rails", "5.0.0.1"
+  end
+
+
+  appraise "rails-5.0.1" do
+    gem "rails", "5.0.1"
+  end
+
+  appraise "rails-5.0.2" do
+    gem "rails", "5.0.2"
+  end
+
+  appraise "rails-5.1.0" do
+    gem "rails", "5.1.0"
+  end
 end
 
-appraise "rails-5.0.0.1" do
-  gem "rails", "5.0.0.1"
-  gem 'rails-controller-testing'
-end
+if  RUBY_VERSION >= '2.2.0' && ENV['BUNDLER_VERSION'].to_s >= '2.0'
+  appraise "rails-5.2.0" do
+    gem "rails", "5.2.0"
+  end
 
+  appraise "rails-5.2.4" do
+    gem "rails", "5.2.4"
+  end
 
-appraise "rails-5.0.1" do
-  gem "rails", "5.0.1"
-  gem 'rails-controller-testing'
-end
+  appraise "rails-6.0.0" do
+    gem "rails", "6.0.0"
+  end
 
-appraise "rails-5.0.2" do
-  gem "rails", "5.0.2"
-  gem 'rails-controller-testing'
-end
-
-appraise "rails-5.1.0.rc1" do
-  gem "rails", "5.1.0.rc1"
-  gem 'rails-controller-testing'
-end
-
-appraise "rails-5.1.0.rc2" do
-  gem "rails", "5.1.0.rc2"
-  gem 'rails-controller-testing'
+  appraise "rails-6.0.1" do
+    gem "rails", "6.0.1"
+  end
 end
