@@ -133,6 +133,16 @@ class Hash
   end
 end
 
+Builder::XmlBase.class_eval do
+
+  alias_method :old_method_missing, :method_missing
+
+  def method_missing(sym, *args, &block)
+    return if ['inspect'].include?(sym.to_s)
+    old_method_missing(sym, *args, &block)
+  end
+end
+
 unless defined?(silence_stream) # Rails 5
   def silence_stream(stream)
     old_stream = stream.dup
