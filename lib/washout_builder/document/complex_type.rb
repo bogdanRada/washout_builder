@@ -30,8 +30,8 @@ module WashoutBuilder
       # @raise [RuntimeError] Raises a runtime error if is detected a duplicate use of the complex type
       # @api public
       def check_duplicate_complex_class(classes_defined, complex_class)
-        complex_obj_found = classes_defined.find { |hash| hash[:class] == complex_class }
-        raise "Duplicate use of `#{basic_type}` type name. Consider using classified types." if !complex_obj_found.nil? && struct? && !classified?
+        complex_obj_found = classes_defined.find { |hash| hash if hash[:class] == complex_class && hash[:obj].find_param_structure.keys != self.find_param_structure.keys }
+        raise "Duplicate use of `#{basic_type}` type name. Consider using classified types" if !complex_obj_found.nil? && struct? && !classified?
       end
 
       # finds the complex class ancestors if the current object is classified, otherwise returns nil
