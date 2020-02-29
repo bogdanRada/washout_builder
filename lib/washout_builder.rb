@@ -52,7 +52,6 @@ end
 base_param_class = WashoutBuilder::Type.base_param_class
 if base_param_class.present?
   base_param_class.class_eval do
-    extend WashoutBuilder::Param
     include WashoutBuilder::Document::ComplexType
   end
 end

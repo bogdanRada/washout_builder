@@ -1,5 +1,6 @@
 # module that is used for constructing complex types in HTML-Documentation
 module WashoutBuilderComplexTypeHelper
+  include WashoutBuilderSharedHelper
   # this method is for printing the attributes of a complex type
   # if the attributes are primitives this will show the attributes with  blue color
   # otherwise will call another method for printing the complex attribute
@@ -49,8 +50,9 @@ module WashoutBuilderComplexTypeHelper
   def create_complex_element_type_html(pre, element, element_description)
     complex_class = element.find_complex_class_name
     return if complex_class.nil?
-    complex_class_content = element.multiplied ? "Array of #{complex_class}" : "#{complex_class}"
-    pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_class_content}</span></a>&nbsp;<span class='bold'>#{element.name}</span>"
+    real_class = find_correct_complex_type(complex_class)
+    complex_class_content = element.multiplied ? "Array of #{real_class}" : "#{real_class}"
+    pre << "<a href='##{real_class}'><span class='lightBlue'>#{complex_class_content}</span></a>&nbsp;<span class='bold'>#{element.name}</span>"
     pre << "&#8194;<span>#{html_safe(element_description)}</span>" unless element_description.blank?
     pre
   end

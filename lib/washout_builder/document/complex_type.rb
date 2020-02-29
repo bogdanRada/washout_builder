@@ -71,25 +71,6 @@ module WashoutBuilder
         self.map = map.delete_if { |element| keys.include?(element.name) }
       end
 
-      # Dirty hack to fix the first washout param type.
-      # This only applies if the first complex type is inheriting WashOutType
-      # its name should be set to its descendant  and the map of the current object will be set to its descendant
-      # @see  WashOut::Param#parse_builder_def
-      #
-      # @param [WashOut::SoapConfig] config an object that holds the soap configuration
-      # @param [Class, String] complex_class the name of the complex type either as a string or a class
-      # @return [void]
-      # @api public
-      def fix_descendant_wash_out_type(config, complex_class)
-        param_class = find_class_from_string(complex_class)
-        base_param_class = WashoutBuilder::Type.base_param_class
-        base_type_class =  WashoutBuilder::Type.base_type_class
-        return if base_param_class.blank? || base_type_class.blank?
-        return unless param_class.present? && param_class.ancestors.include?(base_type_class) && map[0].present?
-        descendant = base_param_class.parse_builder_def(config, param_class.wash_out_param_map)[0]
-        self.name = descendant.name
-        self.map = descendant.map
-      end
 
       # Description of method
       #
@@ -172,8 +153,8 @@ module WashoutBuilder
       def get_nested_complex_types(config, classes_defined)
         classes_defined = [] if classes_defined.blank?
         complex_class = find_complex_class_name(classes_defined)
-        fix_descendant_wash_out_type(config, complex_class)
-        unless complex_class.nil?
+        real_class = find_class_from_string(complex_class)
+        if complex_class.present? && (real_class.blank? || (real_class.present? && !real_class.ancestors.include?( WashoutBuilder::Type.base_type_class)))
           classes_defined << complex_type_hash(complex_class, self, complex_type_ancestors(config, complex_class, classes_defined))
         end
         classes_defined = complex_type_descendants(config, classes_defined)

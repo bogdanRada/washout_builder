@@ -1,5 +1,6 @@
 # helper that is used to list the method's return tyep as a LI element in HTML documentation
 module WashoutBuilderMethodListHelper
+  include WashoutBuilderSharedHelper
   # this method will create the return type of the method and check if the type is basic or complex type or array of types
   #
   # @param [Builder::XmlMarkup] xml the markup builder that is used to insert HTML line breaks or span elements
@@ -10,9 +11,10 @@ module WashoutBuilderMethodListHelper
   #
   # @api public
   def create_return_complex_type_list_html(xml, complex_class, builder_out)
-    return_content = builder_out[0].multiplied ?  "Array of #{complex_class}" : "#{complex_class}"
+    real_class = find_correct_complex_type(complex_class)
+    return_content = builder_out[0].multiplied ?  "Array of #{real_class}" : "#{real_class}"
     xml.span('class' => 'pre') do
-      xml.a('href' => "##{complex_class}") do |inner_xml|
+      xml.a('href' => "##{real_class}") do |inner_xml|
         inner_xml.span('class' => 'lightBlue') do |y|
           y << "#{return_content}"
         end

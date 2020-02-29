@@ -1,5 +1,6 @@
 # helper that is used to show the arguments of a method with their types in HTML documentation
 module WashoutBuilderMethodArgumentsHelper
+  include WashoutBuilderSharedHelper
   # displays the parameter of a method as argument and determines if the parameter is basic type or complex type
   #
   # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
@@ -37,8 +38,9 @@ module WashoutBuilderMethodArgumentsHelper
   # @api public
   def create_method_argument_complex_element(pre, param, use_spacer, spacer, complex_class)
     return if complex_class.nil?
-    argument_content = param.multiplied ? "Array of #{complex_class}" : "#{complex_class}"
-    pre << "#{use_spacer ? spacer : ''}<a href='##{complex_class}'><span class='lightBlue'>#{argument_content}</span></a>&nbsp;<span class='bold'>#{param.name}</span>"
+    real_class = find_correct_complex_type(complex_class)
+    argument_content = param.multiplied ? "Array of #{real_class}" : "#{real_class}"
+    pre << "#{use_spacer ? spacer : ''}<a href='##{real_class}'><span class='lightBlue'>#{argument_content}</span></a>&nbsp;<span class='bold'>#{param.name}</span>"
   end
 
   # this method will check if the current index of the argument is not last, will insert a comma  then a break if the argument is followed by other arguments,

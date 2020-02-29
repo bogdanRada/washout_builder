@@ -1,5 +1,6 @@
 # helper that is used to create the return types of methods in HTML documentation
 module WashoutBuilderMethodReturnTypeHelper
+  include WashoutBuilderSharedHelper
   # this method will print the return type next to the method name
   # @see WashoutBuilder::Document::ComplexType#find_complex_class_name
   # @see WashoutBuilder::Type::BASIC_TYPES
@@ -37,11 +38,12 @@ module WashoutBuilderMethodReturnTypeHelper
   # @api public
   def html_public_method_complex_type(pre, output, complex_class)
     return if complex_class.nil?
+    real_class = find_correct_complex_type(complex_class)
     if output[0].multiplied
-      complex_return_type = "Array of #{complex_class}"
+      complex_return_type = "Array of #{real_class}"
     else
-      complex_return_type = "#{complex_class}"
+      complex_return_type = "#{real_class}"
     end
-    pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_return_type}</span></a>"
+    pre << "<a href='##{real_class}'><span class='lightBlue'>#{complex_return_type}</span></a>"
   end
 end
