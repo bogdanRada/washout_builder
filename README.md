@@ -10,6 +10,10 @@ WashOutBuilder is a Soap Service Documentation generator (extends [WashOut](http
 
 The way [WashOut](https://github.com/inossidabile/wash_out) is used is not modified, it just extends its functionality by generating html documentation to your services that you write
 
+NEW Improvements in version 2.0.1
+---------------------------------
+ - Fix issue when trying to re-use same complex type (with same structure) multiple times inside same controller 
+
 NEW Improvements in version 2.0.0
 ---------------------------------
 
