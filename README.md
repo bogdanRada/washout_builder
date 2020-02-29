@@ -28,6 +28,8 @@ The main issue was not handling correctly the classes that are inheriting from W
 
 This release tries to fix those issues.
 
+Note: Only internal methods have been changed. The configuration has not changed.
+So in order to upgrade to this new version, just update the version in your Gemfile/gemspec file
 
 NEW Improvements in version 1.5.1
 ---------------------------------
