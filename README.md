@@ -10,6 +10,21 @@ WashOutBuilder is a Soap Service Documentation generator (extends [WashOut](http
 
 The way [WashOut](https://github.com/inossidabile/wash_out) is used is not modified, it just extends its functionality by generating html documentation to your services that you write
 
+NEW Improvements in version 2.0.0
+---------------------------------
+
+This release tries to fix some major bugs and introduces backward incompatible changes. 
+ - The complex type list will contain now exactly same types used when doing an actual SOAP request
+ - Same for when listing the soap actions ( the return type and parameters ).
+ 
+Initially the way the complex types were shown on the page was not correct, because it was not reflecting 
+the actual way the SOAP action receives its arguments when doing an actual SOAP request to that controller
+
+The main issue was not handling correctly the classes that are inheriting from WashOut::Type. 
+
+This release tries to fix those issues.
+
+
 NEW Improvements in version 1.5.1
 ---------------------------------
 
@@ -37,21 +52,6 @@ end
 
 If you don't set them and they are left with default nil values, you will have to use the old way, by manually mount the engine in the Rails routes configuration file (**config/routes.rb**) by following examples below.
 
-NEW Improvements in version 2.0.0
----------------------------------
-
-This release tries to fix some major bugs and introduces backward incompatible changes. 
- - The complex type list will contain now exactly same types used when doing an actual SOAP request
- - Same for when listing the soap actions ( the return type and parameters ).
- 
-Initially the way the complex types were shown on the page was not correct, because it was not reflecting 
-the actual way the SOAP action receives its arguments when doing an actual SOAP request to that controller
-
-The main issue was not handling correctly the classes that are inheriting from WashOut::Type. 
-
-This release tries to fix those issues.
-
- 
 NEW Improvements in version 1.4.0
 ---------------------------------
 
