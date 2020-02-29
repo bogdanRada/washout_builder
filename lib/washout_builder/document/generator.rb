@@ -164,11 +164,11 @@ module WashoutBuilder
       # @return [Array<WashOut::Param>] Returns an array with all the complex types sorted alphabetically
       # @api public
       def complex_types
-        defined = []
+        classes_defined = []
         (input_types + output_types).each do |p|
-          defined.concat(p.get_nested_complex_types(config, defined))
+          classes_defined.concat(p.get_nested_complex_types(config, classes_defined))
         end
-        defined = sort_complex_types(defined, 'class')
+        sort_complex_types(classes_defined, 'class')
       end
 
       # Returns an array with all the operations that can raise an exception at least or more
@@ -205,9 +205,9 @@ module WashoutBuilder
       # @api public
       def get_complex_fault_types(base_fault_array)
         fault_types = []
-        defined = filter_exceptions_raised
-        defined = defined.blank? ? base_fault_array : defined.concat(base_fault_array)
-        defined.each { |exception_class| exception_class.get_fault_class_ancestors(fault_types, true) } unless defined.blank?
+        classes_defined = filter_exceptions_raised
+        classes_defined = classes_defined.blank? ? base_fault_array : classes_defined.concat(base_fault_array)
+        classes_defined.each { |exception_class| exception_class.get_fault_class_ancestors(fault_types, true) } unless classes_defined.blank?
         fault_types
       end
 

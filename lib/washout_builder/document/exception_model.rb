@@ -16,18 +16,18 @@ module WashoutBuilder
       # @see #find_fault_model_structure
       # @see #fault_without_inheritable_elements
       #
-      # @param [Array<Hash>] defined An array that contains all the information about all the exception classes found so far
+      # @param [Array<Hash>] classes_defined An array that contains all the information about all the exception classes found so far
       # @param [Boolean] _debug = false An optional parameter used for debugging purposes
       # @return [Array<Class>] Array with all the exception classes from which the current exception class inherits from
       # @api public
-      def get_fault_class_ancestors(defined, _debug = false)
+      def get_fault_class_ancestors(classes_defined, _debug = false)
         bool_the_same = false
         ancestors = fault_ancestors
         if ancestors.blank?
-          defined << fault_ancestor_hash(find_fault_model_structure, [])
+          classes_defined << fault_ancestor_hash(find_fault_model_structure, [])
         else
-          defined << fault_ancestor_hash(fault_without_inheritable_elements(ancestors), ancestors)
-          ancestors[0].get_fault_class_ancestors(defined)
+          classes_defined << fault_ancestor_hash(fault_without_inheritable_elements(ancestors), ancestors)
+          ancestors[0].get_fault_class_ancestors(classes_defined)
         end
         ancestors unless bool_the_same
       end
@@ -47,7 +47,7 @@ module WashoutBuilder
       # @return [Array<Class>] Returns an array with all the classes from which the current exception class inherits from
       # @api public
       def fault_ancestors
-        get_complex_type_ancestors(self, ['ActiveRecord::Base', 'Object', 'BasicObject', 'Exception'])
+        get_complex_type_ancestors(self, %w(ActiveRecord::Base Object BasicObject Exception))
       end
 
       # constructs the structure of the current exception class by holding the instance, the structure, and its ancestors
@@ -80,9 +80,9 @@ module WashoutBuilder
       # @api public
       def check_valid_fault_method?(method)
         method != :== && method != :! &&
-          (instance_methods.include?(:"#{method}=") ||
-            instance_methods.include?(:"#{method}")
-          )
+            (instance_methods.include?(:"#{method}=") ||
+                instance_methods.include?(:"#{method}")
+            )
       end
 
       # tries to fins all instance methods that have both a setter and a getter of the curent class
@@ -90,7 +90,6 @@ module WashoutBuilder
       # @return [Array<String>] An array with all the atrributes and instance methods that have both a setter and a getter
       # @api public
       def find_fault_attributes
-        attrs = []
         attrs = instance_methods(nil).map do |method|
           method.to_s if check_valid_fault_method?(method)
         end
@@ -105,12 +104,12 @@ module WashoutBuilder
       # @api public
       def get_fault_type_method(method_name)
         case method_name.to_s.downcase
-          when 'code'
-            'integer'
-          when 'message', 'backtrace'
-            'string'
-          else
-            'string'
+        when 'code'
+          'integer'
+        when 'message', 'backtrace'
+          'string'
+        else
+          'string'
         end
       end
 
@@ -126,8 +125,8 @@ module WashoutBuilder
           method_name = method_name.to_s.end_with?('=') ? method_name.to_s.delete('=') : method_name
           primitive_type = get_fault_type_method(method_name)
           h["#{method_name}"] = {
-            primitive: "#{primitive_type}",
-            member_type: nil
+              primitive: "#{primitive_type}",
+              member_type: nil
           }
         end
         h

@@ -20,7 +20,7 @@ describe WashoutBuilder::Document::ExceptionModel do
 
   specify { expect(InheritedExceptionModel.included_modules).to include(WashoutBuilder::Document::SharedComplexType) }
 
-  def fault_ancestor_hash(subject, structure, ancestors)
+  def exception_ancestor_hash(subject, structure, ancestors)
     { fault: subject, structure: structure, ancestors: ancestors }
   end
 
@@ -48,11 +48,11 @@ describe WashoutBuilder::Document::ExceptionModel do
   end
 
   it 'fault_ancestor_hash' do
-    expect(subject.fault_ancestor_hash(structure, ancestors)).to eq(fault_ancestor_hash(subject, structure, ancestors))
+    expect(subject.fault_ancestor_hash(structure, ancestors)).to eq(exception_ancestor_hash(subject, structure, ancestors))
   end
 
   it 'gets the fault_ancestors' do
-    subject.expects(:get_complex_type_ancestors).with(subject, ['ActiveRecord::Base', 'Object', 'BasicObject', 'Exception']).returns(ancestors)
+    subject.expects(:get_complex_type_ancestors).with(subject, %w(ActiveRecord::Base Object BasicObject Exception)).returns(ancestors)
     expect(subject.fault_ancestors).to eq ancestors
   end
 
@@ -69,12 +69,12 @@ describe WashoutBuilder::Document::ExceptionModel do
   it 'gets the ancestors' do
     subject.expects(:fault_ancestors).returns(nil)
     subject.expects(:find_fault_model_structure).returns(structure)
-    subject.expects(:fault_ancestor_hash).with(structure, []).returns(fault_ancestor_hash(subject, structure, ancestors))
+    subject.expects(:fault_ancestor_hash).with(structure, []).returns(exception_ancestor_hash(subject, structure, ancestors))
     expect(subject.get_fault_class_ancestors([])).to eq(nil)
   end
 
   it 'gets the ancestors' do
-    expected_defined = fault_ancestor_hash(subject, structure, ancestors)
+    expected_defined = exception_ancestor_hash(subject, structure, ancestors)
     subject.expects(:fault_ancestors).returns(ancestors)
     subject.expects(:fault_without_inheritable_elements).with(ancestors).returns(structure)
     subject.expects(:fault_ancestor_hash).returns(expected_defined)

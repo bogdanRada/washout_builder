@@ -21,7 +21,7 @@ task :all do |_t|
     # require 'json'
     # puts JSON.pretty_generate(ENV.to_hash)
     if ENV['BUNDLE_GEMFILE'] =~ /gemfiles/
-      appraisal_name = ENV['BUNDLE_GEMFILE'].scan(/rails\_(.*)\.gemfile/).flatten.first
+      appraisal_name = ENV['BUNDLE_GEMFILE'].scan(/rails_(.*)\.gemfile/).flatten.first
       command_prefix = "appraisal rails-#{appraisal_name}"
       exec ("#{command_prefix} bundle install && #{command_prefix} bundle exec rspec && bundle exec rake coveralls:push ")
     else
@@ -40,8 +40,8 @@ YARD::Config.load_plugins
 end
 
 YARD::Rake::YardocTask.new do |t|
-  t.files = ['lib/**/*.rb', 'spec/**/*_spec.rb'] # optional
-  t.options = ['--any', '--extra', '--opts', '--markup-provider=redcarpet', '--markup=markdown', '--debug'] # optional
+  t.files = %w(lib/**/*.rb spec/**/*_spec.rb) # optional
+  t.options = %w(--any --extra --opts --markup-provider=redcarpet --markup=markdown --debug) # optional
   t.stats_options = ['--list-undoc'] # optional
 end
 

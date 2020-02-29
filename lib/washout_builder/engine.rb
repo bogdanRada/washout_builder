@@ -4,6 +4,7 @@ module WashoutBuilder
   class Engine < ::Rails::Engine
     isolate_namespace WashoutBuilder
     config.washout_builder = ActiveSupport::OrderedOptions.new
+
     initializer 'washout_builder.configuration' do |app|
       mounted_path = app.config.washout_builder[:mounted_path]
       if WashoutBuilder::EnvChecker.new(app).available_for_env?(Rails.env)

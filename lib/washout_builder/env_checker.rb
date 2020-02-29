@@ -9,7 +9,7 @@ module WashoutBuilder
     end
 
     def available_for_env?(env_name)
-      if (whitelist.present? || blacklist.present?)
+      if whitelist.present? || blacklist.present?
         if whitelist.find{|a| blacklist.include?(a) }.blank?
           if whitelist.include?('*') || (!valid_for_env?(blacklist, env_name) && valid_for_env?(whitelist, env_name))
             return true
@@ -18,7 +18,7 @@ module WashoutBuilder
       else
         return true
       end
-      return false
+      false
     end
 
 

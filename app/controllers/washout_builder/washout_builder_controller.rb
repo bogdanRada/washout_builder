@@ -23,7 +23,7 @@ module WashoutBuilder
         @document = WashoutBuilder::Document::Generator.new(route_details, controller_class(params[:name]).controller_path)
         @file_to_serve = 'wash_with_html/doc'
         render_html(@file_to_serve)
-      elsif
+      else
         @services = all_services
         @file_to_serve = 'wash_with_html/all_services'
         render_html(@file_to_serve)
@@ -71,10 +71,10 @@ module WashoutBuilder
         controller_name = hash[:route].present? && hash[:route].respond_to?(:defaults) ? hash[:route].defaults[:controller] : nil
         if controller_name.present?
           {
-            'service_name' => controller_naming(controller_name),
-            'namespace' => service_namespace(hash, controller_name),
-            'endpoint' => service_endpoint(hash, controller_name),
-            'documentation_url' => service_documentation_url(hash, controller_name)
+              'service_name' => controller_naming(controller_name),
+              'namespace' => service_namespace(hash, controller_name),
+              'endpoint' => service_endpoint(hash, controller_name),
+              'documentation_url' => service_documentation_url(hash, controller_name)
           }
         end
       end.uniq{|hash| hash['service_name'] }
@@ -113,10 +113,10 @@ module WashoutBuilder
         engine_route = Rails.application.routes.named_routes[engine.engine_name]
         routes_hash_array = engine.routes.routes.map { |route|
           {
-            engine: engine,
-            route_set: engine.routes,
-            route: route,
-            mounted_at: engine_route.blank? ? nil : engine_route.path.spec.to_s
+              engine: engine,
+              route_set: engine.routes,
+              route: route,
+              mounted_at: engine_route.blank? ? nil : engine_route.path.spec.to_s
           }
         }
 

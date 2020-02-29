@@ -37,10 +37,10 @@ module WashoutBuilderMethodReturnTypeHelper
   # @api public
   def html_public_method_complex_type(pre, output, complex_class)
     return if complex_class.nil?
-    if output[0].multiplied == false
-      complex_return_type = "#{complex_class}"
-    else
+    if output[0].multiplied
       complex_return_type = "Array of #{complex_class}"
+    else
+      complex_return_type = "#{complex_class}"
     end
     pre << "<a href='##{complex_class}'><span class='lightBlue'>#{complex_return_type}</span></a>"
   end

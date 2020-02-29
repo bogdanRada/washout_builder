@@ -10,27 +10,27 @@ module WashoutBuilder
       # finds the complex class name of the current Washout::Param object and checks if is a duplicate
       # @see #check_duplicate_complex_class
       #
-      # @param [Array] defined Array that is used for when iterating through descendants and ancestors
+      # @param [Array] classes_defined Array that is used for when iterating through descendants and ancestors
       #
       # @return [Class] the complex type name of the current object
       #
       # @api public
-      def find_complex_class_name(defined = [])
+      def find_complex_class_name(classes_defined = [])
         complex_class = struct? ? basic_type.tr('.', '/').camelize : nil
-        check_duplicate_complex_class(defined, complex_class) unless complex_class.nil? || defined.blank?
+        check_duplicate_complex_class(classes_defined, complex_class) unless complex_class.nil? || classes_defined.blank?
         complex_class
       end
 
       # checks if the complex class appears in the array of complex types
       #
-      # @param [Array<Hash>] defined Array that is used for checking if a complex type is already defined
+      # @param [Array<Hash>] classes_defined Array that is used for checking if a complex type is already classes_defined
       # @param [Class] complex_class the complex type name used for searching
       #
       # @return [Boolean] returns true or false if the complex type is found inside the array
       # @raise [RuntimeError] Raises a runtime error if is detected a duplicate use of the complex type
       # @api public
-      def check_duplicate_complex_class(defined, complex_class)
-        complex_obj_found = defined.find { |hash| hash[:class] == complex_class }
+      def check_duplicate_complex_class(classes_defined, complex_class)
+        complex_obj_found = classes_defined.find { |hash| hash[:class] == complex_class }
         raise "Duplicate use of `#{basic_type}` type name. Consider using classified types." if !complex_obj_found.nil? && struct? && !classified?
       end
 
@@ -40,13 +40,13 @@ module WashoutBuilder
       #
       # @param [WashOut::SoapConfig] config the configuration of the soap service
       # @param [Clas] complex_class  the complex type name of the object
-      # @param [Array<Hash>] defined An array that holds all the complex types found so far
+      # @param [Array<Hash>] classes_defined An array that holds all the complex types found so far
       #
       # @return [Array<Class>, nil] returns nil if object not classified othewise an array of classes that are ancestors to curent object
       #
       # @api public
-      def complex_type_ancestors(config, complex_class, defined)
-        classified? ? get_class_ancestors(config, complex_class, defined) : nil
+      def complex_type_ancestors(config, complex_class, classes_defined)
+        classified? ? get_class_ancestors(config, complex_class, classes_defined) : nil
       end
 
       # iterates through all the elements of the current object
@@ -94,7 +94,7 @@ module WashoutBuilder
       # Description of method
       #
       # @param [String] complex_class A string that contains the name of a class
-      # @return [Class, nil] returns the class if it is defined otherwise nil
+      # @return [Class, nil] returns the class if it is classes_defined otherwise nil
       # @api public
       def find_class_from_string(complex_class)
         complex_class.is_a?(Class) ? complex_class : complex_class.constantize
@@ -114,10 +114,10 @@ module WashoutBuilder
         param_structure = find_param_structure
         ancestor_structure = ancestor.find_param_structure
         if param_structure.keys == ancestor_structure.keys
-          return true
+          true
         else
           remove_type_inheritable_elements(ancestor_structure.keys)
-          return false
+          false
         end
       end
 
@@ -132,10 +132,10 @@ module WashoutBuilder
       def get_ancestors(class_name)
         param_class = find_class_from_string(class_name)
         if param_class.nil?
-          return nil
+          nil
         else
           base_type_class =  WashoutBuilder::Type.base_type_class
-          filtered_classes = ['ActiveRecord::Base', 'Object', 'BasicObject']
+          filtered_classes = %w(ActiveRecord::Base Object BasicObject)
           filtered_classes << base_type_class.to_s if base_type_class.present?
           get_complex_type_ancestors(param_class, filtered_classes)
         end
@@ -146,16 +146,16 @@ module WashoutBuilder
       # @see WashOutParam#struct?
       #
       # @param [WashOut::SoapConfig] config an object that holds the soap configuration
-      # @param [Array<Hash>] defined An Array with all the complex types that have been detected till now
+      # @param [Array<Hash>] classes_defined An Array with all the complex types that have been detected till now
       # @return [Array<Hash>] An array with all the complex types that
       # @api public
-      def complex_type_descendants(config, defined)
+      def complex_type_descendants(config, classes_defined)
         if struct?
           c_names = []
-          map.each { |obj| c_names.concat(obj.get_nested_complex_types(config, defined)) }
-          defined.concat(c_names)
+          map.each { |obj| c_names.concat(obj.get_nested_complex_types(config, classes_defined)) }
+          classes_defined.concat(c_names)
         end
-        defined
+        classes_defined
       end
 
       # Recursive method that tries to identify all the nested descendants of the current object
@@ -166,18 +166,18 @@ module WashoutBuilder
       # @see #complex_type_descendants
       #
       # @param [WashOut::SoapConfig] config holds the soap configuration
-      # @param [Array<Hash>] defined An array with all the complex type structures that have been detected so far
+      # @param [Array<Hash>] classes_defined An array with all the complex type structures that have been detected so far
       # @return [Array<Hash>] An array with all the complex type that have been detected while iterating to all the descendants of the current object and also contains the previous ones
       # @api public
-      def get_nested_complex_types(config, defined)
-        defined = [] if defined.blank?
-        complex_class = find_complex_class_name(defined)
+      def get_nested_complex_types(config, classes_defined)
+        classes_defined = [] if classes_defined.blank?
+        complex_class = find_complex_class_name(classes_defined)
         fix_descendant_wash_out_type(config, complex_class)
         unless complex_class.nil?
-          defined << complex_type_hash(complex_class, self, complex_type_ancestors(config, complex_class, defined))
+          classes_defined << complex_type_hash(complex_class, self, complex_type_ancestors(config, complex_class, classes_defined))
         end
-        defined = complex_type_descendants(config, defined)
-        defined.blank? ? [] : defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq
+        classes_defined = complex_type_descendants(config, classes_defined)
+        classes_defined.blank? ? [] : classes_defined.sort_by { |hash| hash[:class].to_s.downcase }.uniq
       end
 
       # method that constructs the a hash with the name of the ancestor ( the class name) and as value its elemen structure
@@ -199,9 +199,9 @@ module WashoutBuilder
       # @api public
       def complex_type_hash(class_name, object, ancestors)
         {
-          class: class_name,
-          obj: object,
-          ancestors: ancestors
+            class: class_name,
+            obj: object,
+            ancestors: ancestors
         }
       end
 
@@ -213,10 +213,10 @@ module WashoutBuilder
       #
       # @param [WashOut::SoapConfig] config holds the soap configuration
       # @param [Class] class_name  The name of the class that is used for fetching the ancestors
-      # @param [Array<Hash>] defined An Array with all the complex types that have been detected so far
+      # @param [Array<Hash>] classes_defined An Array with all the complex types that have been detected so far
       # @return [Array<Class>] An Array of classes from which the class that is sent as parameter inherits from
       # @api public
-      def get_class_ancestors(config, class_name, defined)
+      def get_class_ancestors(config, class_name, classes_defined)
         ancestors = get_ancestors(class_name)
         return if ancestors.blank?
         base_param_class = WashoutBuilder::Type.base_param_class
@@ -224,8 +224,8 @@ module WashoutBuilder
         ancestor_object = base_param_class.parse_def(config, ancestor_structure(ancestors))[0]
         bool_the_same = same_structure_as_ancestor?(ancestor_object)
         unless bool_the_same
-          top_ancestors = get_class_ancestors(config, ancestors[0], defined)
-          defined << complex_type_hash(ancestors[0], ancestor_object, top_ancestors)
+          top_ancestors = get_class_ancestors(config, ancestors[0], classes_defined)
+          classes_defined << complex_type_hash(ancestors[0], ancestor_object, top_ancestors)
         end
         ancestors unless bool_the_same
       end

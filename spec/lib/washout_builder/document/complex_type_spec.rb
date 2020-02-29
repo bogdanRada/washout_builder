@@ -4,18 +4,14 @@ require 'spec_helper'
 describe WashoutBuilder::Document::ComplexType do
   let(:soap_config) do
     OpenStruct.new(
-      camelize_wsdl: false,
-      namespace: '/api/wsdl',
-      description: 'some description'
+        camelize_wsdl: false,
+        namespace: '/api/wsdl',
+        description: 'some description'
     )
   end
 
   let(:subject) { get_wash_out_param(ProjectType) }
   let(:namespaced_object) { get_wash_out_param(Api::TestType) }
-
-  it 'returns the complex class name' do
-    expect(subject.find_complex_class_name).to eq('ProjectType')
-  end
 
   it 'returns the complex class name' do
     expect(subject.find_complex_class_name).to eq('ProjectType')
@@ -33,7 +29,7 @@ describe WashoutBuilder::Document::ComplexType do
   end
 
   it 'returns the param structure' do
-    expect(subject.find_param_structure).to eq('project' => 'struct')
+    expect(subject.find_param_structure).to eq("project"=>"struct")
   end
 
   it 'fixes the first descendant ' do

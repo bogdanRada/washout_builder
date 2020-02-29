@@ -98,11 +98,11 @@ end
 class WashoutBuilderTestError < base_exception
 end
 
-def get_wash_out_param(class_name_or_structure, soap_config = OpenStruct.new(
+def get_wash_out_param(class_or_struct, soap_config = OpenStruct.new(
   camelize_wsdl: false,
   namespace: '/api/wsdl'
 ))
-  WashOut::Param.parse_builder_def(soap_config, class_name_or_structure)[0]
+  WashOut::Param.parse_builder_def(soap_config, class_or_struct)[0]
 end
 
 class Hash

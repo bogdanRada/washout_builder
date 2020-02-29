@@ -37,7 +37,7 @@ module WashoutBuilderMethodArgumentsHelper
   # @api public
   def create_method_argument_complex_element(pre, param, use_spacer, spacer, complex_class)
     return if complex_class.nil?
-    argument_content = param.multiplied == false ? "#{complex_class}" : "Array of #{complex_class}"
+    argument_content = param.multiplied ? "Array of #{complex_class}" : "#{complex_class}"
     pre << "#{use_spacer ? spacer : ''}<a href='##{complex_class}'><span class='lightBlue'>#{argument_content}</span></a>&nbsp;<span class='bold'>#{param.name}</span>"
   end
 
