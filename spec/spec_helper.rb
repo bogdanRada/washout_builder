@@ -102,7 +102,7 @@ def get_wash_out_param(class_or_struct, soap_config = OpenStruct.new(
   camelize_wsdl: false,
   namespace: '/api/wsdl'
 ))
-  WashOut::Param.parse_builder_def(soap_config, class_or_struct)[0]
+  WashOut::Param.parse_def(soap_config, class_or_struct)[0]
 end
 
 class Hash

@@ -14,29 +14,29 @@ describe WashoutBuilder::Document::ComplexType do
   let(:namespaced_object) { get_wash_out_param(Api::TestType) }
 
   it 'returns the complex class name' do
-    expect(subject.find_complex_class_name).to eq('ProjectType')
+    expect(subject.find_complex_class_name).to eq('Project')
   end
 
   it 'returns the complex class with namespace' do
-    expect(namespaced_object.find_complex_class_name).to eq('Api::TestType')
+    expect(namespaced_object.find_complex_class_name).to eq('Project')
+  end
+
+  it 'does not return error if classname already detected (only used for hashes) and same structure' do
+    subject.stubs(:classified?).returns(false)
+    subject.stubs(:basic_type).returns('ProjectType')
+    classes_defined = [{ class: 'ProjectType', obj: get_wash_out_param(ProjectType), ancestors: [] }]
+    expect { subject.find_complex_class_name(classes_defined) }.to_not raise_error(RuntimeError, 'Duplicate use of `ProjectType` type name. Consider using classified types.')
   end
 
   it 'returns error if classname already detected (only used for hashes)' do
     subject.stubs(:classified?).returns(false)
     subject.stubs(:basic_type).returns('ProjectType')
-    defined = [{ class: 'ProjectType' }]
-    expect { subject.find_complex_class_name(defined) }.to raise_error(RuntimeError, 'Duplicate use of `ProjectType` type name. Consider using classified types.')
+    classes_defined = [{ class: 'ProjectType', obj: get_wash_out_param(Api::TestType), ancestors: [] }]
+    expect { subject.find_complex_class_name(classes_defined) }.to raise_error(RuntimeError, 'Duplicate use of `ProjectType` type name. Consider using classified types.')
   end
 
   it 'returns the param structure' do
-    expect(subject.find_param_structure).to eq("project"=>"struct")
-  end
-
-  it 'fixes the first descendant ' do
-    descendant = get_wash_out_param(ProjectType.wash_out_param_map)
-    subject.fix_descendant_wash_out_type(soap_config, ProjectType)
-    expect(subject.name).to eq(descendant.name)
-    expect(subject.map[0].find_param_structure).to eq(descendant.map[0].find_param_structure)
+    expect(subject.find_param_structure).to eq("description"=>"string", "name"=>"string", "users"=>"struct")
   end
 
   it 'same as ancestor' do
@@ -75,18 +75,18 @@ describe WashoutBuilder::Document::ComplexType do
 
   describe '#complex_type_descendants' do
     it 'returns empty array if not struct?' do
-      defined = []
+      classes_defined = []
       subject.stubs(:struct?).returns(false)
-      expect(subject.complex_type_descendants(soap_config, defined)).to eq(defined)
+      expect(subject.complex_type_descendants(soap_config, classes_defined)).to eq(classes_defined)
     end
 
     it 'returns the descendants if  struct?' do
-      defined = []
+      classes_defined = []
       subject.map.each do |obj|
-        obj.expects(:get_nested_complex_types).with(soap_config, defined).returns([obj.name])
+        obj.expects(:get_nested_complex_types).with(soap_config, classes_defined).returns([obj.name])
       end
       subject.stubs(:struct?).returns(true)
-      expect(subject.complex_type_descendants(soap_config, defined)).to eq(subject.map.map(&:name))
+      expect(subject.complex_type_descendants(soap_config, classes_defined)).to eq(subject.map.map(&:name))
     end
   end
 
@@ -97,21 +97,20 @@ describe WashoutBuilder::Document::ComplexType do
     let(:expected) { [complex_type_hash] }
 
     it 'returns the complex class ancestors' do
-      defined = []
-      subject.expects(:find_complex_class_name).with(defined).returns(complex_class)
-      subject.expects(:fix_descendant_wash_out_type).with(soap_config, complex_class).returns(true)
-      subject.expects(:complex_type_ancestors).with(soap_config, complex_class, defined).returns(ancestors)
+      classes_defined = []
+      subject.expects(:find_complex_class_name).with(classes_defined).returns(complex_class)
+      subject.expects(:find_class_from_string).with(complex_class).returns(nil)
+      subject.expects(:complex_type_ancestors).with(soap_config, complex_class, classes_defined).returns(ancestors)
       subject.expects(:complex_type_hash).with(complex_class, subject, ancestors).returns(complex_type_hash)
       subject.expects(:complex_type_descendants).with(soap_config, [complex_type_hash]).returns(expected)
-      expect(subject.get_nested_complex_types(soap_config, defined)).to eq(expected)
+      expect(subject.get_nested_complex_types(soap_config, classes_defined)).to eq(expected)
     end
 
     it 'returns the the descendants' do
-      defined = nil
+      classes_defined = nil
       subject.expects(:find_complex_class_name).with([]).returns(nil)
-      subject.expects(:fix_descendant_wash_out_type).with(soap_config, nil).returns(true)
       subject.expects(:complex_type_descendants).with(soap_config, []).returns(expected)
-      expect(subject.get_nested_complex_types(soap_config, defined)).to eq(expected)
+      expect(subject.get_nested_complex_types(soap_config, classes_defined)).to eq(expected)
     end
   end
 
@@ -135,7 +134,7 @@ describe WashoutBuilder::Document::ComplexType do
 
   describe '#get_class_ancestors' do
     let(:class_name) { 'ProjectType' }
-    let(:defined) { [] }
+    let(:classes_defined) { [] }
     let(:ancestors) { ['SomeInexistentClass'] }
     let(:ancestor_structure) { { ancestors[0].to_s.downcase => 'bla' } }
     let(:top_ancestors) {}
@@ -143,7 +142,7 @@ describe WashoutBuilder::Document::ComplexType do
 
     it 'returns nil if no ancestors' do
       subject.expects(:get_ancestors).with(class_name).returns(nil)
-      expect(subject.get_class_ancestors(soap_config, class_name, defined)).to eq(nil)
+      expect(subject.get_class_ancestors(soap_config, class_name, classes_defined)).to eq(nil)
     end
 
     it 'returns the ancestors and the top ones' do
@@ -153,15 +152,16 @@ describe WashoutBuilder::Document::ComplexType do
       WashOut::Param.stubs(:parse_def).returns([namespaced_object])
       subject.expects(:same_structure_as_ancestor?).with(namespaced_object).returns(false)
       subject.expects(:complex_type_hash).returns(complex_type_hash)
-      expect(subject.get_class_ancestors(soap_config, class_name, defined)).to eq([complex_type_hash])
+      expect(subject.get_class_ancestors(soap_config, class_name, classes_defined)).to eq([complex_type_hash])
     end
 
     it 'returns nil if same structure as ancestor' do
+      namespaced_object
       subject.expects(:get_ancestors).with(class_name).returns(ancestors)
       subject.expects(:ancestor_structure).with(ancestors).returns(ancestor_structure)
-      WashOut::Param.stubs(:parse_def).returns([namespaced_object])
+      WashOut::Param.stubs(:parse_def).with(soap_config, ancestor_structure).returns([namespaced_object])
       subject.expects(:same_structure_as_ancestor?).with(namespaced_object).returns(true)
-      expect(subject.get_class_ancestors(soap_config, class_name, defined)).to eq(nil)
+      expect(subject.get_class_ancestors(soap_config, class_name, classes_defined)).to eq(nil)
     end
   end
 end

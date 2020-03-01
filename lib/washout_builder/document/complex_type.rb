@@ -31,7 +31,7 @@ module WashoutBuilder
       # @api public
       def check_duplicate_complex_class(classes_defined, complex_class)
         complex_obj_found = classes_defined.find { |hash| hash if hash[:class] == complex_class && hash[:obj].find_param_structure.keys != self.find_param_structure.keys }
-        raise "Duplicate use of `#{basic_type}` type name. Consider using classified types" if !complex_obj_found.nil? && struct? && !classified?
+        raise "Duplicate use of `#{basic_type}` type name. Consider using classified types." if !complex_obj_found.nil? && struct? && !classified?
       end
 
       # finds the complex class ancestors if the current object is classified, otherwise returns nil
@@ -197,7 +197,7 @@ module WashoutBuilder
       # @param [Array<Hash>] classes_defined An Array with all the complex types that have been detected so far
       # @return [Array<Class>] An Array of classes from which the class that is sent as parameter inherits from
       # @api public
-      def get_class_ancestors(config, class_name, classes_defined)
+      def  get_class_ancestors(config, class_name, classes_defined)
         ancestors = get_ancestors(class_name)
         return if ancestors.blank?
         base_param_class = WashoutBuilder::Type.base_param_class
