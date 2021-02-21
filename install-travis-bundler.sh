@@ -11,8 +11,8 @@ echo "Trying to compare rails ${rails_version:="1"} with 5.2"
 if (( $(echo "${rails_version%.*} >= 5.2" |bc -l) )); then
    echo "Installing Bundler v2"
    gem uninstall -v '< 2.0' -i "$(rvm gemdir)"@global -ax bundler --force || true
-   gem install bundler -v '2.0.1'
-   export MY_BUNDLER_VERSION="_2.0.1_"
+   gem install bundler -v '2.2.11'
+   export MY_BUNDLER_VERSION="_2.2.11_"
 else
    echo "Installing Bundler v1"
    gem uninstall -v '>= 2' -i "$(rvm gemdir)"@global -ax bundler --force  || true

@@ -21,13 +21,14 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'wash_out', '>= 0.9.1', '>= 0.9.1'
   s.add_runtime_dependency 'activesupport', '>= 4.0', '>= 4.0'
-  
-  s.add_development_dependency 'wasabi', '~> 3.5', '>= 3.5'
+
+  # wasabi >= 3.6.0 does not work well with savon
+  s.add_development_dependency 'wasabi', '< 3.6.0'
   s.add_development_dependency 'savon', '~> 2.11', '>= 2.11'
   s.add_development_dependency 'httpi', '~> 2.4', '>= 2.4'
   s.add_development_dependency 'nokogiri', '~> 1.7', '>= 1.7'
 
-  s.add_development_dependency 'rspec-rails','4.0.0.beta3'
+  s.add_development_dependency 'rspec-rails','4.0.2'
   s.add_development_dependency 'appraisal', '~> 2.1', '>= 2.1'
   s.add_development_dependency 'simplecov', '~> 0.12', '>= 0.12'
   s.add_development_dependency 'simplecov-summary', '~> 0.0.5', '>= 0.0.5'
