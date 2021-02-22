@@ -11,8 +11,8 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
 
   let(:soap_config) do
     OpenStruct.new(
-        camelize_wsdl: false,
-        namespace: '/api/wsdl'
+      camelize_wsdl: false,
+      namespace: '/api/wsdl'
     )
   end
 
@@ -33,7 +33,11 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
   it 'renders the template' do
     get :all
     expect(subject.instance_variable_get(:@file_to_serve)).to eq('wash_with_html/all_services')
-    expect(response.media_type).to eq("text/html")
+    if response.respond_to?(:media_type)
+      expect(response.media_type).to eq("text/html")
+    else
+      expect(response.content_type).to eq('text/html')
+    end
     expect(response).to have_http_status(:ok)
   end
 
@@ -52,7 +56,11 @@ describe WashoutBuilder::WashoutBuilderController, type: :controller do
       get :all, params
     end
     expect(subject.instance_variable_get(:@file_to_serve)).to eq('wash_with_html/doc')
-    expect(response.media_type).to eq("text/html")
+    if response.respond_to?(:media_type)
+      expect(response.media_type).to eq("text/html")
+    else
+      expect(response.content_type).to eq('text/html')
+    end
     expect(response).to have_http_status(:ok)
   end
 end
