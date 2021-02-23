@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "wash_out", :github => "inossidabile/wash_out"
+gem "wash_out", git: "https://github.com/inossidabile/wash_out.git"
 gem "rails", "4.2.0"
 
-gemspec :path => "../"
+gemspec path: "../"
